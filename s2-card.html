@@ -377,27 +377,39 @@ body{
   .viewport{background:#F5F5F5}
   .card{margin:4px 4px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04)}
 
-  /* ===== 与 S1 一致的识别头：左图右文 + 原声块 ===== */
-  .hero{display:flex;align-items:stretch;gap:0;padding:12px}
-  .hero .pic{flex:0 0 104px;align-self:stretch;border-radius:8px;background-size:cover;background-position:center;min-height:100%}
-  .hero .body{flex:1;min-width:0;padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
-  .hero .name{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .hero .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);flex-wrap:wrap}
-  .hero .meta .star{color:var(--text);font-weight:700}
-  .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
-  .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-4);flex:0 0 auto}
-  .hero .tags{display:flex;gap:5px;flex-wrap:wrap}
-  .hero .tags .tg{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;background:var(--bg-soft);color:var(--text-2);font-size:11px;font-weight:600;letter-spacing:-.005em}
-  .voice{
-    margin-top:auto;display:flex;align-items:center;gap:8px;
-    padding:9px 10px;background:var(--bg-soft);
-    border-radius:0 8px 8px 0;
-    border-left:2px solid var(--text);cursor:pointer;
+  /* ===== S2 识别头：4:3 banner 大图 + 信息压在图上 + 底部黑色柔和渐变（区别于 S1 的左图右文）===== */
+  .hero{position:relative;aspect-ratio:4/3;overflow:hidden;background:#000}
+  .hero .pic{position:absolute;inset:0;background-size:cover;background-position:center}
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;top:30%;
+    background:linear-gradient(180deg,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,.15) 30%,
+      rgba(0,0,0,.55) 70%,
+      rgba(0,0,0,.82) 100%);
+    pointer-events:none;
   }
-  .voice .txt{flex:1;min-width:0;font-size:12.5px;color:var(--text-2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .voice .txt b{color:var(--text);font-weight:700}
-  .voice .arr{flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
-  .voice .arr svg{width:11px;height:11px}
+  .hero .body{
+    position:absolute;left:0;right:0;bottom:0;z-index:1;
+    padding:16px 16px 16px;
+    display:flex;flex-direction:column;gap:7px;color:#fff;
+  }
+  .hero .name{
+    font-size:22px;font-weight:800;color:#fff;letter-spacing:-.024em;line-height:1.18;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .hero .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.88);flex-wrap:wrap;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+  .hero .meta .star{color:#fff;font-weight:700}
+  .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
+  .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.55);flex:0 0 auto}
+  .hero .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .hero .tags .tg{
+    display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:5px;
+    background:rgba(255,255,255,.16);backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);
+    color:#fff;font-size:11px;font-weight:600;letter-spacing:-.005em;
+    border:1px solid rgba(255,255,255,.18);
+  }
 
   /* segmented control */
   .seg{display:flex;padding:0 14px;border-bottom:1px solid var(--line);gap:22px;font-size:13px;color:var(--text-3);overflow-x:auto;scrollbar-width:none}
@@ -717,10 +729,6 @@ body{
           <div class="tags">
             <span class="tg">Private pool</span>
             <span class="tg">Skyline view</span>
-          </div>
-          <div class="voice">
-            <div class="txt">"<b>Quiet, spacious rooms</b> and a rooftop pool with skyline view — mentioned by <b>86% of 1,288 guests</b>."</div>
-            <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
           </div>
         </div>
       </div>
