@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fusion Card · 4 Strategies · Side-by-Side</title>
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg-2:#101013;
+    --surface:#16171a;
+    --surface-2:#1c1d21;
+    --line:rgba(255,255,255,.07);
+    --line-2:rgba(255,255,255,.13);
+    --text:#fafafa;
+    --text-2:rgba(255,255,255,.74);
+    --text-3:rgba(255,255,255,.5);
+    --text-4:rgba(255,255,255,.3);
+    --accent:#fe2c55;
+    --font:'Inter','SF Pro Text',-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC',sans-serif;
+    --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+    --font-display:'Inter','SF Pro Display',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:100vh}
+
+  /* ===== top bar ===== */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);
+    background:rgba(10,10,11,.7);border-bottom:1px solid var(--line);
+    padding:14px 32px;display:flex;align-items:center;gap:14px;font-size:13px;color:var(--text-2);
+  }
+  .topbar .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .topbar .t{font-weight:600;color:var(--text);letter-spacing:-.005em}
+  .topbar .meta{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--text-4);letter-spacing:.04em}
+
+  /* ===== hero ===== */
+  .hero{padding:64px 40px 8px;max-width:1760px;margin:0 auto}
+  .hero .pre{
+    display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--text-3);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  }
+  .hero h1{
+    margin:24px 0 14px;font-family:var(--font-display);font-size:60px;line-height:1.02;
+    letter-spacing:-.028em;font-weight:700;color:#fff;
+  }
+  .hero h1 em{font-style:normal;color:var(--text-3);font-weight:600}
+  .hero p{margin:0;color:var(--text-2);font-size:15.5px;line-height:1.6;max-width:840px}
+  .hero p b{color:var(--text);font-weight:600}
+  .hero .keyrow{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}
+  .hero .keyrow span{
+    padding:6px 11px;border-radius:6px;background:var(--surface);border:1px solid var(--line);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;color:var(--text-3);
+  }
+  .hero .keyrow span b{color:var(--text);font-weight:600}
+
+  /* ===== 4-up compare ===== */
+  .compare{
+    max-width:1760px;margin:0 auto;padding:48px 40px 24px;
+  }
+  .compare-head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:36px;
+  }
+  .compare-head h2{
+    margin:0;font-family:var(--font-display);font-size:30px;letter-spacing:-.018em;font-weight:700;color:#fff;
+  }
+  .compare-head h2 em{color:var(--text-3);font-style:normal;font-weight:600}
+  .compare-head p{margin:8px 0 0;color:var(--text-3);font-size:13.5px;line-height:1.55;max-width:760px}
+  .compare-head .legend{
+    flex-shrink:0;font-family:var(--font-mono);font-size:11px;color:var(--text-4);letter-spacing:.05em;text-align:right;line-height:1.7;
+  }
+  .compare-head .legend b{color:var(--text-2);font-weight:600}
+
+  .grid4{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;
+  }
+  @media (max-width:1280px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:680px){.grid4{grid-template-columns:1fr}}
+
+  .col{
+    display:flex;flex-direction:column;gap:18px;min-width:0;
+  }
+
+  /* card meta header */
+  .col-head{
+    display:flex;flex-direction:column;gap:10px;padding:0 4px;
+  }
+  .col-head .top{
+    display:flex;align-items:center;gap:8px;
+  }
+  .col-head .num{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    padding:4px 8px;border-radius:5px;background:var(--surface);color:var(--text-2);
+    border:1px solid var(--line-2);font-weight:700;
+  }
+  .col-head .num.s1{background:rgba(254,44,85,.14);color:#ff7898;border-color:rgba(254,44,85,.32)}
+  .col-head .num.s2{background:rgba(244,180,0,.12);color:#f5c450;border-color:rgba(244,180,0,.3)}
+  .col-head .num.s3{background:rgba(26,178,107,.12);color:#5fd49a;border-color:rgba(26,178,107,.3)}
+  .col-head .num.s4{background:rgba(168,109,255,.14);color:#c8a6ff;border-color:rgba(168,109,255,.32)}
+  .col-head .ref{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;color:var(--text-4);
+    margin-left:auto;text-transform:uppercase;
+  }
+  .col-head h3{
+    margin:0;font-family:var(--font-display);font-size:22px;letter-spacing:-.018em;font-weight:700;color:#fff;line-height:1.18;
+  }
+  .col-head .desc{
+    margin:0;font-size:13px;color:var(--text-3);line-height:1.55;font-weight:400;
+  }
+
+  /* phone */
+  .phone-wrap{
+    width:100%;aspect-ratio:390 / 844;position:relative;background:transparent;
+    border-radius:42px;overflow:hidden;
+    box-shadow:
+      0 30px 70px rgba(0,0,0,.55),
+      0 12px 28px rgba(0,0,0,.4),
+      0 0 0 1px rgba(255,255,255,.04),
+      inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .phone-screen{position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden;background:#fff}
+  .phone-screen iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
+
+  /* mechanics list */
+  .mech{
+    margin-top:6px;display:flex;flex-direction:column;gap:8px;padding:14px 14px;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  }
+  .mech .row{
+    display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:var(--text-2);
+  }
+  .mech .row .lbl{
+    flex:0 0 60px;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--text-4);font-weight:700;padding-top:1px;
+  }
+  .mech .row .val{flex:1;min-width:0}
+  .mech .row .val b{color:var(--text);font-weight:600}
+
+  /* ===== summary table ===== */
+  .summary{
+    max-width:1760px;margin:0 auto;padding:48px 40px 32px;
+  }
+  .summary h3{
+    margin:0 0 18px;font-family:var(--font-display);font-size:18px;letter-spacing:-.005em;font-weight:600;color:var(--text-2);
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary h3::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--text-3)}
+  .stable{
+    width:100%;border-collapse:separate;border-spacing:0;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    font-size:13px;
+  }
+  .stable th, .stable td{
+    text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top;
+  }
+  .stable th{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-4);font-weight:700;background:var(--surface-2);
+  }
+  .stable tr:last-child td{border-bottom:0}
+  .stable td:first-child{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--text-2);font-weight:700;width:120px;
+  }
+  .stable td{color:var(--text-3);line-height:1.55}
+  .stable td b{color:var(--text);font-weight:600}
+
+  /* ===== footer ===== */
+  footer{
+    max-width:1760px;margin:48px auto 0;padding:28px 40px 56px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+    color:var(--text-4);font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;
+  }
+  footer span b{color:var(--text-2);font-weight:600}
+  footer a{color:var(--text-3);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:1px}
+  footer a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="dot"></span>
+  <span class="t">POI Exact Search · Fusion Card</span>
+  <span style="color:var(--text-3)">v4 · Hotel · 4 strategies side-by-side</span>
+  <span class="meta">iPhone 390 × 844 · 2026.06</span>
+</header>
+
+<section class="hero">
+  <span class="pre">4 strategies × 1 representative each</span>
+  <h1>Four structural takes,<br><em>one hotel.</em></h1>
+  <p>同一个酒店、同一组核心信息，仅在 <b>识别 / 理解 / 交易</b> 三段的结构与权重上做差异化。每个策略只保留一个最能体现精髓的方案 —— 一句话说清为什么贴合该策略。</p>
+  <div class="keyrow">
+    <span><b>iPhone</b> · 390 × 844</span>
+    <span><b>Hotel</b> · Bangkok Marriott Marquis</span>
+    <span><b>3 phases</b> · Identify → Understand → Transact</span>
+  </div>
+</section>
+
+<section class="compare">
+  <div class="compare-head">
+    <div>
+      <h2>Side-by-side <em>· same data, four shapes</em></h2>
+      <p>从左到右：<b>识别即转化 → 折叠分层 → 解耦排版 → 内容沉浸</b>。每一列下方一句话解释它为什么是该策略最纯粹的形态。</p>
+    </div>
+    <div class="legend">
+      Light viewport · BW palette<br>
+      <b>Hotel</b>: Bangkok Marriott Marquis<br>
+      Source: figma POI exact search v3
+    </div>
+  </div>
+
+  <div class="grid4">
+
+    <!-- ====== STAGE 1 · TIGHT ====== -->
+    <div class="col">
+      <div class="col-head">
+        <div class="top">
+          <span class="num s1">Stage 1</span>
+          <span class="ref">REF · Google · Booking</span>
+        </div>
+        <h3>Identity-led Single Card</h3>
+        <p class="desc">S1 与 S2 <b>共用同一个识别头</b>（左图右文 + 2 行原声 + 跳转箭头）。S1 把<b>交易</b>收敛为<b>单一最优供应商</b>，让用户"看完即下单"。</p>
+      </div>
+      <div class="phone-wrap"><div class="phone-screen"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div></div>
+      <div class="mech">
+        <div class="row"><span class="lbl">Why fit</span><span class="val">识别头一致 · 仅用 <b>1 个最优供应商 + 一个全宽 CTA</b> 收口交易 —— 转化最纯粹。</span></div>
+      </div>
+    </div>
+
+    <!-- ====== STAGE 2 · FOLDED ====== -->
+    <div class="col">
+      <div class="col-head">
+        <div class="top">
+          <span class="num s2">Stage 2</span>
+          <span class="ref">REF · iOS Music</span>
+        </div>
+        <h3>Folded Tabs Card</h3>
+        <p class="desc">沿用 S1 的识别头，下方加 <b>Deals / Reviews / What people say / Location</b> 四段 segment：交易、理解、内容、地理位置按需展开，每个 tab 可独立沉浸。</p>
+      </div>
+      <div class="phone-wrap"><div class="phone-screen"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div></div>
+      <div class="mech">
+        <div class="row"><span class="lbl">Why fit</span><span class="val">识别头一致 · 用 <b>segmented 折叠</b>承载多视图，理解维度按需展开 —— 折叠分层最纯粹。</span></div>
+      </div>
+    </div>
+
+    <!-- ====== STAGE 3 · DECOUPLED ====== -->
+    <div class="col">
+      <div class="col-head">
+        <div class="top">
+          <span class="num s3">Stage 3</span>
+          <span class="ref">REF · App Store</span>
+        </div>
+        <h3>Decoupled Modules</h3>
+        <p class="desc">把识别 / 交易 / 理解 / 推荐拆成 <b>4 张完全独立的小卡</b>（Identity · Deals · Reviews · You may also like），灰底卡间隙 + 双列 native feed 穿插，每张可独立 ranking、独立竞价、独立沉浸。</p>
+      </div>
+      <div class="phone-wrap"><div class="phone-screen"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div></div>
+      <div class="mech">
+        <div class="row"><span class="lbl">Why fit</span><span class="val">灰底 + 卡间隙强调"模块可重排"<b> · 每个模块都能单独做实验</b> —— 解耦排版最纯粹。</span></div>
+      </div>
+    </div>
+
+    <!-- ====== STAGE 4 · IMMERSIVE ====== -->
+    <div class="col">
+      <div class="col-head">
+        <div class="top">
+          <span class="num s4">Stage 4</span>
+          <span class="ref">REF · TikTok FYP</span>
+        </div>
+        <h3>Content-Mounted Video</h3>
+        <p class="desc">9:13 横滑视频卡片做主体容器，<b>识别</b>压在顶部头条行，<b>交易</b>以白色聚合卡反向挂载在视频底部。</p>
+      </div>
+      <div class="phone-wrap"><div class="phone-screen"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div></div>
+      <div class="mech">
+        <div class="row"><span class="lbl">Why fit</span><span class="val">视频本体即理解过程 · POI mount 几乎不打断观看 —— <b>"先看再买"内容沉浸最纯粹</b>。</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="summary">
+  <h3>Decision matrix · 三段结构权重</h3>
+  <table class="stable">
+    <thead>
+      <tr>
+        <th></th>
+        <th>S1 · Identity-led</th>
+        <th>S2 · Folded</th>
+        <th>S3 · Decoupled</th>
+        <th>S4 · Immersive</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>识别</td>
+        <td>左图右文 + 原声</td>
+        <td>左图右文 + tabs</td>
+        <td>独立 Identity 卡</td>
+        <td>视频本体即识别</td>
+      </tr>
+      <tr>
+        <td>理解</td>
+        <td>2 行原声 · 极简</td>
+        <td>tabs 切换</td>
+        <td>独立 Reviews 卡 + 横滑 clip 轨</td>
+        <td><b>视频内容承载</b></td>
+      </tr>
+      <tr>
+        <td>交易</td>
+        <td><b>1 个最优供应商</b></td>
+        <td>3 行 OTA + See more (4)</td>
+        <td>独立 Deals 卡</td>
+        <td>底部 POI mount</td>
+      </tr>
+      <tr>
+        <td>Best for</td>
+        <td>明确酒店意图 · 即买</td>
+        <td>需多角度比较</td>
+        <td>多 ranking 自由组合</td>
+        <td>探索型 · 内容驱动</td>
+      </tr>
+      <tr>
+        <td>Risk</td>
+        <td>供应商选择被收敛</td>
+        <td>层级隐藏导致首屏认知不全</td>
+        <td>整卡感弱 · 易碎片</td>
+        <td>转化路径长</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <span><b>Fusion Card</b> · 4 strategies side-by-side · Hotel · 390 × 844</span>
+  <span>TikTok Local Services · 2026.06</span>
+</footer>
+
+<script>
+  function fitIframes(){
+    document.querySelectorAll('.phone-screen').forEach(scr=>{
+      const iframe = scr.querySelector('iframe');
+      if(!iframe) return;
+      const w = scr.clientWidth;
+      const h = scr.clientHeight;
+      const sx = w / 390;
+      const sy = h / 844;
+      const s = Math.min(sx, sy);
+      iframe.style.transform = `scale(${s})`;
+      iframe.style.width = (w/s) + 'px';
+      iframe.style.height = (h/s) + 'px';
+    });
+  }
+  window.addEventListener('load', fitIframes);
+  window.addEventListener('resize', fitIframes);
+  document.querySelectorAll('iframe').forEach(f=>f.addEventListener('load', fitIframes));
+</script>
+
+</body>
+</html>

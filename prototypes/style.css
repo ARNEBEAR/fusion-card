@@ -1,0 +1,160 @@
+/* =========================================================
+   Shared style for the 4 standalone prototype pages.
+   Extracted from index.html (TikTok dark surface tokens
+   + skeleton primitives + phone chrome) so each prototype
+   can live as its own URL for Feishu webpage embedding.
+   ========================================================= */
+
+:root{
+  --bg:#0a0a0b;
+  --bg-2:#0f0f12;
+  --surface:#16171a;
+  --surface-2:#1d1e22;
+  --surface-3:#26272c;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --text:#fafafa;
+  --text-2:rgba(255,255,255,.78);
+  --text-3:rgba(255,255,255,.55);
+  --text-4:rgba(255,255,255,.38);
+  --brand:#fe2c55;
+  --brand-2:#25f4ee;
+  --radius-card:18px;
+  --radius-content:12px;
+  --radius-pill:999px;
+  --shadow-2:0 12px 36px rgba(0,0,0,.45);
+  --font:'Inter','SF Pro Text',-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.6;}
+
+.stage-wrap{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:48px 24px;
+  gap:28px;
+}
+.kicker{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  text-align:center;
+}
+.title{
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:-.005em;
+  text-align:center;
+  margin:0;
+  max-width:560px;
+}
+.title b{color:#fff}
+
+/* ===== phone chrome ===== */
+.phone{
+  width:300px;aspect-ratio:9/19;
+  background:#050507;border-radius:36px;
+  border:1px solid #1d1e21;overflow:hidden;
+  position:relative;
+  box-shadow:var(--shadow-2),inset 0 0 0 5px #050506;
+}
+.phone .screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg)}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#000;border-radius:14px;z-index:5}
+.status{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 4px;font-size:11px;font-weight:600;flex:0 0 auto}
+.status .right{display:flex;gap:5px;align-items:center;font-size:10px}
+.ic-batt{width:18px;height:9px;border:1px solid var(--text);border-radius:2px;position:relative;padding:1px}
+.ic-batt::after{content:"";position:absolute;right:-3px;top:2px;bottom:2px;width:1.5px;background:var(--text);border-radius:1px}
+.ic-batt span{display:block;height:100%;width:75%;background:var(--text);border-radius:1px}
+
+.search{display:flex;align-items:center;gap:10px;padding:6px 14px 10px;flex:0 0 auto}
+.search .back{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:18px}
+.search .input{flex:1;height:32px;background:var(--surface-2);border-radius:var(--radius-pill);display:flex;align-items:center;padding:0 12px;gap:8px;font-size:12px;color:var(--text)}
+.search .input svg{flex:0 0 auto;opacity:.7}
+.search .cancel{font-size:12.5px;color:var(--text);font-weight:500}
+
+.tabs{display:flex;gap:18px;padding:0 14px 8px;font-size:12px;color:var(--text-3);overflow-x:auto;flex:0 0 auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs span{padding:6px 0;flex:0 0 auto;white-space:nowrap}
+.tabs .active{color:var(--text);font-weight:600;position:relative}
+.tabs .active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--text);border-radius:2px}
+
+.scroll{flex:1 1 auto;overflow-y:auto;padding:8px 12px 24px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ===== skeleton primitives ===== */
+.sk-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-card);overflow:hidden;
+}
+.sk-thumb{
+  border-radius:var(--radius-content);
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 8px,transparent 8px 16px);
+  border:1px solid rgba(255,255,255,.06);
+  flex:0 0 auto;position:relative;
+}
+.sk-thumb::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(60% 60% at 50% 40%,rgba(254,44,85,.10),transparent 70%);
+  pointer-events:none;
+}
+
+.sk-block{
+  position:relative;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+  overflow:hidden;
+}
+.sk-block.identity{
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border-color:rgba(255,255,255,.12);
+}
+.sk-block.content{
+  background:
+    linear-gradient(135deg,rgba(37,244,238,.08),rgba(37,244,238,.02)),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 10px,transparent 10px 20px);
+  border-color:rgba(37,244,238,.22);
+}
+.sk-block.conversion{
+  background:linear-gradient(180deg,rgba(254,44,85,.16),rgba(254,44,85,.05));
+  border-color:rgba(254,44,85,.4);
+}
+.sk-block.aux{
+  background:rgba(255,255,255,.025);
+  border-style:dashed;
+  border-color:rgba(255,255,255,.1);
+  opacity:.85;
+}
+.sk-block .tag{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:10.5px;
+  color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;
+  pointer-events:none;font-weight:500;
+}
+.sk-block.content .tag{color:#7befe8}
+.sk-block.conversion .tag{color:#ff7894}
+.sk-block .tag.tl{top:14px;transform:none}
+.sk-block .tag.center{left:50%;transform:translate(-50%,-50%);text-align:center}
+
+/* tiny back-to-overview link, optional */
+.back-link{
+  position:fixed;top:16px;left:18px;
+  font-size:12px;color:var(--text-3);
+  font-family:var(--font-mono);letter-spacing:.04em;
+  text-decoration:none;
+}
+.back-link:hover{color:var(--text)}
+
+@media (max-width:480px){
+  .phone{width:88vw;max-width:320px}
+  .stage-wrap{padding:36px 16px}
+}

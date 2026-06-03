@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>策略 2 · 信息折叠一体卡 — Fusion Card Prototype</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="back-link" href="../overview.html">‹ overview</a>
+<main class="stage-wrap">
+  <div class="kicker">Strategy 2 · Folded compact card</div>
+  <h1 class="title">信息折叠一体卡 — 依然是单张卡片，但通过<b>折叠 / 横滑</b>把次要信息藏起、压缩高度</h1>
+
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="right"><span>5G</span><div class="ic-batt"><span></span></div></div></div>
+    <div class="search">
+      <span class="back">‹</span>
+      <div class="input">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span style="opacity:.55">Search query</span>
+      </div>
+      <span class="cancel" style="opacity:.6">Cancel</span>
+    </div>
+    <div class="tabs"><span>All</span><span class="active">Place</span><span>Video</span><span>User</span><span>LIVE</span><span>Shop</span></div>
+    <div class="scroll">
+
+      <div class="sk-card" style="padding:10px;display:flex;flex-direction:column;gap:10px;background:var(--surface)">
+        <div class="sk-block identity" style="height:62px"><span class="tag">Identity · header</span></div>
+        <div class="sk-block content" style="height:48px"><span class="tag">Content · folded summary</span></div>
+        <div class="sk-block conversion" style="height:54px"><span class="tag">Conversion · inline</span></div>
+        <div class="sk-block aux" style="height:28px"><span class="tag center">Expand for more  ▾</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+        <div class="sk-thumb" style="aspect-ratio:9/14"></div>
+        <div class="sk-thumb" style="aspect-ratio:9/14"></div>
+        <div class="sk-thumb" style="aspect-ratio:9/14"></div>
+        <div class="sk-thumb" style="aspect-ratio:9/14"></div>
+      </div>
+    </div>
+  </div></div>
+</main>
+</body>
+</html>

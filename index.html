@@ -1,42 +1,96 @@
 <!doctype html><meta charset="utf-8">
-<title>Fusion Card · Standalone · 4 strategies</title>
+<title>地点精搜融合卡 · 4 套策略</title>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;
     background:#0a0a0b;color:#fafafa;min-height:100vh;
   }
-  header{padding:36px 32px 8px;text-align:center}
-  header h1{font-size:24px;margin:0 0 6px;letter-spacing:-.02em;font-weight:700}
-  header p{margin:0;color:rgba(255,255,255,.55);font-size:13px}
+  .wrap{max-width:1760px;margin:0 auto}
+
+  /* ===== header ===== */
+  header{padding:48px 32px 8px;text-align:center}
+  header .pre{
+    display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:999px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  header h1{font-size:32px;margin:0 0 10px;letter-spacing:-.025em;font-weight:700;line-height:1.15}
+  header h1 em{font-style:normal;color:rgba(255,255,255,.45);font-weight:600}
+  header p.sub{margin:0;color:rgba(255,255,255,.6);font-size:14px;line-height:1.55;max-width:720px;margin-left:auto;margin-right:auto}
+
+  /* ===== axis ===== */
+  .axis{padding:32px 32px 8px}
+  .axis-inner{
+    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;
+    padding:22px 28px;
+  }
+  .axis-title{
+    font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(255,255,255,.45);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+  }
+  .axis-title::before{content:"";flex:0 0 4px;width:4px;height:12px;border-radius:2px;background:#fe2c55}
+  .axis-bar{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:center;
+    font-size:13px;color:rgba(255,255,255,.78);line-height:1.5;
+  }
+  .axis-bar .step{
+    position:relative;padding:14px 18px;border-radius:10px;
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  }
+  .axis-bar .step .k{
+    font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:#ff7898;font-weight:700;margin-bottom:6px;display:block;
+  }
+  .axis-bar .step .v{color:#fff;font-weight:600;font-size:14px;letter-spacing:-.005em}
+  .axis-bar .step .d{margin-top:4px;color:rgba(255,255,255,.55);font-size:12.5px}
+  .axis-arrow{text-align:center;color:rgba(255,255,255,.3);font-size:11px;margin-top:10px;font-family:"SF Mono",monospace;letter-spacing:.1em}
+
+  /* ===== quick links ===== */
   .links{
-    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
     padding:24px 16px 8px;
   }
   .links a{
     color:#ff7898;text-decoration:none;
-    font-family:"SF Mono","JetBrains Mono",monospace;font-size:12.5px;font-weight:600;
-    padding:8px 14px;border:1px solid rgba(255,120,152,.3);border-radius:6px;
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:12px;font-weight:600;
+    padding:7px 13px;border:1px solid rgba(255,120,152,.3);border-radius:6px;
     transition:background .15s;
   }
   .links a:hover{background:rgba(254,44,85,.08)}
+
+  /* ===== grid ===== */
   .grid{
     display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;
-    padding:24px 32px 56px;max-width:1760px;margin:0 auto;
+    padding:24px 32px 56px;
   }
   @media (max-width:1280px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:680px){.grid{grid-template-columns:1fr}}
-  .col{display:flex;flex-direction:column;gap:12px;align-items:center}
+  .col{display:flex;flex-direction:column;gap:10px}
   .col .lbl{
     font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);
+    letter-spacing:.14em;text-transform:uppercase;color:#ff7898;
   }
-  .col .ttl{font-size:14px;font-weight:600;color:#fff;letter-spacing:-.005em;margin-top:-4px}
+  .col .ttl{font-size:16px;font-weight:700;color:#fff;letter-spacing:-.01em;margin-top:-2px}
+  .col .desc{
+    font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.62);
+    min-height:70px;
+  }
+  .col .desc b{color:rgba(255,255,255,.92);font-weight:600}
+  .col .meta{
+    display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;
+  }
+  .col .meta span{
+    font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.08);
+  }
   .phone-wrap{
     width:100%;aspect-ratio:390/844;position:relative;border-radius:42px;overflow:hidden;
     box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
-    background:#fff;
+    background:#fff;margin-top:6px;
   }
   .phone-wrap iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
   footer{
@@ -45,42 +99,89 @@
   }
 </style>
 
-<header>
-  <h1>Fusion Card · 4 strategies</h1>
-  <p>POI Exact Search · Hotel · 390 × 844 · standalone HTML</p>
-</header>
+<div class="wrap">
 
-<nav class="links">
-  <a href="s1-card.html">S1 · Identity-led</a>
-  <a href="s2-card.html">S2 · Folded Tabs</a>
-  <a href="s3-card.html">S3 · Decoupled</a>
-  <a href="s4-card.html">S4 · Video-First</a>
-</nav>
+  <header>
+    <span class="pre">POI Exact Search · Hotel · 390 × 844</span>
+    <h1>同一家酒店，<em>四种结构解法</em></h1>
+    <p class="sub">同一组核心信息，仅在 <b>识别 / 理解 / 交易</b> 三段的结构与权重上做差异化。从单卡聚合到内容沉浸，逐步把"识别即转化"释放为"内容驱动决策"。</p>
+  </header>
 
-<section class="grid">
-  <div class="col">
-    <span class="lbl">Stage 1</span>
-    <span class="ttl">Identity-led Single Card</span>
-    <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
-  </div>
-  <div class="col">
-    <span class="lbl">Stage 2</span>
-    <span class="ttl">Folded Tabs Card</span>
-    <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
-  </div>
-  <div class="col">
-    <span class="lbl">Stage 3</span>
-    <span class="ttl">Decoupled Modules</span>
-    <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
-  </div>
-  <div class="col">
-    <span class="lbl">Stage 4</span>
-    <span class="ttl">Content-Mounted Video</span>
-    <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
-  </div>
-</section>
+  <section class="axis">
+    <div class="axis-inner">
+      <div class="axis-title">设计横轴 · 结构演进</div>
+      <div class="axis-bar">
+        <div class="step">
+          <span class="k">策略 1</span>
+          <span class="v">识别即转化</span>
+          <div class="d">最强收口，单一最优供应商 + 全宽 CTA</div>
+        </div>
+        <div class="step">
+          <span class="k">策略 2</span>
+          <span class="v">折叠分层</span>
+          <div class="d">同识别头 + 四段 segment 折叠多视图</div>
+        </div>
+        <div class="step">
+          <span class="k">策略 3</span>
+          <span class="v">解耦排版</span>
+          <div class="d">识别 / 交易 / 理解 / 推荐独立成卡</div>
+        </div>
+        <div class="step">
+          <span class="k">策略 4</span>
+          <span class="v">内容沉浸</span>
+          <div class="d">视频做主体，识别压顶 / 交易反向挂载</div>
+        </div>
+      </div>
+      <div class="axis-arrow">— 交易主导  →  内容主导 —</div>
+    </div>
+  </section>
 
-<footer>TikTok Local Services · Fusion Card · 2026.06</footer>
+  <nav class="links">
+    <a href="overview.html">📖 完整文字分析（Overview）</a>
+    <a href="prototypes/stage-1.html">📐 Lo-fi 线框图</a>
+    <a href="s1-card.html">策略 1</a>
+    <a href="s2-card.html">策略 2</a>
+    <a href="s3-card.html">策略 3</a>
+    <a href="s4-card.html">策略 4</a>
+  </nav>
+
+  <section class="grid">
+    <div class="col">
+      <span class="lbl">策略 1</span>
+      <span class="ttl">识别即转化 · 单卡聚合</span>
+      <p class="desc">左图右文识别头 + <b>单一最优供应商</b> + 全宽 CTA。最强收口，转化路径最短。</p>
+      <div class="meta"><span>识别头</span><span>1 个 OTA</span><span>1 个 CTA</span></div>
+      <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
+    </div>
+
+    <div class="col">
+      <span class="lbl">策略 2</span>
+      <span class="ttl">折叠分层 · 多视图 segment</span>
+      <p class="desc">沿用识别头，下方 <b>Deals / Reviews / What people say / Location</b> 四段 segment 按需展开。一卡承载多视图。</p>
+      <div class="meta"><span>识别头</span><span>4 段 tab</span><span>3+4 OTA</span></div>
+      <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
+    </div>
+
+    <div class="col">
+      <span class="lbl">策略 3</span>
+      <span class="ttl">解耦排版 · 模块独立</span>
+      <p class="desc">识别 / 交易 / 理解 / 推荐拆成 4 张独立卡，<b>每张可独立 ranking、独立竞价、独立沉浸</b>。灰底间隙允许 native feed 穿插。</p>
+      <div class="meta"><span>4 张独立卡</span><span>可穿插 feed</span></div>
+      <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
+    </div>
+
+    <div class="col">
+      <span class="lbl">策略 4</span>
+      <span class="ttl">内容沉浸 · 视频主体</span>
+      <p class="desc">9:13 横滑视频卡做主容器，识别压顶、<b>交易反向挂载</b>在视频底部白色聚合卡。Creator UGC 与 Official 一键切换。</p>
+      <div class="meta"><span>横滑视频</span><span>UGC ↔ Official</span><span>挂载交易</span></div>
+      <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
+    </div>
+  </section>
+
+  <footer>TikTok Local Services · Fusion Card · 2026.06</footer>
+
+</div>
 
 <script>
   function fitIframes(){
@@ -94,7 +195,6 @@
       iframe.style.height = (h/s) + 'px';
     });
   }
-  // 内嵌的子页 body 在被 iframe 装载时不需要 dark 背景，让它保持白色
   document.querySelectorAll('iframe').forEach(f=>{
     f.addEventListener('load',()=>{
       try{
