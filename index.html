@@ -1,25 +1,113 @@
 <!doctype html><meta charset="utf-8">
-<title>Fusion Card · Standalone</title>
+<title>Fusion Card · Standalone · 4 strategies</title>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#0a0a0b;color:#fafafa;margin:0;padding:32px;text-align:center}
-  h1{font-size:22px;margin:0 0 8px}
-  p{color:rgba(255,255,255,.55);margin:0 0 28px;font-size:13px}
-  ul{list-style:none;padding:0;margin:0 0 32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-  ul a{color:#ff7898;text-decoration:none;font-family:"SF Mono",monospace;font-size:13px;padding:8px 14px;border:1px solid rgba(255,120,152,.3);border-radius:6px}
-  .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-  .row iframe{width:390px;height:844px;border:0;border-radius:12px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+    background:#0a0a0b;color:#fafafa;min-height:100vh;
+  }
+  header{padding:36px 32px 8px;text-align:center}
+  header h1{font-size:24px;margin:0 0 6px;letter-spacing:-.02em;font-weight:700}
+  header p{margin:0;color:rgba(255,255,255,.55);font-size:13px}
+  .links{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+    padding:24px 16px 8px;
+  }
+  .links a{
+    color:#ff7898;text-decoration:none;
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:12.5px;font-weight:600;
+    padding:8px 14px;border:1px solid rgba(255,120,152,.3);border-radius:6px;
+    transition:background .15s;
+  }
+  .links a:hover{background:rgba(254,44,85,.08)}
+  .grid{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;
+    padding:24px 32px 56px;max-width:1760px;margin:0 auto;
+  }
+  @media (max-width:1280px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:680px){.grid{grid-template-columns:1fr}}
+  .col{display:flex;flex-direction:column;gap:12px;align-items:center}
+  .col .lbl{
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);
+  }
+  .col .ttl{font-size:14px;font-weight:600;color:#fff;letter-spacing:-.005em;margin-top:-4px}
+  .phone-wrap{
+    width:100%;aspect-ratio:390/844;position:relative;border-radius:42px;overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
+    background:#fff;
+  }
+  .phone-wrap iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
+  footer{
+    text-align:center;padding:24px 32px 48px;
+    color:rgba(255,255,255,.3);font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.05em;
+  }
 </style>
-<h1>Fusion Card · 4 strategies</h1>
-<p>Standalone HTML · 390 × 844 · Hotel</p>
-<ul>
-  <li><a href="s1-card.html">S1 · Identity-led</a></li>
-  <li><a href="s2-card.html">S2 · Folded Tabs</a></li>
-  <li><a href="s3-card.html">S3 · Decoupled</a></li>
-  <li><a href="s4-card.html">S4 · Video-First</a></li>
-</ul>
-<div class="row">
-  <iframe src="s1-card.html"></iframe>
-  <iframe src="s2-card.html"></iframe>
-  <iframe src="s3-card.html"></iframe>
-  <iframe src="s4-card.html"></iframe>
-</div>
+
+<header>
+  <h1>Fusion Card · 4 strategies</h1>
+  <p>POI Exact Search · Hotel · 390 × 844 · standalone HTML</p>
+</header>
+
+<nav class="links">
+  <a href="s1-card.html">S1 · Identity-led</a>
+  <a href="s2-card.html">S2 · Folded Tabs</a>
+  <a href="s3-card.html">S3 · Decoupled</a>
+  <a href="s4-card.html">S4 · Video-First</a>
+</nav>
+
+<section class="grid">
+  <div class="col">
+    <span class="lbl">Stage 1</span>
+    <span class="ttl">Identity-led Single Card</span>
+    <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
+  </div>
+  <div class="col">
+    <span class="lbl">Stage 2</span>
+    <span class="ttl">Folded Tabs Card</span>
+    <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
+  </div>
+  <div class="col">
+    <span class="lbl">Stage 3</span>
+    <span class="ttl">Decoupled Modules</span>
+    <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
+  </div>
+  <div class="col">
+    <span class="lbl">Stage 4</span>
+    <span class="ttl">Content-Mounted Video</span>
+    <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
+  </div>
+</section>
+
+<footer>TikTok Local Services · Fusion Card · 2026.06</footer>
+
+<script>
+  function fitIframes(){
+    document.querySelectorAll('.phone-wrap').forEach(scr=>{
+      const iframe = scr.querySelector('iframe');
+      if(!iframe) return;
+      const w = scr.clientWidth, h = scr.clientHeight;
+      const s = Math.min(w/390, h/844);
+      iframe.style.transform = `scale(${s})`;
+      iframe.style.width = (w/s) + 'px';
+      iframe.style.height = (h/s) + 'px';
+    });
+  }
+  // 内嵌的子页 body 在被 iframe 装载时不需要 dark 背景，让它保持白色
+  document.querySelectorAll('iframe').forEach(f=>{
+    f.addEventListener('load',()=>{
+      try{
+        const d = f.contentDocument;
+        if(d){
+          const s = d.createElement('style');
+          s.textContent = 'html,body{background:#fff !important;display:block !important;padding:0 !important}.iphone{box-shadow:none !important;border-radius:0 !important}.iphone .ios{border-radius:0 !important}';
+          d.head.appendChild(s);
+        }
+      }catch(e){}
+      fitIframes();
+    });
+  });
+  window.addEventListener('load', fitIframes);
+  window.addEventListener('resize', fitIframes);
+</script>

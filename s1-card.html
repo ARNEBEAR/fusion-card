@@ -1,144 +1,690 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
-<title>S1·A · Identity-led Single Card</title>
+<title>S1·A · Tight · Identity-led</title>
 <style>
-  :root{
-    --bg:#ffffff;--bg-soft:#f7f7f7;--bg-soft-2:#f0f0f0;
-    --line:#ececec;--line-2:#dfdfdf;
-    --text:#0a0a0a;--text-2:#3a3a3a;--text-3:#737373;--text-4:#a3a3a3;--text-5:#cfcfcf;
-    --brand:#ff2d55;--brand-soft:#ffe5ec;--gold:#f4b400;
-    --r-card:26px;--r-thumb:14px;--r-pill:999px;
-    --font:'Inter','SF Pro Text',-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC',sans-serif;
-    --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  body{font-family:var(--font);background:#F5F5F5;color:var(--text);width:390px;margin:0 auto;padding:8px 0}
-  a{color:inherit;text-decoration:none}
+/* =========================================================
+   Fusion Card · Shared CSS (BW-first, refined)
+   黑白灰主导 + 红色仅用于价格 / Viewed chip + 大字号对比 + 外卡 22px 大圆角
+   ========================================================= */
 
-  .star::before{content:"★";color:var(--gold);font-size:14px;margin-right:2px}
-  .brand-mark{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex:0 0 auto;color:#fff}
-  .brand-mark.tv{background:#1f76ff}
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f7f7f7;
+  --bg-soft-2:#f0f0f0;
+  --line:#ececec;
+  --line-2:#dfdfdf;
+  --text:#0a0a0a;
+  --text-2:#3a3a3a;
+  --text-3:#737373;
+  --text-4:#a3a3a3;
+  --text-5:#cfcfcf;
+  --brand:#ff2d55;
+  --brand-soft:#ffe5ec;
+  --gold:#f4b400;
+  --r-card:26px;
+  --r-thumb:14px;
+  --r-pill:999px;
+  --font:'Inter','SF Pro Text',-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC',sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+}
 
-  .cover{background:#ddd center/cover no-repeat;display:block}
-  .cover.hotel-pool{background-image:url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80")}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{
+  font-family:var(--font);background:#fff;color:var(--text);
+  width:390px;min-height:844px;margin:0 auto;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
 
-  .date-bar{
-    display:flex;align-items:center;gap:10px;height:36px;padding:0 12px;border-radius:8px;
-    background:#F8F8F8;color:#000;font-size:13px;font-weight:600;letter-spacing:-.005em;cursor:pointer;user-select:none;
-  }
-  .date-bar .ic{
-    flex:0 0 auto;width:14px;height:14px;display:inline-block;background:#000;
-    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat;
-            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat;
-  }
-  .date-bar .dt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
-  .date-bar .sep{flex:0 0 auto;width:1px;height:16px;background:rgba(0,0,0,.18)}
-  .date-bar .gst{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;line-height:1.2}
-  .date-bar .gst .pic{
-    width:14px;height:14px;display:inline-block;background:#000;
-    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat;
-            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat;
-  }
-  .date-bar .ch{flex:0 0 auto;width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;color:rgba(0,0,0,.55);margin-left:-2px}
-  .date-bar .ch svg{width:11px;height:11px}
+.design-meta{display:none !important}
+.iphone{
+  width:390px !important;height:844px !important;background:#fff !important;
+  border-radius:0 !important;border:0 !important;box-shadow:none !important;padding:0 !important;
+  position:relative;overflow:hidden;margin:0;
+}
+.iphone::before,.notch,.home-indicator{display:none !important}
+.iphone .ios{
+  inset:0 !important;border-radius:0 !important;position:absolute;
+  background:var(--bg);display:flex;flex-direction:column;
+}
 
-  .card{margin:0 4px;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);overflow:hidden}
-  .hero{display:flex;align-items:stretch;gap:0;padding:12px}
-  .hero .pic{flex:0 0 104px;align-self:stretch;border-radius:8px;background-size:cover;background-position:center;min-height:100%}
+/* ===== status bar ===== */
+.statusbar{
+  height:52px;flex:0 0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 24px 4px;font-size:15.5px;font-weight:600;color:var(--text);letter-spacing:-.01em;
+}
+.statusbar .right{display:flex;align-items:center;gap:5px}
+
+/* ===== search bar ===== */
+.searchbar{display:flex;align-items:center;gap:10px;padding:8px 14px 12px;flex:0 0 auto}
+.searchbar .back{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text)}
+.searchbar .input{
+  flex:1;height:36px;background:var(--bg-soft);border-radius:10px;
+  display:flex;align-items:center;padding:0 12px;gap:8px;
+  font-size:14px;color:var(--text);font-weight:500;
+}
+.searchbar .input .magnify{flex:0 0 auto;color:var(--text-3);width:17px;height:17px}
+.searchbar .input .text{
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.searchbar .input .clear{
+  margin-left:auto;width:17px;height:17px;border-radius:50%;
+  background:var(--text-5);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;flex:0 0 auto;
+}
+.searchbar .more{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text)}
+
+/* ===== tabs ===== */
+.tabs{
+  display:flex;align-items:center;gap:20px;padding:0 16px;flex:0 0 auto;
+  font-size:15px;color:var(--text-3);position:relative;
+  border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tabs .tab{padding:10px 0;font-weight:500;flex:0 0 auto;white-space:nowrap}
+.tabs .tab.active{color:var(--text);font-weight:700;position:relative}
+.tabs .tab.active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--text);border-radius:2px;
+}
+
+/* ===== viewport ===== */
+.viewport{flex:1 1 auto;overflow-y:auto;background:var(--bg)}
+.viewport::-webkit-scrollbar{width:0;display:none}
+
+/* ===== shared header chunk (search + tabs) helper class ===== */
+/* used by templates */
+
+/* ===== identity atoms (faithful to figma) ===== */
+.viewed-chip{
+  display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:4px;
+  background:var(--brand-soft);color:var(--brand);
+  font-size:11px;font-weight:600;letter-spacing:-.01em;flex:0 0 auto;
+}
+.tag-grey{
+  display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:5px;
+  background:var(--bg-soft);color:var(--text-2);font-size:12px;font-weight:500;
+  white-space:nowrap;
+}
+.star::before{content:"★";color:var(--gold);font-size:14px;margin-right:2px}
+
+/* ===== price ===== */
+.price-now{font-size:18px;font-weight:800;color:var(--brand);letter-spacing:-.01em;line-height:1}
+.price-was{font-size:12px;color:var(--text-4);text-decoration:line-through;font-weight:400}
+.price-pct{font-size:12px;font-weight:700;color:var(--brand);font-family:var(--font-mono)}
+
+/* ===== CTA ===== */
+.cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:40px;padding:0 18px;border-radius:10px;
+  background:var(--text);color:#fff;font-size:14.5px;font-weight:700;letter-spacing:-.005em;
+}
+.cta.brand{background:var(--brand)}
+.cta.full{width:100%}
+.cta.lg{height:48px;font-size:15.5px;border-radius:12px}
+.cta.ghost{background:#fff;color:var(--text);border:1px solid var(--line-2)}
+
+/* ===== avatar / brand mark ===== */
+.brand-mark{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;flex:0 0 auto;color:#fff;
+}
+.brand-mark.tv{background:#1f76ff}
+.brand-mark.tp{background:#235ce6;font-size:8px}
+.brand-mark.ag{background:#5392f9}
+.brand-mark.bk{background:#003580;font-size:8px}
+.brand-mark.kk{background:#ff5722}
+
+/* ===== covers (Unsplash hotel) ===== */
+.cover{background:#ddd center/cover no-repeat;display:block}
+.cover.hotel-hero{background-image:url("https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80")}
+.cover.hotel-pool{background-image:url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-room{background-image:url("https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-lobby{background-image:url("https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-night{background-image:url("https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-bar{background-image:url("https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-view{background-image:url("https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-spa{background-image:url("https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80")}
+.cover.hotel-suite{background-image:url("https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=80")}
+.cover.creator-1{background-image:url("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-2{background-image:url("https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-3{background-image:url("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-4{background-image:url("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-5{background-image:url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-6{background-image:url("https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-7{background-image:url("https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-8{background-image:url("https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-9{background-image:url("https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-10{background-image:url("https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-11{background-image:url("https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80")}
+.cover.creator-12{background-image:url("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80")}
+.cover.map{background-image:url("https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80")}
+
+/* ===== UGC clip covers（横滑视频缩略图，用于 S2 says / S3 reviews / S4 swipe） ===== */
+.cover.clip-pool{background-image:url("https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-room{background-image:url("https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-suite{background-image:url("https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-bf{background-image:url("https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-night{background-image:url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-bar{background-image:url("https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-spa{background-image:url("https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-lobby{background-image:url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-view{background-image:url("https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-gym{background-image:url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-bath{background-image:url("https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=900&q=80")}
+.cover.clip-rooftop{background-image:url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80")}
+
+/* ===== Date / Guests Capsule（货架顶部的入离日期 + 人数）—— figma 6788:115574 ===== */
+.date-bar{
+  display:flex;align-items:center;gap:10px;
+  height:36px;padding:0 12px;border-radius:8px;
+  background:#F8F8F8;color:#000;
+  font-size:13px;font-weight:600;letter-spacing:-.005em;
+  cursor:pointer;user-select:none;
+}
+.date-bar .ic{
+  flex:0 0 auto;width:14px;height:14px;display:inline-block;background:#000;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat;
+}
+.date-bar .dt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+.date-bar .sep{flex:0 0 auto;width:1px;height:16px;background:rgba(0,0,0,.18)}
+.date-bar .gst{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;line-height:1.2}
+.date-bar .gst .pic{
+  width:14px;height:14px;display:inline-block;background:#000;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat;
+}
+.date-bar .ch{
+  flex:0 0 auto;width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;color:rgba(0,0,0,.55);margin-left:-2px;
+}
+.date-bar .ch svg{width:11px;height:11px}
+
+/* ===== Avatar Stack（端内 tux Avatar Stack 组件 · figma 7257:21812）—— 用于"See more (n)"入口 ===== */
+.av-stack{display:inline-flex;align-items:center;flex:0 0 auto}
+.av-stack .av{
+  width:18px;height:18px;border-radius:50%;
+  box-shadow:0 0 0 1.5px #fff;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:#fff;font-size:8px;font-weight:800;letter-spacing:-.01em;
+}
+.av-stack .av + .av{margin-left:-6px}
+.av-stack .av.bk{background:#003580}
+.av-stack .av.kk{background:#ff5722}
+.av-stack .av.ex{background:#fdd935;color:#0b1f4d}
+.av-stack .av.hc{background:#d63346}
+
+/* ===== See more 入口（货架内统一样式）===== */
+.see-more-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:13px;color:var(--text);font-weight:600;letter-spacing:-.005em;
+  cursor:pointer;user-select:none;
+}
+.see-more-row .ch{
+  width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;
+  transition:transform .3s ease;color:var(--text-3);
+}
+.see-more-row .ch svg{width:12px;height:12px}
+.see-more-row.open .ch{transform:rotate(180deg)}
+.see-more-row.open .av-stack{display:none}
+
+/* ===== native feed below the card (TikTok POI search · 2-up) =====
+   figma 7519:134145 精准还原：
+   - 容器 grey #F5F5F5，4px padding & 4px gap（行/列）
+   - 每张卡 white #FFF，圆角 4px
+   - 图片区高度 291px，4px 顶部圆角
+   - 左上 dark "Top liked" chip：rgba(51,51,51,.4) 半透明 + 12px Medium 白字
+   - 右下 50×50 内 "3:03"：径向渐变蒙版 + mono 12px Medium 白字
+   - 卡内白色信息区：caption（15px Regular, 关键词 SemiBold, line-height 130%）
+                     + 用户行（24px 头像 + 名 + 8px verified + 日期 | ❤ 12px + likes）
+   ============================================================ */
+.native-feed{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;
+  padding:4px 4px 24px;background:#F5F5F5;
+}
+.native-feed .v{
+  display:flex;flex-direction:column;gap:6px;background:#fff;border-radius:8px;overflow:hidden;min-width:0;
+  cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;
+}
+.native-feed .v:active{transform:scale(.985)}
+.native-feed .v .pic{
+  position:relative;aspect-ratio:189/291;background:#ddd center/cover no-repeat;border-radius:8px 8px 0 0;
+  overflow:hidden;
+}
+.native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80")}
+.native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80")}
+/* ===== 4 个策略差异化双列封面（每个策略各换 2 张，互不重复） ===== */
+.viewport[data-strategy="s1"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80")} /* rooftop pool */
+.viewport[data-strategy="s1"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80")} /* spa */
+.viewport[data-strategy="s1"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1551776235-dde6d4829808?auto=format&fit=crop&w=900&q=80")} /* rooftop bar */
+.viewport[data-strategy="s1"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80")} /* breakfast */
+.viewport[data-strategy="s2"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80")} /* room interior */
+.viewport[data-strategy="s2"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80")} /* bar */
+.viewport[data-strategy="s2"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80")} /* skyline night */
+.viewport[data-strategy="s2"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=900&q=80")} /* gym */
+.viewport[data-strategy="s3"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80")} /* night */
+.viewport[data-strategy="s3"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=900&q=80")} /* view */
+.viewport[data-strategy="s3"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=900&q=80")} /* bath */
+.viewport[data-strategy="s3"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80")} /* room2 */
+.viewport[data-strategy="s4"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=900&q=80")} /* lobby */
+.viewport[data-strategy="s4"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=80")} /* suite */
+.viewport[data-strategy="s4"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80")} /* lobby2 */
+.viewport[data-strategy="s4"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=900&q=80")} /* villa */
+/* 底部渐变：从透明到 30% 黑 */
+.native-feed .v .pic::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:50%;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.3) 100%);
+  pointer-events:none;
+}
+/* 左上 Top liked dark chip（rgba(51,51,51,.4)） */
+.native-feed .v .top-liked{
+  position:absolute;top:8px;left:8px;z-index:2;
+  display:inline-flex;align-items:center;height:17px;padding:2px 4px;border-radius:3px;
+  background:rgba(51,51,51,.4);backdrop-filter:blur(8px);
+  color:#fff;font-size:12px;font-weight:500;letter-spacing:.013em;line-height:130%;
+}
+/* 右下时长 chip（径向渐变蒙版 + mono 数字） */
+.native-feed .v .dur{
+  position:absolute;right:0;bottom:0;width:50px;height:50px;z-index:2;
+  display:flex;align-items:flex-end;justify-content:flex-end;padding:0 8px 6px;
+  background:radial-gradient(50% 50% at 100% 100%,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 100%);
+  color:#fff;font-size:12px;font-weight:500;letter-spacing:.013em;line-height:130%;
+  font-family:var(--font-mono);
+}
+/* 白色信息区（图片下方） */
+.native-feed .v .info{
+  display:flex;flex-direction:column;gap:6px;padding:0 8px 8px;
+}
+.native-feed .v .info .cap{
+  font-size:15px;font-weight:400;color:#000;line-height:130%;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.native-feed .v .info .cap b{font-weight:600}
+.native-feed .v .info .row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.native-feed .v .info .who{
+  display:flex;align-items:center;gap:4px;min-width:0;flex:1;
+}
+.native-feed .v .info .who .av{
+  width:24px;height:24px;border-radius:50%;
+  background:#ddd center/cover no-repeat;
+  border:.6px solid rgba(0,0,0,.05);flex:0 0 auto;
+  background-image:url("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80");
+}
+.native-feed .v .info .who .col{
+  display:flex;flex-direction:column;justify-content:center;min-width:0;line-height:130%;
+}
+.native-feed .v .info .who .nm-row{display:flex;align-items:center;gap:2px;min-width:0}
+.native-feed .v .info .who .nm{
+  font-size:12px;font-weight:400;color:rgba(0,0,0,.65);line-height:130%;letter-spacing:.005em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.native-feed .v .info .who .vbadge{
+  width:8px;height:8px;border-radius:50%;background:#20D5EC;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:6px;font-weight:900;
+}
+.native-feed .v .info .who .vbadge::before{content:"✓";font-size:6px;line-height:1}
+.native-feed .v .info .who .date{
+  font-size:10px;font-weight:400;color:rgba(0,0,0,.48);line-height:130%;
+}
+.native-feed .v .info .like{
+  display:inline-flex;align-items:center;gap:2px;flex:0 0 auto;
+  font-size:12px;font-weight:400;color:rgba(0,0,0,.65);line-height:130%;
+}
+/* figma 7519:134155 · Icon/Like 12x12 outline heart */
+.native-feed .v .info .like::before{
+  content:"";width:12px;height:12px;flex:0 0 auto;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.19812 2.17173C2.87295 2.23763 2.2811 2.54462 1.88903 3.12278C1.51884 3.66867 1.30321 4.49148 1.75265 5.66738C2.10462 6.58823 2.90073 7.52408 3.80295 8.3287C4.58784 9.02868 5.41338 9.59447 5.99994 9.92978C6.5865 9.59447 7.41205 9.02868 8.19694 8.3287C9.09916 7.52408 9.89526 6.58823 10.2472 5.66738C10.6967 4.49148 10.481 3.66867 10.1109 3.12278C9.71879 2.54462 9.12694 2.23763 8.80177 2.17173C7.43387 1.89453 6.66821 2.7731 5.99994 3.71769C5.3316 2.77301 4.55685 1.89639 3.19812 2.17173ZM5.99994 2.35994C6.80177 1.35403 7.90253 0.969178 9.00038 1.19165C9.57792 1.30869 10.3973 1.76349 10.9385 2.56153C11.5016 3.39185 11.7412 4.55967 11.1813 6.0244C10.7445 7.16725 9.80799 8.23183 8.86252 9.07502C7.90968 9.92478 6.8946 10.5963 6.23164 10.943L5.99994 11.0642L5.76824 10.943C5.10528 10.5963 4.0902 9.92478 3.13737 9.07502C2.19189 8.23183 1.25538 7.16725 0.818561 6.0244C0.258711 4.55967 0.498316 3.39185 1.06138 2.56153C1.60256 1.76349 2.42196 1.30869 2.99951 1.19165C4.09735 0.969178 5.19811 1.35403 5.99994 2.35994Z'/></svg>") center/contain no-repeat;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.19812 2.17173C2.87295 2.23763 2.2811 2.54462 1.88903 3.12278C1.51884 3.66867 1.30321 4.49148 1.75265 5.66738C2.10462 6.58823 2.90073 7.52408 3.80295 8.3287C4.58784 9.02868 5.41338 9.59447 5.99994 9.92978C6.5865 9.59447 7.41205 9.02868 8.19694 8.3287C9.09916 7.52408 9.89526 6.58823 10.2472 5.66738C10.6967 4.49148 10.481 3.66867 10.1109 3.12278C9.71879 2.54462 9.12694 2.23763 8.80177 2.17173C7.43387 1.89453 6.66821 2.7731 5.99994 3.71769C5.3316 2.77301 4.55685 1.89639 3.19812 2.17173ZM5.99994 2.35994C6.80177 1.35403 7.90253 0.969178 9.00038 1.19165C9.57792 1.30869 10.3973 1.76349 10.9385 2.56153C11.5016 3.39185 11.7412 4.55967 11.1813 6.0244C10.7445 7.16725 9.80799 8.23183 8.86252 9.07502C7.90968 9.92478 6.8946 10.5963 6.23164 10.943L5.99994 11.0642L5.76824 10.943C5.10528 10.5963 4.0902 9.92478 3.13737 9.07502C2.19189 8.23183 1.25538 7.16725 0.818561 6.0244C0.258711 4.55967 0.498316 3.39185 1.06138 2.56153C1.60256 1.76349 2.42196 1.30869 2.99951 1.19165C4.09735 0.969178 5.19811 1.35403 5.99994 2.35994Z'/></svg>") center/contain no-repeat;
+}
+
+/* ===== utility ===== */
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot-sep{display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--text-4);margin:0 6px;vertical-align:middle}
+
+/* ===== status bar SVG icons (used in template) ===== */
+.sb-ico{display:block}
+
+
+/* === standalone preview override === */
+html{background:#0a0a0b;min-height:100vh}
+body{
+  background:#0a0a0b !important;
+  width:auto !important;
+  min-height:100vh !important;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 0 !important;
+}
+.iphone{
+  flex:0 0 auto;
+  width:390px !important;height:844px !important;
+  border-radius:42px !important;
+  overflow:hidden;
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.55),
+    0 12px 28px rgba(0,0,0,.4),
+    0 0 0 1px rgba(255,255,255,.04),
+    inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+.iphone .ios{border-radius:42px !important;overflow:hidden}
+
+</style>
+<style>
+  .viewport{background:#F5F5F5}
+  .card{
+    margin:4px 4px 0;background:#fff;border-radius:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);overflow:hidden;
+  }
+
+  /* ===== 主体：左图右文（图自适应右侧高度） ===== */
+  .hero{
+    display:flex;align-items:stretch;gap:0;padding:12px;
+  }
+  .hero .pic{
+    flex:0 0 104px;align-self:stretch;
+    border-radius:8px;background-size:cover;background-position:center;
+    min-height:100%;
+  }
   .hero .body{flex:1;min-width:0;padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
-  .hero .name{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .hero .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);flex-wrap:wrap}
+  .hero .name{
+    font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .hero .meta{
+    display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);flex-wrap:wrap;
+  }
   .hero .meta .star{color:var(--text);font-weight:700}
   .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
   .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-4);flex:0 0 auto}
-  .hero .location{display:flex;align-items:center;gap:4px;font-size:13px;line-height:1.3;color:rgba(0,0,0,.65);font-weight:400;letter-spacing:-.005em;flex-wrap:wrap}
+  /* 位置行 —— 完全对齐 figma 7489:81430 (App/P2-Regular 13px, rgba(0,0,0,.65)) */
+  .hero .location{
+    display:flex;align-items:center;gap:4px;font-size:13px;line-height:1.3;
+    color:rgba(0,0,0,.65);font-weight:400;letter-spacing:-.005em;flex-wrap:wrap;
+  }
+  .hero .location .pin-ic{
+    width:12px;height:12px;display:inline-block;flex:0 0 auto;color:rgba(0,0,0,.65);
+    background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/></svg>") center/contain no-repeat;
+  }
   .hero .location .sep{color:rgba(0,0,0,.45)}
   .hero .tags{display:flex;gap:5px;flex-wrap:wrap}
-  .hero .tags .tg{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;background:var(--bg-soft);color:var(--text-2);font-size:11px;font-weight:600;letter-spacing:-.005em}
+  .hero .tags .tg{
+    display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;
+    background:var(--bg-soft);color:var(--text-2);font-size:11px;font-weight:600;letter-spacing:-.005em;
+  }
 
+  /* ===== 用户原声块：2 行省略 + 右箭头（点击跳转落地页） ===== */
   .voice{
     margin-top:auto;display:flex;align-items:center;gap:8px;
-    padding:9px 10px;background:var(--bg-soft);border-radius:0 8px 8px 0;border-left:2px solid var(--text);cursor:pointer;
+    padding:9px 10px 9px 10px;background:var(--bg-soft);
+    border-radius:0 8px 8px 0;
+    border-left:2px solid var(--text);cursor:pointer;
   }
-  .voice .txt{flex:1;min-width:0;font-size:12.5px;color:var(--text-2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .voice .txt{
+    flex:1;min-width:0;font-size:12.5px;color:var(--text-2);line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
   .voice .txt b{color:var(--text);font-weight:700}
-  .voice .arr{flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
+  .voice .arr{
+    flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+    color:var(--text-3);
+  }
   .voice .arr svg{width:11px;height:11px}
 
+  /* ===== 日期 + 人数 胶囊（货架顶部） ===== */
   .date-bar-wrap{padding:12px 14px 4px;border-top:1px solid var(--line)}
   .date-bar-wrap + .deal{border-top:0;padding-top:8px}
 
-  .deal{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-top:1px solid var(--line);cursor:pointer}
+  /* ===== 单一供应商 + 价格行（带 benefit）—— 价格区参考 S4 货架，From 浮在右上角 ===== */
+  .deal{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 14px;border-top:1px solid var(--line);cursor:pointer;
+  }
   .deal .l{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
   .deal .l .brand-mark{width:20px;height:20px;border-radius:50%;font-size:9px;flex:0 0 auto;margin-top:0}
   .deal .l .col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;line-height:1.2}
-  .deal .l .col .who{font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .deal .l .col .benefit{font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.35;letter-spacing:-.005em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
-  .deal .price-col{display:flex;flex-direction:column;align-items:flex-end;flex:0 0 auto;line-height:1;gap:2px}
-  .deal .price-col .from{font-size:9.5px;color:var(--text-4);font-family:var(--font-mono);letter-spacing:.06em;text-transform:uppercase;font-weight:700;line-height:1}
-  .deal .price-col .price{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.022em;line-height:1.1}
+  .deal .l .col .who{
+    font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .deal .l .col .benefit{
+    font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.35;letter-spacing:-.005em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    white-space:normal;
+  }
+  .deal .price-col{
+    display:flex;flex-direction:column;align-items:flex-end;flex:0 0 auto;line-height:1;gap:2px;
+  }
+  .deal .price-col .from{
+    font-size:9.5px;color:var(--text-4);font-family:var(--font-mono);
+    letter-spacing:.06em;text-transform:uppercase;font-weight:700;line-height:1;
+  }
+  .deal .price-col .price{
+    font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.022em;line-height:1.1;
+  }
   .deal .price-col .price .cur{font-size:12px;font-weight:700;color:var(--text-2);margin-right:2px;letter-spacing:0}
-  .deal .price-col .strike{font-size:11px;font-weight:500;color:var(--text-4);letter-spacing:-.005em;line-height:1;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.32);text-decoration-thickness:1px;margin-top:1px}
+  .deal .price-col .strike{
+    font-size:11px;font-weight:500;color:var(--text-4);letter-spacing:-.005em;line-height:1;
+    text-decoration:line-through;text-decoration-color:rgba(0,0,0,.32);text-decoration-thickness:1px;
+    margin-top:1px;
+  }
 
+  /* ===== See more 行（avatar stack + 数量），位于 CTA 下方 ===== */
+  .more-providers{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:0 14px 12px;
+    font-size:13px;color:var(--text);font-weight:600;letter-spacing:-.005em;cursor:pointer;user-select:none;
+  }
+  .more-providers .av-stack{display:inline-flex;align-items:center}
+  .more-providers .av-stack .av{
+    width:20px;height:20px;border-radius:50%;
+    box-shadow:0 0 0 1.5px #fff;
+    display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-size:9px;font-weight:800;letter-spacing:-.01em;
+  }
+  .more-providers .av-stack .av + .av{margin-left:-6px}
+  .more-providers .av-stack .av.bk{background:#003580}
+  .more-providers .av-stack .av.kk{background:#ff5722}
+  .more-providers .av-stack .av.ex{background:#fdd935;color:#0b1f4d}
+  .more-providers .av-stack .av.hc{background:#d63346}
+  .more-providers .ch{
+    width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;color:var(--text-3);
+  }
+  .more-providers .ch svg{width:11px;height:11px}
+
+  /* ===== 全宽 CTA —— 端内 Button：Subtle / Neutral（rgba(0,0,0,.05) + 8px 圆角 · figma 6955:138068）===== */
   .cta-wrap{padding:8px 12px 12px}
-  .cta-wrap .cta-full{display:flex;align-items:center;justify-content:center;height:44px;border-radius:8px;background:rgba(0,0,0,.05);color:#000;font-size:14px;font-weight:500;letter-spacing:-.005em;cursor:pointer;transition:background-color .15s,transform .1s}
+  .cta-wrap .cta-full{
+    display:flex;align-items:center;justify-content:center;
+    height:44px;border-radius:8px;background:rgba(0,0,0,.05);color:#000;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;cursor:pointer;
+    transition:background-color .15s,transform .1s;
+  }
   .cta-wrap .cta-full:active{background:rgba(0,0,0,.08);transform:scale(.995)}
+  .cta-wrap .cta-full .more{margin-left:8px;color:rgba(0,0,0,.55);font-weight:500;font-size:13px}
 </style></head>
 <body>
-  <div class="card">
-    <div class="hero">
-      <div class="pic cover hotel-pool"></div>
-      <div class="body">
-        <div class="name">Bangkok Marriott Marquis City Star</div>
-        <div class="meta">
-          <span class="star">4.5</span><span>(1,288)</span>
-          <span class="dot"></span><span>5-star</span>
+<div class="iphone"><div class="ios">
+  <div class="statusbar"><span>9:41</span><div class="right">
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5c2.4 0 4.6.93 6.27 2.45l-1.42 1.42A6.6 6.6 0 0 0 8 4.5a6.6 6.6 0 0 0-4.85 1.87L1.73 4.95A8.6 8.6 0 0 1 8 2.5z"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="22" height="10" rx="2.5"/><rect x="3" y="3" width="17" height="6" rx="1" fill="currentColor"/><rect x="24" y="4" width="1.5" height="4" rx=".75" fill="currentColor"/></svg>
+  </div></div>
+  <div class="searchbar">
+    <span class="back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 2 2 9l7 7"/></svg></span>
+    <div class="input">
+      <svg class="magnify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="text">Bangkok Marriott Marquis City Star</span>
+      <span class="clear">×</span>
+    </div>
+    <span class="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>
+  </div>
+  <div class="tabs"><span class="tab active">Top</span><span class="tab">Users</span><span class="tab">Videos</span><span class="tab">Sounds</span><span class="tab">Shop</span><span class="tab">LIVE</span></div>
+
+  <div class="viewport" data-strategy="s1">
+    <div class="card">
+      <div class="hero">
+        <div class="pic cover hotel-pool"></div>
+        <div class="body">
+          <div class="name">Bangkok Marriott Marquis City Star</div>
+          <div class="meta">
+            <span class="star">4.5</span><span>(1,288)</span>
+            <span class="dot"></span><span>5-star</span>
+          </div>
+          <div class="location">
+            <span>7.1km from city center</span>
+            <span class="sep">·</span>
+            <span>1.2km</span>
+          </div>
+          <div class="tags">
+            <span class="tg">Private pool</span>
+            <span class="tg">Skyline view</span>
+          </div>
+          <div class="voice">
+            <div class="txt">"<b>Quiet, spacious rooms</b> and a rooftop pool with skyline view — mentioned by <b>86% of 1,288 guests</b>."</div>
+            <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+          </div>
         </div>
-        <div class="location">
-          <span>7.1km from city center</span>
-          <span class="sep">·</span>
-          <span>1.2km</span>
+      </div>
+
+      <div class="date-bar-wrap">
+        <div class="date-bar">
+          <span class="ic" aria-hidden="true"></span>
+          <span class="dt">Thu, Nov 21 - Sat, Nov 23</span>
+          <span class="sep"></span>
+          <span class="gst"><span class="pic" aria-hidden="true"></span>2</span>
+          <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
         </div>
-        <div class="tags">
-          <span class="tg">Private pool</span>
-          <span class="tg">Skyline view</span>
+      </div>
+
+      <div class="deal">
+        <div class="l">
+          <span class="brand-mark tv">tv</span>
+          <div class="col">
+            <span class="who">Traveloka</span>
+            <span class="benefit">Free cancellation · Breakfast · Pay at hotel · Member rate · Late checkout</span>
+          </div>
         </div>
-        <div class="voice">
-          <div class="txt">"<b>Quiet, spacious rooms</b> and a rooftop pool with skyline view — mentioned by <b>86% of 1,288 guests</b>."</div>
-          <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
-        </div>
+        <span class="price-col">
+          <span class="from">From</span>
+          <span class="price"><span class="cur">Rp</span>1,299,000</span>
+          <span class="strike">Rp1,580,000</span>
+        </span>
+      </div>
+
+      <div class="cta-wrap">
+        <a class="cta-full">Book on Traveloka</a>
       </div>
     </div>
 
-    <div class="date-bar-wrap">
-      <div class="date-bar">
-        <span class="ic" aria-hidden="true"></span>
-        <span class="dt">Thu, Nov 21 - Sat, Nov 23</span>
-        <span class="sep"></span>
-        <span class="gst"><span class="pic" aria-hidden="true"></span>2</span>
-        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
-      </div>
-    </div>
-
-    <div class="deal">
-      <div class="l">
-        <span class="brand-mark tv">tv</span>
-        <div class="col">
-          <span class="who">Traveloka</span>
-          <span class="benefit">Free cancellation · Breakfast · Pay at hotel · Member rate · Late checkout</span>
+    <div class="native-feed">
+      <div class="v b1">
+        <div class="pic">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">3:03</span>
+        </div>
+        <div class="info">
+          <div class="cap">Skyline-view <b>rooftop pool</b> at Marriott Marquis — golden hour magic</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-2"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Aurelia</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">7.3K</span>
+          </div>
         </div>
       </div>
-      <span class="price-col">
-        <span class="from">From</span>
-        <span class="price"><span class="cur">Rp</span>1,299,000</span>
-        <span class="strike">Rp1,580,000</span>
-      </span>
-    </div>
-
-    <div class="cta-wrap">
-      <a class="cta-full">Book on Traveloka</a>
+      <div class="v b2">
+        <div class="pic">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap">Inside the <b>executive lounge</b> — high tea with city views</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">JesseLiu</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">5.7K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b3">
+        <div class="pic">
+          <span class="dur">0:48</span>
+        </div>
+        <div class="info">
+          <div class="cap">Late-night <b>rooftop bar</b> — live jazz till 1am</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-4"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">nick.travel</span><span class="vbadge"></span></div>
+                <span class="date">Jul 16, 2024</span>
+              </div>
+            </div>
+            <span class="like">4.2K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic">
+          <span class="dur">2:42</span>
+        </div>
+        <div class="info">
+          <div class="cap">Honest <b>breakfast review</b> — Thai noodles &amp; egg station</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-6"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Foodie.bkk</span><span class="vbadge"></span></div>
+                <span class="date">Jul 14, 2024</span>
+              </div>
+            </div>
+            <span class="like">3.8K</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div></div>
+<script>
+  // 用户原声 → 跳详情页
+  document.querySelectorAll('.voice').forEach(el=>{
+    el.addEventListener('click',()=>{
+      el.style.opacity='.6';
+      setTimeout(()=>{el.style.opacity='';alert('Open hotel detail · review highlights');},120);
+    });
+  });
+  // 主 CTA → 跳 OTA
+  document.querySelector('.cta-full')?.addEventListener('click',()=>{
+    alert('Continue to Traveloka — Bangkok Marriott Marquis · Rp1,299,000');
+  });
+  // 单 OTA 行 → 跳供应商
+  document.querySelector('.deal')?.addEventListener('click',()=>{
+    alert('Open Traveloka offer');
+  });
+  // 双列 native feed → 跳视频详情
+  document.querySelectorAll('.native-feed .v').forEach((v,i)=>{
+    v.addEventListener('click',()=>alert('Play video #'+(i+1)));
+  });
+  // tabs 切换
+  document.querySelectorAll('.tabs .tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tabs .tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
 </body></html>
