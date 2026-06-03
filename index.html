@@ -1,5 +1,5 @@
 <!doctype html><meta charset="utf-8">
-<title>地点精搜融合卡 · 4 套策略</title>
+<title>Fusion Card · 4 Strategies</title>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -10,176 +10,219 @@
   .wrap{max-width:1760px;margin:0 auto}
 
   /* ===== header ===== */
-  header{padding:48px 32px 8px;text-align:center}
+  header{padding:80px 32px 24px;text-align:center}
   header .pre{
-    display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
     background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);
-    font-family:"SF Mono","JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-    margin-bottom:18px;
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:28px;
   }
-  header h1{font-size:32px;margin:0 0 10px;letter-spacing:-.025em;font-weight:700;line-height:1.15}
-  header h1 em{font-style:normal;color:rgba(255,255,255,.45);font-weight:600}
-  header p.sub{margin:0;color:rgba(255,255,255,.6);font-size:14px;line-height:1.55;max-width:720px;margin-left:auto;margin-right:auto}
+  header h1{
+    margin:0;
+    font-family:"SF Pro Display","Inter",-apple-system,sans-serif;
+    font-size:84px;line-height:1.02;letter-spacing:-.035em;font-weight:700;
+    background:linear-gradient(180deg,#fff 0%,#fff 40%,rgba(255,255,255,.55) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  header h1 em{font-style:italic;color:#ff7898;-webkit-text-fill-color:#ff7898;font-weight:600}
+  header .lead{
+    margin:24px auto 0;color:rgba(255,255,255,.62);font-size:15px;line-height:1.65;max-width:680px;
+  }
+  header .lead b{color:#fff;font-weight:600}
 
-  /* ===== axis ===== */
-  .axis{padding:32px 32px 8px}
+  /* ===== axis (true horizontal timeline) ===== */
+  .axis{padding:48px 32px 12px}
   .axis-inner{
-    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:14px;
-    padding:22px 28px;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.08);border-radius:18px;
+    padding:36px 40px 28px;position:relative;
   }
-  .axis-title{
-    font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
-    color:rgba(255,255,255,.45);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+  .axis-head{
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;
+    font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   }
-  .axis-title::before{content:"";flex:0 0 4px;width:4px;height:12px;border-radius:2px;background:#fe2c55}
-  .axis-bar{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:center;
-    font-size:13px;color:rgba(255,255,255,.78);line-height:1.5;
-  }
-  .axis-bar .step{
-    position:relative;padding:14px 18px;border-radius:10px;
-    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
-  }
-  .axis-bar .step .k{
-    font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:#ff7898;font-weight:700;margin-bottom:6px;display:block;
-  }
-  .axis-bar .step .v{color:#fff;font-weight:600;font-size:14px;letter-spacing:-.005em}
-  .axis-bar .step .d{margin-top:4px;color:rgba(255,255,255,.55);font-size:12.5px}
-  .axis-arrow{text-align:center;color:rgba(255,255,255,.3);font-size:11px;margin-top:10px;font-family:"SF Mono",monospace;letter-spacing:.1em}
+  .axis-head .lbl{color:rgba(255,255,255,.5)}
+  .axis-head .lbl::before{content:"";display:inline-block;width:4px;height:11px;border-radius:2px;background:#fe2c55;margin-right:10px;vertical-align:-1px}
+  .axis-head .end-l{color:rgba(255,120,152,.85);font-weight:700}
+  .axis-head .end-r{color:rgba(120,180,255,.85);font-weight:700}
 
-  /* ===== quick links ===== */
-  .links{
-    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
-    padding:24px 16px 8px;
+  /* track */
+  .track{
+    position:relative;height:6px;border-radius:999px;
+    background:linear-gradient(90deg,#fe2c55 0%,#ff7898 28%,rgba(255,120,152,.45) 50%,rgba(120,180,255,.55) 72%,#5b9eff 100%);
+    margin:0 0 0;
+    box-shadow:0 0 24px rgba(254,44,85,.25),0 0 48px rgba(91,158,255,.18);
   }
-  .links a{
-    color:#ff7898;text-decoration:none;
-    font-family:"SF Mono","JetBrains Mono",monospace;font-size:12px;font-weight:600;
-    padding:7px 13px;border:1px solid rgba(255,120,152,.3);border-radius:6px;
-    transition:background .15s;
+  .nodes{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin-top:-13px}
+  .node{position:relative;display:flex;justify-content:center}
+  .dot{
+    width:20px;height:20px;border-radius:50%;
+    background:#0a0a0b;border:2px solid #fff;
+    box-shadow:0 0 0 4px rgba(255,255,255,.06),0 4px 14px rgba(0,0,0,.6);
+    position:relative;z-index:2;
   }
-  .links a:hover{background:rgba(254,44,85,.08)}
+  .node:nth-child(1) .dot{border-color:#fe2c55;box-shadow:0 0 0 4px rgba(254,44,85,.18),0 0 24px rgba(254,44,85,.5)}
+  .node:nth-child(2) .dot{border-color:#ff7898;box-shadow:0 0 0 4px rgba(255,120,152,.18),0 0 24px rgba(255,120,152,.4)}
+  .node:nth-child(3) .dot{border-color:#a59bff;box-shadow:0 0 0 4px rgba(165,155,255,.18),0 0 24px rgba(165,155,255,.4)}
+  .node:nth-child(4) .dot{border-color:#5b9eff;box-shadow:0 0 0 4px rgba(91,158,255,.18),0 0 24px rgba(91,158,255,.5)}
+
+  .node-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:22px}
+  .node-card{
+    text-align:center;padding:0 8px;
+  }
+  .node-card .k{
+    display:inline-block;font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,255,255,.45);font-weight:700;margin-bottom:8px;
+    padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  }
+  .node-card .v{display:block;color:#fff;font-weight:700;font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
+  .node-card .d{color:rgba(255,255,255,.55);font-size:12.5px;line-height:1.55}
+
+  .axis-foot{
+    margin-top:28px;padding-top:18px;border-top:1px dashed rgba(255,255,255,.08);
+    display:flex;justify-content:space-between;font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(255,255,255,.35);
+  }
+  .axis-foot .l{color:#ff7898}
+  .axis-foot .r{color:#5b9eff}
 
   /* ===== grid ===== */
   .grid{
-    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;
-    padding:24px 32px 56px;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;
+    padding:48px 32px 56px;
   }
   @media (max-width:1280px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:680px){.grid{grid-template-columns:1fr}}
-  .col{display:flex;flex-direction:column;gap:10px}
+  .col{display:flex;flex-direction:column;gap:14px}
   .col .lbl{
     font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;color:#ff7898;
+    letter-spacing:.16em;text-transform:uppercase;
   }
-  .col .ttl{font-size:16px;font-weight:700;color:#fff;letter-spacing:-.01em;margin-top:-2px}
+  .col:nth-child(1) .lbl{color:#ff7898}
+  .col:nth-child(2) .lbl{color:#ffa6c0}
+  .col:nth-child(3) .lbl{color:#a59bff}
+  .col:nth-child(4) .lbl{color:#5b9eff}
+  .col .ttl{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.012em;margin-top:-4px;line-height:1.3}
+  .phone-wrap{
+    width:100%;aspect-ratio:390/844;position:relative;border-radius:42px;overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
+    background:#fff;
+  }
+  .phone-wrap iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
   .col .desc{
-    font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.62);
-    min-height:70px;
+    font-size:13px;line-height:1.6;color:rgba(255,255,255,.62);
+    padding-top:6px;
   }
   .col .desc b{color:rgba(255,255,255,.92);font-weight:600}
-  .col .meta{
-    display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;
-  }
+  .col .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
   .col .meta span{
     font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
     padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);
     border:1px solid rgba(255,255,255,.08);
   }
-  .phone-wrap{
-    width:100%;aspect-ratio:390/844;position:relative;border-radius:42px;overflow:hidden;
-    box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
-    background:#fff;margin-top:6px;
-  }
-  .phone-wrap iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
+
   footer{
-    text-align:center;padding:24px 32px 48px;
+    text-align:center;padding:32px 32px 56px;
     color:rgba(255,255,255,.3);font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.05em;
   }
+  footer a{color:rgba(255,255,255,.45);text-decoration:none;margin:0 8px}
+  footer a:hover{color:#ff7898}
 </style>
 
 <div class="wrap">
 
   <header>
     <span class="pre">POI Exact Search · Hotel · 390 × 844</span>
-    <h1>同一家酒店，<em>四种结构解法</em></h1>
-    <p class="sub">同一组核心信息，仅在 <b>识别 / 理解 / 交易</b> 三段的结构与权重上做差异化。从单卡聚合到内容沉浸，逐步把"识别即转化"释放为"内容驱动决策"。</p>
+    <h1>One hotel,<br><em>four structural takes.</em></h1>
+    <p class="lead">Same identity, same listings, same reviews. Only the <b>structure & weighting of identity / understanding / transaction</b> differs — progressively releasing the page from <b>commerce-first</b> to <b>content-first</b>.</p>
   </header>
 
   <section class="axis">
     <div class="axis-inner">
-      <div class="axis-title">设计横轴 · 结构演进</div>
-      <div class="axis-bar">
-        <div class="step">
+      <div class="axis-head">
+        <span class="lbl">Design Axis · Structural Progression</span>
+        <span><span class="end-l">Commerce-led</span> ────► <span class="end-r">Content-led</span></span>
+      </div>
+
+      <div class="track"></div>
+      <div class="nodes">
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+      </div>
+
+      <div class="node-cards">
+        <div class="node-card">
           <span class="k">策略 1</span>
           <span class="v">识别即转化</span>
-          <div class="d">最强收口，单一最优供应商 + 全宽 CTA</div>
+          <div class="d">最强收口<br>单一最优供应商 + 全宽 CTA</div>
         </div>
-        <div class="step">
+        <div class="node-card">
           <span class="k">策略 2</span>
           <span class="v">折叠分层</span>
-          <div class="d">同识别头 + 四段 segment 折叠多视图</div>
+          <div class="d">同识别头<br>四段 segment 折叠多视图</div>
         </div>
-        <div class="step">
+        <div class="node-card">
           <span class="k">策略 3</span>
           <span class="v">解耦排版</span>
-          <div class="d">识别 / 交易 / 理解 / 推荐独立成卡</div>
+          <div class="d">识别 / 交易 / 理解 / 推荐<br>独立成卡，可穿插 feed</div>
         </div>
-        <div class="step">
+        <div class="node-card">
           <span class="k">策略 4</span>
           <span class="v">内容沉浸</span>
-          <div class="d">视频做主体，识别压顶 / 交易反向挂载</div>
+          <div class="d">视频做主体<br>识别压顶 / 交易反向挂载</div>
         </div>
       </div>
-      <div class="axis-arrow">— 交易主导  →  内容主导 —</div>
+
+      <div class="axis-foot">
+        <span class="l">◀ 转化路径最短</span>
+        <span>结构权重</span>
+        <span class="r">内容驱动决策 ▶</span>
+      </div>
     </div>
   </section>
-
-  <nav class="links">
-    <a href="overview.html">📖 完整文字分析（Overview）</a>
-    <a href="prototypes/stage-1.html">📐 Lo-fi 线框图</a>
-    <a href="s1-card.html">策略 1</a>
-    <a href="s2-card.html">策略 2</a>
-    <a href="s3-card.html">策略 3</a>
-    <a href="s4-card.html">策略 4</a>
-  </nav>
 
   <section class="grid">
     <div class="col">
       <span class="lbl">策略 1</span>
       <span class="ttl">识别即转化 · 单卡聚合</span>
+      <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
       <p class="desc">左图右文识别头 + <b>单一最优供应商</b> + 全宽 CTA。最强收口，转化路径最短。</p>
       <div class="meta"><span>识别头</span><span>1 个 OTA</span><span>1 个 CTA</span></div>
-      <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
     </div>
 
     <div class="col">
       <span class="lbl">策略 2</span>
       <span class="ttl">折叠分层 · 多视图 segment</span>
+      <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
       <p class="desc">沿用识别头，下方 <b>Deals / Reviews / What people say / Location</b> 四段 segment 按需展开。一卡承载多视图。</p>
       <div class="meta"><span>识别头</span><span>4 段 tab</span><span>3+4 OTA</span></div>
-      <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
     </div>
 
     <div class="col">
       <span class="lbl">策略 3</span>
       <span class="ttl">解耦排版 · 模块独立</span>
+      <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
       <p class="desc">识别 / 交易 / 理解 / 推荐拆成 4 张独立卡，<b>每张可独立 ranking、独立竞价、独立沉浸</b>。灰底间隙允许 native feed 穿插。</p>
       <div class="meta"><span>4 张独立卡</span><span>可穿插 feed</span></div>
-      <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
     </div>
 
     <div class="col">
       <span class="lbl">策略 4</span>
       <span class="ttl">内容沉浸 · 视频主体</span>
+      <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
       <p class="desc">9:13 横滑视频卡做主容器，识别压顶、<b>交易反向挂载</b>在视频底部白色聚合卡。Creator UGC 与 Official 一键切换。</p>
       <div class="meta"><span>横滑视频</span><span>UGC ↔ Official</span><span>挂载交易</span></div>
-      <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
     </div>
   </section>
 
-  <footer>TikTok Local Services · Fusion Card · 2026.06</footer>
+  <footer>
+    TikTok Local Services · Fusion Card · 2026.06
+    &nbsp;·&nbsp;
+    <a href="overview.html">Overview</a>
+    <a href="prototypes/stage-1.html">Lo-fi</a>
+  </footer>
 
 </div>
 
