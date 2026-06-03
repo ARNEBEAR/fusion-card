@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
+<title>S2·A · Folded Tabs Card</title>
+<style>
+  :root{
+    --bg:#ffffff;--bg-soft:#f7f7f7;--bg-soft-2:#f0f0f0;
+    --line:#ececec;--line-2:#dfdfdf;
+    --text:#0a0a0a;--text-2:#3a3a3a;--text-3:#737373;--text-4:#a3a3a3;--text-5:#cfcfcf;
+    --brand:#ff2d55;--brand-soft:#ffe5ec;--gold:#f4b400;
+    --r-card:26px;--r-thumb:14px;--r-pill:999px;
+    --font:'Inter','SF Pro Text',-apple-system,BlinkMacSystemFont,'Helvetica Neue','PingFang SC',sans-serif;
+    --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{font-family:var(--font);background:#F5F5F5;color:var(--text);width:390px;margin:0 auto;padding:8px 0}
+
+  .star::before{content:"★";color:var(--gold);font-size:14px;margin-right:2px}
+  .brand-mark{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex:0 0 auto;color:#fff}
+  .brand-mark.tv{background:#1f76ff}.brand-mark.tp{background:#235ce6;font-size:8px}
+  .brand-mark.ag{background:#5392f9}.brand-mark.bk{background:#003580;font-size:8px}
+  .brand-mark.kk{background:#ff5722}
+
+  .cover{background:#ddd center/cover no-repeat;display:block}
+  .cover.hotel-pool{background-image:url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80")}
+  .cover.hotel-room{background-image:url("https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80")}
+  .cover.hotel-lobby{background-image:url("https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=900&q=80")}
+  .cover.hotel-night{background-image:url("https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-pool{background-image:url("https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-room{background-image:url("https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-suite{background-image:url("https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-bf{background-image:url("https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-night{background-image:url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-bar{background-image:url("https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-spa{background-image:url("https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-lobby{background-image:url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-view{background-image:url("https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-gym{background-image:url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-bath{background-image:url("https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=900&q=80")}
+  .cover.clip-rooftop{background-image:url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80")}
+  .cover.creator-1{background-image:url("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-2{background-image:url("https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-3{background-image:url("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-4{background-image:url("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-5{background-image:url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-6{background-image:url("https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-7{background-image:url("https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-8{background-image:url("https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-9{background-image:url("https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-10{background-image:url("https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-11{background-image:url("https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80")}
+  .cover.creator-12{background-image:url("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80")}
+
+  .date-bar{display:flex;align-items:center;gap:10px;height:36px;padding:0 12px;border-radius:8px;background:#F8F8F8;color:#000;font-size:13px;font-weight:600;letter-spacing:-.005em;cursor:pointer;user-select:none}
+  .date-bar .ic{flex:0 0 auto;width:14px;height:14px;display:inline-block;background:#000;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>") center/contain no-repeat}
+  .date-bar .dt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+  .date-bar .sep{flex:0 0 auto;width:1px;height:16px;background:rgba(0,0,0,.18)}
+  .date-bar .gst{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;line-height:1.2}
+  .date-bar .gst .pic{width:14px;height:14px;display:inline-block;background:#000;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-8 1.7-8 5v3h16v-3c0-3.3-4.7-5-8-5z'/></svg>") center/contain no-repeat}
+  .date-bar .ch{flex:0 0 auto;width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;color:rgba(0,0,0,.55);margin-left:-2px}
+  .date-bar .ch svg{width:11px;height:11px}
+
+  .av-stack{display:inline-flex;align-items:center;flex:0 0 auto}
+  .av-stack .av{width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 1.5px #fff;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800;letter-spacing:-.01em}
+  .av-stack .av + .av{margin-left:-6px}
+  .av-stack .av.bk{background:#003580}.av-stack .av.kk{background:#ff5722}
+  .av-stack .av.ex{background:#fdd935;color:#0b1f4d}.av-stack .av.hc{background:#d63346}
+
+  .card{margin:0 4px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04)}
+  .hero{display:flex;align-items:stretch;gap:0;padding:12px}
+  .hero .pic{flex:0 0 104px;align-self:stretch;border-radius:8px;background-size:cover;background-position:center;min-height:100%}
+  .hero .body{flex:1;min-width:0;padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
+  .hero .name{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hero .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);flex-wrap:wrap}
+  .hero .meta .star{color:var(--text);font-weight:700}
+  .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
+  .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-4);flex:0 0 auto}
+  .hero .tags{display:flex;gap:5px;flex-wrap:wrap}
+  .hero .tags .tg{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;background:var(--bg-soft);color:var(--text-2);font-size:11px;font-weight:600;letter-spacing:-.005em}
+  .voice{margin-top:auto;display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--bg-soft);border-radius:0 8px 8px 0;border-left:2px solid var(--text);cursor:pointer}
+  .voice .txt{flex:1;min-width:0;font-size:12.5px;color:var(--text-2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .voice .txt b{color:var(--text);font-weight:700}
+  .voice .arr{flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
+  .voice .arr svg{width:11px;height:11px}
+
+  .seg{display:flex;padding:0 14px;border-bottom:1px solid var(--line);gap:22px;font-size:13px;color:var(--text-3);overflow-x:auto;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg .it{padding:11px 0 12px;font-weight:600;position:relative;cursor:pointer;letter-spacing:-.005em;flex:0 0 auto;white-space:nowrap}
+  .seg .it.on{color:var(--text);font-weight:700}
+  .seg .it.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-1px;height:2px;background:var(--text);border-radius:2px}
+
+  .panel{padding:4px 14px 12px}
+  .panel.hide{display:none}
+  .panel .date-bar-wrap{margin:4px 0 6px}
+  .deal-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:1px solid var(--line);gap:10px;cursor:pointer}
+  .deal-row:first-child{border-top:0}
+  .panel .date-bar-wrap + .deal-row{border-top:0}
+  .deal-row .l{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+  .deal-row .l .brand-mark{width:20px;height:20px;border-radius:50%;font-size:9px;flex:0 0 auto}
+  .deal-row .l .col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;line-height:1.2}
+  .deal-row .l .col .name{font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .deal-row .l .col .benefit{font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.3;letter-spacing:-.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .deal-row .r{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+  .deal-row .r .pp{font-weight:800;font-size:14.5px;color:var(--text);letter-spacing:-.012em;line-height:1}
+  .deal-row .r .chev{color:var(--text-4);font-size:18px;line-height:1;margin-left:2px}
+  .deal-row.extra{display:flex;max-height:0;padding-top:0;padding-bottom:0;border-top-width:0;overflow:hidden;opacity:0;transition:max-height .32s ease,opacity .25s ease,padding .28s ease,border-top-width .28s ease}
+  .deal-row.extra.shown{max-height:64px;padding-top:11px;padding-bottom:11px;border-top-width:1px;opacity:1}
+  .deal-foot{margin-top:8px;padding:10px 0 2px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:var(--text);font-weight:600;cursor:pointer;letter-spacing:-.005em;user-select:none}
+  .deal-foot.open .av-stack{display:none}
+  .deal-foot .ch{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;transition:transform .3s ease;color:var(--text-3)}
+  .deal-foot .ch svg{width:12px;height:12px}
+  .deal-foot.open .ch{transform:rotate(180deg)}
+
+  .rv-filter{display:flex;gap:6px;padding:8px 0 0;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+  .rv-filter::-webkit-scrollbar{display:none}
+  .rv-filter .chip{display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:-.005em;cursor:pointer;background:var(--bg-soft);color:var(--text-2);transition:all .15s;flex:0 0 auto;white-space:nowrap}
+  .rv-filter .chip.on{background:var(--text);color:#fff}
+  .rv-list{display:flex;flex-direction:column;gap:14px;padding:12px 0 6px}
+  .rv-list .it.hidden{display:none}
+  .rv-list .it .who{display:flex;align-items:center;gap:4px;margin-bottom:4px;flex-wrap:wrap}
+  .rv-list .it .who .av{width:20px;height:20px;border-radius:50%;background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;flex:0 0 auto;border:.5px solid rgba(0,0,0,.06)}
+  .rv-list .it .who .nm{font-size:15px;font-weight:400;color:var(--text);letter-spacing:-.005em;line-height:1.3}
+  .rv-list .it .who .vbadge{width:12px;height:12px;display:inline-block;flex:0 0 auto;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill='%2320D5EC' d='M6 0 7.32 1.18 8.95.92 9.73 2.4l1.6.55-.34 1.65L12 6l-1.01 1.4.34 1.65-1.6.55-.78 1.48-1.63-.26L6 12 4.68 10.82 3.05 11.08 2.27 9.6.67 9.05l.34-1.65L0 6l1.01-1.4L.67 2.95l1.6-.55.78-1.48 1.63.26z'/><path fill='white' d='M5.04 8.36 2.92 6.24l.95-.95 1.17 1.18 2.91-2.91.95.94z'/></svg>") center/contain no-repeat}
+  .rv-list .it .who .sep{font-size:13px;color:rgba(0,0,0,.65);font-weight:400;line-height:1.3}
+  .rv-list .it .who .stars{display:inline-flex;gap:1px;align-items:center;margin-left:2px}
+  .rv-list .it .who .stars .s{width:14px;height:14px;display:inline-block;background:currentColor;color:#FFBB00;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat}
+  .rv-list .it .who .stars .s.off{color:rgba(0,0,0,.12)}
+  .rv-list .it .row{display:flex;align-items:flex-start;gap:12px}
+  .rv-list .it .body{flex:1;min-width:0;font-size:15px;line-height:1.3;color:var(--text);font-weight:400;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;letter-spacing:-.005em}
+  .rv-list .it .thumb{flex:0 0 auto;width:44px;height:44px;border-radius:8px;background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat}
+  .rv-foot{padding:10px 0 4px;margin:0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer}
+  .rv-foot::after{content:"›";color:var(--text-3);font-size:16px;margin-left:4px}
+
+  .says-filter{display:flex;gap:6px;padding:8px 0 0;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+  .says-filter::-webkit-scrollbar{display:none}
+  .says-filter .chip{display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:-.005em;cursor:pointer;background:var(--bg-soft);color:var(--text-2);transition:all .15s;flex:0 0 auto;white-space:nowrap}
+  .says-filter .chip.on{background:var(--text);color:#fff}
+  .says-rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 0 6px 14px;margin:0 -14px;scroll-padding-left:14px;scrollbar-width:none}
+  .says-rail::-webkit-scrollbar{display:none}
+  .says-card{flex:0 0 auto;width:160px;scroll-snap-align:start;cursor:pointer;position:relative}
+  .says-card .pic{width:100%;aspect-ratio:3/4;border-radius:8px;position:relative;overflow:hidden;background-color:#ddd}
+  .says-card .pic .bg-img{position:absolute;inset:0;z-index:0;background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat}
+  .says-card .pic::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.35) 100%);pointer-events:none}
+  .says-card .pic .like{position:absolute;right:6px;bottom:6px;z-index:2;display:inline-flex;align-items:center;gap:3px;color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  .says-card .pic .like::before{content:"";width:11px;height:11px;display:inline-block;background:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.5C1 3.1 2.1 2 3.5 2 4.5 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.5 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.5C1 3.1 2.1 2 3.5 2 4.5 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.5 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat}
+  .says-card .pic .who{position:absolute;left:6px;bottom:6px;z-index:3;display:flex;align-items:center;gap:4px;color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);max-width:62%}
+  .says-card .pic .who .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .says-card .pic .who .av{width:16px;height:16px;border-radius:50%;background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;border:1px solid rgba(255,255,255,.7);flex:0 0 auto}
+  .says-card .cap{margin-top:6px;font-size:12px;color:var(--text);font-weight:600;line-height:1.35;letter-spacing:-.005em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .says-card .cap b{font-weight:800}
+  .says-card.hidden{display:none}
+
+  .loc-wrap{position:relative;margin:8px 0 4px;border-radius:10px;overflow:hidden;height:240px;background:#eaf2ff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+  .loc-wrap .gmap{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:saturate(.78) contrast(.96) brightness(1.02)}
+  .loc-wrap .pin-overlay{position:absolute;left:50%;top:44%;transform:translate(-50%,-100%);z-index:2;pointer-events:none;width:30px;height:40px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='40' viewBox='0 0 30 40'><defs><filter id='s' x='-10%25' y='-10%25' width='120%25' height='120%25'><feDropShadow dx='0' dy='1.5' stdDeviation='1.5' flood-color='black' flood-opacity='.35'/></filter></defs><path filter='url(%23s)' fill='%23ff2d55' stroke='white' stroke-width='2.6' d='M15 2c-7 0-12.6 5.4-12.6 12.2 0 9.2 12.6 23.6 12.6 23.6s12.6-14.4 12.6-23.6C27.6 7.4 22 2 15 2z'/><circle cx='15' cy='13.5' r='4.6' fill='white'/></svg>") center/contain no-repeat}
+  .loc-wrap .ctrl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.12);z-index:2}
+  .loc-wrap .ctrl .b{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:18px;font-weight:600;cursor:pointer}
+  .loc-wrap .ctrl .b + .b{border-top:1px solid var(--line)}
+  .loc-wrap .me{position:absolute;right:10px;bottom:78px;z-index:2;width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.16);cursor:pointer}
+  .loc-wrap .me svg{width:14px;height:14px}
+  .loc-wrap .addr-card{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;background:rgba(255,255,255,.86);-webkit-backdrop-filter:saturate(140%) blur(14px);backdrop-filter:saturate(140%) blur(14px);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.18),0 0 0 .5px rgba(255,255,255,.6) inset;padding:8px 12px;height:68px;display:flex;align-items:center;gap:12px;overflow:hidden}
+  .loc-wrap .addr-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 60%)}
+  .loc-wrap .addr-card .pin-btn{position:relative;z-index:1;flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--text)}
+  .loc-wrap .addr-card .pin-btn svg{width:14px;height:14px}
+  .loc-wrap .addr-card .col{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.3}
+  .loc-wrap .addr-card .col .a1{font-size:13px;font-weight:400;color:#202020;letter-spacing:-.005em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .loc-wrap .addr-card .col .a2{font-size:12px;color:rgba(0,0,0,.65);font-weight:400;line-height:1.3;letter-spacing:-.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px}
+  .loc-wrap .addr-card .col .a2 .img{width:8px;height:12px;flex:0 0 auto;border-radius:1px;background:linear-gradient(135deg,#9bd3df 0%,#5fa8b8 100%)}
+</style></head>
+<body>
+  <div class="card">
+    <div class="hero">
+      <div class="pic cover hotel-night"></div>
+      <div class="body">
+        <div class="name">Bangkok Marriott Marquis City Star</div>
+        <div class="meta">
+          <span class="star">4.5</span><span>(1,288)</span>
+          <span class="dot"></span><span>5-star</span>
+          <span class="dot"></span><span>1.2km</span>
+        </div>
+        <div class="tags">
+          <span class="tg">Private pool</span>
+          <span class="tg">Skyline view</span>
+        </div>
+        <div class="voice">
+          <div class="txt">"<b>Quiet, spacious rooms</b> and a rooftop pool with skyline view — mentioned by <b>86% of 1,288 guests</b>."</div>
+          <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="seg">
+      <span class="it on" data-tab="deals">Deals</span>
+      <span class="it" data-tab="reviews">Reviews</span>
+      <span class="it" data-tab="says">What people say</span>
+      <span class="it" data-tab="loc">Location</span>
+    </div>
+    <div class="panel" data-panel="deals">
+      <div class="date-bar-wrap">
+        <div class="date-bar">
+          <span class="ic" aria-hidden="true"></span>
+          <span class="dt">Thu, Nov 21 - Sat, Nov 23</span>
+          <span class="sep"></span>
+          <span class="gst"><span class="pic" aria-hidden="true"></span>2</span>
+          <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+      </div>
+      <div class="deal-row"><div class="l"><span class="brand-mark tv">tv</span><div class="col"><span class="name">Traveloka</span><span class="benefit">Free cancellation · Breakfast · Pay at hotel</span></div></div><div class="r"><span class="pp">Rp1,299,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row"><div class="l"><span class="brand-mark tp">Trip</span><div class="col"><span class="name">Trip.com</span><span class="benefit">Free cancellation · Member price</span></div></div><div class="r"><span class="pp">Rp1,345,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row"><div class="l"><span class="brand-mark ag">A</span><div class="col"><span class="name">Agoda</span><span class="benefit">Pay later · Breakfast included</span></div></div><div class="r"><span class="pp">Rp1,405,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row extra"><div class="l"><span class="brand-mark bk">B</span><div class="col"><span class="name">Booking.com</span><span class="benefit">No prepayment · Free cancellation</span></div></div><div class="r"><span class="pp">Rp1,422,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row extra"><div class="l"><span class="brand-mark kk">K</span><div class="col"><span class="name">Klook</span><span class="benefit">App-only · Breakfast · Late checkout</span></div></div><div class="r"><span class="pp">Rp1,488,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row extra"><div class="l"><span class="brand-mark tv">E</span><div class="col"><span class="name">Expedia</span><span class="benefit">Bundle &amp; save · Free cancellation</span></div></div><div class="r"><span class="pp">Rp1,499,000</span><span class="chev">›</span></div></div>
+      <div class="deal-row extra"><div class="l"><span class="brand-mark tp">H</span><div class="col"><span class="name">Hotels.com</span><span class="benefit">Collect 10 nights, get 1 free</span></div></div><div class="r"><span class="pp">Rp1,512,000</span><span class="chev">›</span></div></div>
+      <div class="deal-foot" id="seeMore">
+        <span class="av-stack" aria-hidden="true">
+          <span class="av bk">B</span><span class="av kk">K</span><span class="av ex">E</span><span class="av hc">H</span>
+        </span>
+        <span class="lbl">See more (4)</span>
+        <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+      </div>
+    </div>
+    <div class="panel hide" data-panel="reviews">
+      <div class="rv-filter" id="rvFilter">
+        <span class="chip on" data-f="all">All <span style="opacity:.6;font-weight:600">1,288</span></span>
+        <span class="chip" data-f="pos">Positive <span style="opacity:.6;font-weight:600">1,104</span></span>
+        <span class="chip" data-f="neu">Neutral <span style="opacity:.6;font-weight:600">128</span></span>
+        <span class="chip" data-f="neg">Negative <span style="opacity:.6;font-weight:600">56</span></span>
+        <span class="chip" data-f="loc">Location <span style="opacity:.6;font-weight:600">412</span></span>
+        <span class="chip" data-f="room">Rooms <span style="opacity:.6;font-weight:600">386</span></span>
+        <span class="chip" data-f="svc">Service <span style="opacity:.6;font-weight:600">274</span></span>
+        <span class="chip" data-f="food">Dining <span style="opacity:.6;font-weight:600">196</span></span>
+      </div>
+      <div class="rv-list" id="rvList">
+        <div class="it" data-tone="pos" data-topic="room loc">
+          <div class="who">
+            <span class="av cover creator-1"></span>
+            <span class="nm">Sasithorn P.</span>
+            <span class="vbadge"></span>
+            <span class="sep">·</span>
+            <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span></span>
+          </div>
+          <div class="row">
+            <div class="body">Rooms are exactly as photos — quiet, spacious, with a real skyline view. Rooftop pool was the highlight. Breakfast spread is huge, plenty of Thai &amp; Western options.</div>
+            <div class="thumb cover hotel-room"></div>
+          </div>
+        </div>
+        <div class="it" data-tone="pos" data-topic="svc loc">
+          <div class="who">
+            <span class="av cover creator-7"></span>
+            <span class="nm">Aurelia W.</span>
+            <span class="sep">·</span>
+            <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span></span>
+          </div>
+          <div class="row">
+            <div class="body">Service at check-in was warm; got a free upgrade to a corner room. Walking distance to BTS is a big plus, but the elevators get crowded between 8–9am.</div>
+            <div class="thumb cover hotel-lobby"></div>
+          </div>
+        </div>
+        <div class="it" data-tone="neu" data-topic="room svc">
+          <div class="who">
+            <span class="av cover creator-3"></span>
+            <span class="nm">Jesse L.</span>
+            <span class="vbadge"></span>
+            <span class="sep">·</span>
+            <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span><span class="s off"></span></span>
+          </div>
+          <div class="row">
+            <div class="body">Good location and clean rooms, but the Wi-Fi in the lower floors kept dropping. Front desk was helpful and switched me to a higher floor — fixed it.</div>
+            <div class="thumb cover hotel-pool"></div>
+          </div>
+        </div>
+      </div>
+      <div class="rv-foot">See all 1,288 reviews</div>
+    </div>
+    <div class="panel hide" data-panel="says">
+      <div class="says-filter" id="saysFilter">
+        <span class="chip on" data-f="all">Most liked</span>
+        <span class="chip" data-f="loc">Location</span>
+        <span class="chip" data-f="room">Rooms</span>
+        <span class="chip" data-f="svc">Service</span>
+        <span class="chip" data-f="food">Dining</span>
+      </div>
+      <div class="says-rail" id="saysRail"></div>
+    </div>
+    <div class="panel hide" data-panel="loc">
+      <div class="loc-wrap" id="locMap">
+        <iframe class="gmap" src="https://www.google.com/maps?q=199+Sukhumvit+Soi+22+Bangkok&z=15&output=embed&hl=en" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <div class="pin-overlay"></div>
+        <div class="ctrl">
+          <div class="b">+</div>
+          <div class="b">−</div>
+        </div>
+        <div class="me">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </div>
+        <div class="addr-card">
+          <div class="pin-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          </div>
+          <div class="col">
+            <span class="a1">1.2 km from Bangkok city center</span>
+            <span class="a2"><span class="img"></span>199 Sukhumvit Soi 22 · Bangkok 10110</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  document.querySelectorAll('.seg .it').forEach(it=>{
+    it.addEventListener('click',()=>{
+      document.querySelectorAll('.seg .it').forEach(x=>x.classList.remove('on'));
+      it.classList.add('on');
+      const t=it.dataset.tab;
+      document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('hide',p.dataset.panel!==t));
+    });
+  });
+  const seeMore=document.getElementById('seeMore');
+  const lbl=seeMore.querySelector('.lbl');
+  seeMore.addEventListener('click',()=>{
+    const open=seeMore.classList.toggle('open');
+    document.querySelectorAll('.deal-row.extra').forEach(r=>r.classList.toggle('shown',open));
+    lbl.textContent=open?'Show less':'See more (4)';
+  });
+  const rvFilter=document.getElementById('rvFilter');
+  const rvList=document.getElementById('rvList');
+  const TONES=new Set(['pos','neu','neg']);
+  const TOPICS=new Set(['loc','room','svc','food']);
+  if(rvFilter){
+    rvFilter.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        rvFilter.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+        c.classList.add('on');
+        const f=c.dataset.f;
+        rvList.querySelectorAll('.it').forEach(it=>{
+          let ok=true;
+          if(f==='all') ok=true;
+          else if(TONES.has(f)) ok=(it.dataset.tone===f);
+          else if(TOPICS.has(f)) ok=(it.dataset.topic||'').split(/\s+/).includes(f);
+          it.classList.toggle('hidden',!ok);
+        });
+      });
+    });
+  }
+  const saysFilter=document.getElementById('saysFilter');
+  const saysRail=document.getElementById('saysRail');
+  const saysData=[
+    {clip:'clip-pool',av:'creator-2',nm:'Aurelia',like:'12.4k',cap:'<b>Rooftop pool</b> at golden hour — the view is unreal',topic:'room loc svc food'},
+    {clip:'clip-night',av:'creator-3',nm:'nick.travel',like:'8.7k',cap:'5-min walk to <b>BTS Asok</b> — Sukhumvit at your feet',topic:'loc room food'},
+    {clip:'clip-suite',av:'creator-1',nm:'Sasithorn',like:'5.2k',cap:'Corner suite tour — <b>floor-to-ceiling</b> windows',topic:'room loc svc'},
+    {clip:'clip-bf',av:'creator-6',nm:'Foodie.bkk',like:'3.8k',cap:'Honest <b>breakfast review</b> — Thai noodles &amp; egg station',topic:'food svc room loc'},
+    {clip:'clip-lobby',av:'creator-5',nm:'NickHarrow',like:'2.1k',cap:'Front-desk <b>service walkthrough</b> — warm welcome at midnight',topic:'svc loc room food'},
+    {clip:'clip-rooftop',av:'creator-7',nm:'lobby.lover',like:'4.4k',cap:'Cabana <b>day pass</b> — private deck &amp; full villa feel',topic:'room svc food loc'},
+    {clip:'clip-view',av:'creator-9',nm:'bangkok.nights',like:'3.1k',cap:'Bangkok by night — <b>36th floor</b> sunset to neon',topic:'loc room svc food'},
+    {clip:'clip-bath',av:'creator-8',nm:'suitelife',like:'3.5k',cap:'Bathtub view — <b>panoramic skyline</b> from the corner suite',topic:'room loc svc food'},
+    {clip:'clip-bar',av:'creator-10',nm:'mclub.tea',like:'2.7k',cap:'M Club lounge tour — <b>high tea</b> &amp; canapés',topic:'food svc loc room'},
+    {clip:'clip-room',av:'creator-11',nm:'checkin.review',like:'2.4k',cap:'Check-in <b>upgrade hack</b> — what worked for our stay',topic:'svc room loc food'},
+    {clip:'clip-gym',av:'creator-12',nm:'rooftop.guide',like:'2.1k',cap:'Best <b>rooftop bars</b> walking distance edition',topic:'loc food svc room'},
+    {clip:'clip-spa',av:'creator-4',nm:'thaitravel.diaries',like:'1.9k',cap:'Inside the <b>executive lounge</b> — high tea + skyline',topic:'food svc room loc'}
+  ];
+  if(saysRail){
+    saysRail.innerHTML=saysData.map(d=>`
+      <div class="says-card" data-topic="${d.topic}">
+        <div class="pic">
+          <div class="bg-img cover ${d.clip}"></div>
+          <span class="who"><span class="av cover ${d.av}"></span><span class="nm">${d.nm}</span></span>
+          <span class="like">${d.like}</span>
+        </div>
+        <div class="cap">${d.cap}</div>
+      </div>
+    `).join('');
+  }
+  if(saysFilter && saysRail){
+    saysFilter.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        saysFilter.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+        c.classList.add('on');
+        const f=c.dataset.f;
+        saysRail.querySelectorAll('.says-card').forEach(card=>{
+          const ok=(f==='all')||(card.dataset.topic||'').split(/\s+/).includes(f);
+          card.classList.toggle('hidden',!ok);
+        });
+        saysRail.scrollLeft=0;
+      });
+    });
+  }
+</script>
+</body></html>
