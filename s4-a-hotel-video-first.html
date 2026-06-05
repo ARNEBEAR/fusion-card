@@ -269,6 +269,7 @@
         <!-- Horizontal swipe video carousel -->
         <div class="swipe" id="swipe">
           <div class="card c1" data-bg="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80')"></div>
             <span class="badge brand">Updated recently</span>
             <span class="dur">0:48</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
@@ -282,6 +283,7 @@
             </div>
           </div>
           <div class="card c2" data-bg="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80')"></div>
             <span class="dur">1:24</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
             <div class="meta">
@@ -294,6 +296,7 @@
             </div>
           </div>
           <div class="card c3" data-bg="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80')"></div>
             <span class="dur">0:52</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
             <div class="meta">
@@ -449,7 +452,7 @@
     const data=sets[mode];
     swipe.innerHTML=data.map((d,i)=>`
       <div class="card c${i+1}${d.photo?' photo':''}" data-bg="${d.bg}">
-        <div class="bg-img" style="background-image:url('${d.bg}')"></div>
+        <div class="bg-img" style="background-image: url('${d.bg}');"></div>
         ${d.badge?`<span class="badge ${mode==='ugc'?'brand':''}">${d.badge}</span>`:''}
         <span class="dur">${d.dur}</span>
         <span class="sound" data-sound="on">${SOUND_ON_SVG}${SOUND_OFF_SVG}</span>
