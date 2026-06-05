@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
+<title>S3·A · Shopping Mall</title>
+<link rel="stylesheet" href="../_shared.css">
+<style>
+  .viewport{background:#F5F5F5}
+
+  /* ===== module shell ===== */
+  .mod{
+    margin:4px 4px 0;background:#fff;border-radius:8px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);
+  }
+  .mod:first-of-type{margin-top:4px}
+
+  /* 模块标题：统一 H3/Bold（18/800），与酒店名一致 */
+  .ctx{display:flex;align-items:baseline;gap:8px;padding:14px 14px 10px}
+  .ctx .ttl{
+    flex:1;min-width:0;font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .ctx .ct{font-size:12px;color:var(--text-3);font-weight:600;letter-spacing:-.005em;flex:0 0 auto}
+  .ctx .more{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--text-3);flex:0 0 auto;cursor:pointer}
+  .ctx .more::before{content:"⋯";font-size:18px;font-weight:800;line-height:1}
+
+  /* ===== M1 · Identity (name + meta + swipe 4:3 + location/map) ===== */
+  .m1-head{padding:14px 14px 10px}
+  .m1-head .ttl{font-size:18px;font-weight:800;letter-spacing:-.024em;line-height:1.2;color:var(--text)}
+  .m1-head .meta{margin-top:4px;font-size:12.5px;color:var(--text-3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .m1-head .meta .star{color:var(--text);font-weight:700}
+  .m1-head .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
+  .m1-head .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-4);flex:0 0 auto}
+
+  .m1-swipe{
+    display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding:0 0 0 14px;scroll-padding-left:14px;scrollbar-width:none;
+  }
+  .m1-swipe::-webkit-scrollbar{display:none}
+  .m1-swipe .it{
+    flex:0 0 auto;width:268px;aspect-ratio:4/3;border-radius:10px;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    scroll-snap-align:start;position:relative;cursor:pointer;
+  }
+  /* 末尾贴右边出血，避免视觉上"封死"的右白边 */
+  .m1-swipe .it:last-child{margin-right:0}
+  /* 站内默认即视频，封面不再展示居中播放按钮；个别图文体裁卡片左上仅加图标（无底色） */
+  .m1-swipe .it.photo::before{
+    content:"";position:absolute;top:8px;left:8px;z-index:2;
+    width:16px;height:16px;color:#fff;background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));
+  }
+  /* photo 体裁的右下角时长改为「N photos」标签（去掉黑色背景，仅文字） */
+  .m1-swipe .it.photo .dur{
+    background:transparent;backdrop-filter:none;padding:0;height:auto;
+    font-family:inherit;font-size:11px;font-weight:700;
+    text-shadow:0 1px 2px rgba(0,0,0,.55);
+  }
+  .m1-swipe .it .dur{
+    position:absolute;right:8px;bottom:8px;
+    color:#fff;font-size:11px;font-weight:700;font-family:var(--font-mono);
+    display:inline-flex;align-items:center;
+    text-shadow:0 1px 2px rgba(0,0,0,.55);
+  }
+  /* 地图入口 —— 富视觉地图预览：左侧 88×88 圆角真实地图缩略 + 右侧距离/地址（最多 2 行） */
+  .m1-loc{
+    margin:12px 14px 0;min-height:96px;padding:8px;border-radius:12px;
+    /* 右侧给 nav-btn 预留 28（按钮）+ 8（最小间距）+ 8（按钮自身距右）= 44px */
+    padding-right:44px;
+    display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#F4F8FB 0%,#EAF1F6 100%);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.06) inset;
+  }
+  /* 左侧静态地图缩略 —— 用 SVG 模拟真实街区/水域形状（flat illustration 风格） */
+  .m1-loc .map-mini{
+    flex:0 0 80px;width:80px;height:80px;border-radius:8px;overflow:hidden;
+    position:relative;
+    background:#E5EEF2;
+    box-shadow:0 1px 3px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.05) inset;
+  }
+  .m1-loc .map-mini::before{
+    content:"";position:absolute;inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' preserveAspectRatio='xMidYMid slice'><rect width='80' height='80' fill='%23EEF4F1'/><path d='M-4 50 Q20 46 38 56 T 84 60 L84 84 L-4 84 Z' fill='%23CFE3E9'/><path d='M0 8 H80' stroke='%23E2EBE6' stroke-width='2'/><path d='M0 30 H80' stroke='%23E2EBE6' stroke-width='3'/><path d='M0 64 H80' stroke='%23DEE7E2' stroke-width='2'/><path d='M22 0 V80' stroke='%23E2EBE6' stroke-width='2.5'/><path d='M52 0 V80' stroke='%23DEE7E2' stroke-width='2'/><rect x='6' y='12' width='10' height='12' rx='1.5' fill='%23F2EAD8' stroke='%23E2D5BB' stroke-width='.5'/><rect x='28' y='10' width='14' height='14' rx='1.5' fill='%23F4D9CF' stroke='%23E0BFB0' stroke-width='.5'/><rect x='56' y='8' width='12' height='14' rx='1.5' fill='%23E5DBC6' stroke='%23D4C7AE' stroke-width='.5'/><rect x='8' y='38' width='10' height='20' rx='1.5' fill='%23F2EAD8' stroke='%23E2D5BB' stroke-width='.5'/><rect x='28' y='38' width='20' height='22' rx='1.5' fill='%23E8E0CF' stroke='%23D8CDB6' stroke-width='.5'/><rect x='58' y='38' width='14' height='14' rx='1.5' fill='%23F4D9CF' stroke='%23E0BFB0' stroke-width='.5'/><circle cx='62' cy='28' r='2.5' fill='%23B7D7B6'/><circle cx='14' cy='30' r='2' fill='%23B7D7B6'/></svg>");
+    background-size:cover;background-position:center;
+  }
+  /* 中心地标针 —— red pin with white border (matching S2 location tab) */
+  .m1-loc .map-mini::after{
+    content:"";position:absolute;left:50%;top:48%;transform:translate(-50%,-100%);
+    width:18px;height:24px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 40'><defs><filter id='s' x='-10%25' y='-10%25' width='120%25' height='120%25'><feDropShadow dx='0' dy='1.5' stdDeviation='1.2' flood-color='black' flood-opacity='.3'/></filter></defs><path filter='url(%23s)' fill='%23ff2d55' stroke='white' stroke-width='2.4' d='M15 2c-7 0-12.6 5.4-12.6 12.2 0 9.2 12.6 23.6 12.6 23.6s12.6-14.4 12.6-23.6C27.6 7.4 22 2 15 2z'/><circle cx='15' cy='13.5' r='4.6' fill='white'/></svg>");
+    background-size:contain;background-repeat:no-repeat;background-position:center;
+  }
+  /* 文案区（仅展示距离行 + 地址行，最多 2 行） */
+  .m1-loc .info{
+    flex:1;min-width:0;
+    display:flex;flex-direction:column;justify-content:center;gap:4px;line-height:1.3;padding:2px 0;
+  }
+  .m1-loc .info .addr{
+    font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.32;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    word-break:break-word;
+  }
+  .m1-loc .info .addr b{font-weight:800}
+  .m1-loc .info .sub{
+    font-size:12px;color:rgba(0,0,0,.6);font-weight:500;letter-spacing:-.005em;line-height:1.3;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    word-break:break-word;
+  }
+  /* 右侧导航箭头按钮（视觉提示可点） */
+  .m1-loc .nav-btn{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.08),0 0 0 .5px rgba(0,0,0,.06);
+    color:var(--text);
+  }
+  .m1-loc .nav-btn svg{width:12px;height:12px}
+  .m1-pad-bottom{height:14px}
+
+  /* ===== M2 · Deals（去掉红色价格 + Food price 标签；加 benefit） ===== */
+  .m-deals{padding:0 14px 6px}
+  .m-deals .row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 0;border-top:1px solid var(--line);cursor:pointer;
+  }
+  .m-deals .row:first-child{border-top:0}
+  .m-deals .date-bar-wrap + .row{border-top:0}
+  .m-deals .l{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+  .m-deals .l .brand-mark{
+    width:20px;height:20px;border-radius:50%;flex:0 0 auto;margin-top:0;font-size:9px;
+  }
+  .m-deals .l .col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;line-height:1.2}
+  .m-deals .l .col .nm{
+    font-size:13.5px;font-weight:700;letter-spacing:-.005em;color:var(--text);line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .m-deals .l .col .benefit{
+    font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.3;letter-spacing:-.005em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .m-deals .r{display:flex;align-items:center;gap:4px;flex:0 0 auto;padding-top:0}
+  .m-deals .r .pp{font-weight:800;font-size:14.7px;letter-spacing:-.014em;color:var(--text);line-height:1}
+  .m-deals .r .chev{color:var(--text-4);font-size:18px;line-height:1;margin-left:2px}
+  /* 展开/收起额外 OTA 行 */
+  .m-deals .row.extra{
+    max-height:0;padding-top:0;padding-bottom:0;border-top-width:0;
+    overflow:hidden;opacity:0;
+    transition:max-height .32s ease,opacity .25s ease,padding .28s ease,border-top-width .28s ease;
+  }
+  .m-deals .row.extra.shown{
+    max-height:64px;padding-top:11px;padding-bottom:11px;border-top-width:1px;opacity:1;
+  }
+  /* see more —— 完全对齐 S2 的 .deal-foot 形态：avatar stack + 文案 + chevron */
+  .m-deals .foot{
+    margin-top:0;padding:11px 0 12px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:13px;color:var(--text);font-weight:600;cursor:pointer;letter-spacing:-.005em;
+    user-select:none;
+  }
+  .m-deals .foot .ch{
+    width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;
+    transition:transform .3s ease;color:var(--text-3);
+  }
+  .m-deals .foot .ch svg{width:12px;height:12px}
+  .m-deals .foot.open .ch{transform:rotate(180deg)}
+  .m-deals .foot.open .av-stack{display:none}
+  .m-deals .foot::after{content:none}
+
+  /* ===== M3 · Reviews：clip rail 3:4 一屏 3.5 个 ===== */
+  .m-rev{padding:0 14px 12px}
+  .m-rev .top{display:flex;align-items:baseline;gap:10px}
+  .m-rev .top .big{font-size:30px;font-weight:800;letter-spacing:-.034em;line-height:1;color:var(--text)}
+  .m-rev .top .ct{font-size:12px;color:var(--text-3);font-weight:500}
+  .m-rev .top .ct b{color:var(--text);font-weight:700}
+  .m-rev .clip-rail{
+    display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
+    /* 默认左侧 14px 与模块标题对齐；横滑时右侧无任何 padding/margin，最后一张直接触达 .mod 右边缘 */
+    padding:0 0 4px 14px;margin:12px -14px 0 -14px;scroll-padding-left:14px;scrollbar-width:none;
+  }
+  .m-rev .clip-rail::-webkit-scrollbar{display:none}
+  /* 与 S2 says 保持一致：宽 160px、3:4 比例 */
+  .m-rev .clip{
+    flex:0 0 auto;width:160px;aspect-ratio:3/4;border-radius:8px;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    position:relative;scroll-snap-align:start;cursor:pointer;overflow:hidden;
+  }
+  .m-rev .clip::before{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:50%;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.4) 100%);pointer-events:none;
+  }
+  /* 视频默认无需播放标识；个别图文体裁左上仅加图标（无底色） */
+  .m-rev .clip.photo::after{
+    content:"";position:absolute;top:6px;left:6px;
+    width:16px;height:16px;color:#fff;background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));
+  }
+  .m-rev .clip .who{
+    position:absolute;left:6px;bottom:6px;z-index:2;display:flex;align-items:center;gap:4px;
+    color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);
+    max-width:62%;
+  }
+  .m-rev .clip .who .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .m-rev .clip .who .av{
+    width:16px;height:16px;border-radius:50%;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    border:1px solid rgba(255,255,255,.7);flex:0 0 auto;
+  }
+  /* 右下角点赞数（与 S2 横滑视频结构一致） */
+  .m-rev .clip .like{
+    position:absolute;right:6px;bottom:6px;z-index:2;display:inline-flex;align-items:center;gap:3px;
+    color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  .m-rev .clip .like::before{
+    content:"";width:11px;height:11px;display:inline-block;background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.7C1 3.1 2.1 2 3.5 2 4.7 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.7 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.7C1 3.1 2.1 2 3.5 2 4.7 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.7 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat;
+  }
+  .m-rev .reviews{margin-top:14px;display:flex;flex-direction:column;gap:14px}
+  /* review 文本列表 —— 对齐 figma 7536:38297：身份+评分一行 + 正文 max 2 行 + 右侧可选 44 方缩略图 */
+  .m-rev .rv{display:flex;flex-direction:column;gap:4px}
+  .m-rev .rv .who{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  .m-rev .rv .who .av{
+    width:20px;height:20px;border-radius:50%;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    border:.5px solid rgba(0,0,0,.06);flex:0 0 auto;
+  }
+  .m-rev .rv .who .nm{font-size:15px;font-weight:400;color:var(--text);letter-spacing:-.005em;line-height:1.3}
+  .m-rev .rv .who .vbadge{
+    width:12px;height:12px;display:inline-block;flex:0 0 auto;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill='%2320D5EC' d='M6 0 7.32 1.18 8.95.92 9.73 2.4l1.6.55-.34 1.65L12 6l-1.01 1.4.34 1.65-1.6.55-.78 1.48-1.63-.26L6 12 4.68 10.82 3.05 11.08 2.27 9.6.67 9.05l.34-1.65L0 6l1.01-1.4L.67 2.95l1.6-.55.78-1.48 1.63.26z'/><path fill='white' d='M5.04 8.36 2.92 6.24l.95-.95 1.17 1.18 2.91-2.91.95.94z'/></svg>") center/contain no-repeat;
+  }
+  .m-rev .rv .who .sep{font-size:13px;color:rgba(0,0,0,.65);font-weight:400;line-height:1.3}
+  .m-rev .rv .who .stars{display:inline-flex;gap:1px;align-items:center;margin-left:2px}
+  .m-rev .rv .who .stars .s{
+    width:14px;height:14px;display:inline-block;background:currentColor;color:#FFBB00;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat;
+  }
+  .m-rev .rv .who .stars .s.off{color:rgba(0,0,0,.12)}
+  .m-rev .rv .row{display:flex;align-items:flex-start;gap:12px;margin-top:4px}
+  .m-rev .rv .body{
+    flex:1;min-width:0;
+    font-size:15px;line-height:1.3;color:var(--text);font-weight:400;letter-spacing:-.005em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .m-rev .rv .thumb{
+    flex:0 0 auto;width:44px;height:44px;border-radius:8px;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+  }
+  .m-rev .more-foot{
+    margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;
+  }
+  .m-rev .more-foot::after{content:"›";color:var(--text-3);font-size:16px;margin-left:4px}
+
+  /* ===== M4 · You may like ===== */
+  .m-ymal{padding:0 0 12px}
+  .m-ymal .rail{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding:0 14px 4px;scroll-padding-left:14px;scrollbar-width:none;
+  }
+  .m-ymal .rail::-webkit-scrollbar{display:none}
+  .m-ymal .it{
+    flex:0 0 auto;width:148px;scroll-snap-align:start;cursor:pointer;
+  }
+  .m-ymal .it .pic{
+    width:100%;aspect-ratio:4/3;border-radius:8px;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    position:relative;
+  }
+  .m-ymal .it .pic .fav{
+    position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;
+    background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--text-3);
+  }
+  .m-ymal .it .pic .fav svg{width:12px;height:12px}
+  .m-ymal .it .nm{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .m-ymal .it .meta{margin-top:2px;font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:5px;font-weight:500}
+  .m-ymal .it .meta .star{color:var(--text);font-weight:700}
+  .m-ymal .it .meta .star::before{content:"★";color:var(--gold);margin-right:1px;font-size:10.5px}
+  .m-ymal .it .meta .dot{width:2px;height:2px;border-radius:50%;background:var(--text-4)}
+  .m-ymal .it .pp{margin-top:3px;font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.012em}
+
+    /* 模块间穿插的双列 feed slice：1 行 2 张，无底部多余 padding */
+  .viewport[data-strategy="s3"] .native-feed.weave{
+    padding:6px 4px 4px;background:transparent;
+  }
+  .viewport[data-strategy="s3"] .native-feed.weave .v{margin-top:0}
+  .viewport[data-strategy="s3"] .native-feed.tail{padding:6px 4px 16px}
+
+  /* Mall vertical native feed overrides */
+  .viewport[data-strategy="s3"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s3"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1555529733-0e670560f7e1?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s3"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1567449303183-ae0d6ed1498e?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s3"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1580913428735-bd3c269d6a82?auto=format&fit=crop&w=900&q=80")}
+
+  /* ===== F&B 产品货架 ===== */
+  .product-shelf{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 14px 14px;scrollbar-width:none}
+  .product-shelf::-webkit-scrollbar{display:none}
+  .product-card{flex:0 0 156px;scroll-snap-align:start;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.06);box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer}
+  .product-card .photo{height:104px;background:center/cover no-repeat #ddd;position:relative}
+  .product-card .photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.34) 100%)}
+  .product-card .badge{position:absolute;left:8px;bottom:8px;z-index:1;height:22px;padding:0 8px;border-radius:6px;background:rgba(0,0,0,.48);backdrop-filter:blur(8px);color:#fff;font-size:10.5px;font-weight:750;letter-spacing:-.005em;display:flex;align-items:center}
+  .product-card .pcopy{padding:9px 10px 10px;display:flex;flex-direction:column;gap:4px}
+  .product-card .pname{font-size:13.5px;font-weight:800;color:#0a0a0a;line-height:1.18;letter-spacing:-.014em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:32px}
+  .product-card .pbenefit{font-size:11px;color:#737373;line-height:1.28;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .product-card .prow{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:2px}
+  .product-card .pprice{font-size:15.5px;font-weight:800;letter-spacing:-.02em;color:#0a0a0a;line-height:1}
+  .product-card .pprice .cur{font-size:10.5px;margin-right:1px;color:#333}
+  .product-card .pstrike{font-size:10.5px;color:#a3a3a3;text-decoration:line-through;line-height:1;margin-top:2px}
+  .product-card .buy{height:28px;padding:0 10px;border-radius:7px;background:#0a0a0a;color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+
+  /* ===== 全宽 CTA ===== */
+  .cta-wrap{padding:0 12px 12px}
+  .cta-wrap .cta-full{
+    display:flex;align-items:center;justify-content:center;
+    height:44px;border-radius:8px;background:rgba(0,0,0,.05);color:#000;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;cursor:pointer;
+    transition:background-color .15s,transform .1s;
+  }
+  .cta-wrap .cta-full:active{background:rgba(0,0,0,.08);transform:scale(.995)}
+  .cta-wrap .cta-full .more{margin-left:8px;color:rgba(0,0,0,.55);font-weight:500;font-size:13px}
+</style></head>
+<body>
+<div class="iphone"><div class="ios">
+  <div class="statusbar"><span>9:41</span><div class="right">
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5c2.4 0 4.6.93 6.27 2.45l-1.42 1.42A6.6 6.6 0 0 0 8 4.7a6.6 6.6 0 0 0-4.85 1.87L1.73 4.95A8.6 8.6 0 0 1 8 2.5z"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="22" height="10" rx="2.5"/><rect x="3" y="3" width="17" height="6" rx="1" fill="currentColor"/><rect x="24" y="4" width="1.5" height="4" rx=".75" fill="currentColor"/></svg>
+  </div></div>
+  <div class="searchbar">
+    <span class="back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 2 2 9l7 7"/></svg></span>
+    <div class="input"><svg class="magnify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="text">Grand Indonesia Mall</span><span class="clear">×</span></div>
+    <span class="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>
+  </div>
+  <div class="tabs"><span class="tab active">Top</span><span class="tab">Users</span><span class="tab">Videos</span><span class="tab">Sounds</span><span class="tab">Shop</span><span class="tab">LIVE</span></div>
+
+  <div class="viewport" data-strategy="s3">
+
+    <!-- M1 · Identity (name + meta + swipe 4:3 + map entry) -->
+    <div class="mod">
+      <div class="m1-head">
+        <div class="ttl">Grand Indonesia Mall</div>
+        <div class="meta">
+          <span class="star">4.7</span><span>(8,642)</span>
+          <span class="dot"></span><span>Shopping mall</span>
+          <span class="dot"></span><span>1.1 km away</span>
+        </div>
+      </div>
+      <div class="m1-swipe" id="m1Swipe">
+        <div class="it" style="background-image:url('https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=80')"><span class="dur">1:12</span></div>
+        <div class="it" style="background-image:url('https://images.unsplash.com/photo-1581622558667-3419a8dc5f83?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="it photo" style="background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80')"><span class="dur">12 photos</span></div>
+        <div class="it" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="it" style="background-image:url('https://images.unsplash.com/photo-1555529771-835f59fc5efe?auto=format&fit=crop&w=800&q=80')"></div>
+      </div>
+      <div class="m1-loc">
+        <div class="map-mini"></div>
+        <div class="info">
+          <div class="addr">Grand Indonesia East Mall, Ground Floor, Central Jakarta</div>
+          <div class="sub"><b>1.1 km</b> from Jakarta city center</div>
+        </div>
+        <span class="nav-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </div>
+      <div class="m1-pad-bottom"></div>
+    </div>
+
+    <!-- weave-1 · 双列穿插 -->
+    <div class="native-feed weave">
+      <div class="v b1">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1567449303078-57ad995bd3db?auto=format&fit=crop&w=800&q=80')">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">3:03</span>
+        </div>
+        <div class="info">
+          <div class="cap">Barista <b>pour-over latte</b> art beside the mall window</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-2"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Aurelia</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">7.3K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1580913428706-c311e67898b3?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap">Voucher <b>QR redemption</b> — 10 seconds flat at the counter</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">JesseLiu</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">5.7K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M2 · Menu vouchers -->
+    <div class="mod">
+      <div class="ctx">
+        <div class="ttl">Menu vouchers</div>
+        <span class="ct">12 items · from Rp85,000</span>
+        <div class="more"></div>
+      </div>
+      <div class="product-shelf">
+        <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1601598851533-4318c64223d6?auto=format&fit=crop&w=700&q=80')"><span class="badge">Parking</span></div><div class="pcopy"><div class="pname">VIP Parking Voucher</div><div class="pbenefit">Instant QR · Valet service · 12hr validity</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>59,000</div><div class="pstrike">Rp100,000</div></div><span class="buy">Buy</span></div></div></div>
+        <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1581622558663-b2e33377dfb2?auto=format&fit=crop&w=700&q=80')"><span class="badge">Fashion</span></div><div class="pcopy"><div class="pname">Fashion Voucher Rp500k</div><div class="pbenefit">Instant QR · Valet service · 12hr validity</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>99,000</div><div class="pstrike">Rp500,000</div></div><span class="buy">Buy</span></div></div></div>
+        <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1441986300914-38604724a8fc?auto=format&fit=crop&w=700&q=80')"><span class="badge">Food</span></div><div class="pcopy"><div class="pname">Food Court Voucher</div><div class="pbenefit">Instant QR · Valet service · 12hr validity</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>48,000</div><div class="pstrike">Rp100,000</div></div><span class="buy">Buy</span></div></div></div>
+      </div>
+      <div class="cta-wrap">
+        <a class="cta-full">View all</a>
+      </div>
+    </div>
+
+    <!-- weave-2 · 双列穿插 -->
+    <div class="native-feed weave">
+      <div class="v b3">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1483985988351-1d575791230e?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">0:48</span>
+        </div>
+        <div class="info">
+          <div class="cap">Hidden <b>VIP lounge</b> — free coffee and charging stations</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-5"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">NickHarrow</span><span class="vbadge"></span></div>
+                <span class="date">Jul 14, 2024</span>
+              </div>
+            </div>
+            <span class="like">4.1K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1555529771-18e3d0612c6f?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">2:42</span>
+        </div>
+        <div class="info">
+          <div class="cap">Luxury <b>brand tour</b> — all 12 flagship stores in 5 minutes</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-1"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">SasiLicious</span><span class="vbadge"></span></div>
+                <span class="date">Jul 12, 2024</span>
+              </div>
+            </div>
+            <span class="like">9.2K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 · Reviews (clip rail 3:4 + 3 text reviews + see more) -->
+    <div class="mod">
+      <div class="ctx">
+        <div class="ttl">Reviews</div>
+        <span class="ct">1,288 · 142 with video</span>
+        <div class="more"></div>
+      </div>
+      <div class="m-rev">
+        <div class="top"><span class="big">4.7</span><span class="ct">/ 5 · <b>1,288</b> reviews · 142 with video</span></div>
+        <div class="clip-rail" id="clipRail">
+          <div class="clip" style="background-image:url('https://images.unsplash.com/photo-1567449303185-1d4e0e64906f?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-2"></span><span class="nm">Aurelia</span></span><span class="like">12.4k</span></div>
+          <div class="clip" style="background-image:url('https://images.unsplash.com/photo-1580913428731-0164c4051eb8?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-1"></span><span class="nm">Sasi</span></span><span class="like">9.8k</span></div>
+          <div class="clip photo" style="background-image:url('https://images.unsplash.com/photo-1601598851551-7f8e17812e9b?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-3"></span><span class="nm">JesseL</span></span><span class="like">7.2k</span></div>
+          <div class="clip" style="background-image:url('https://images.unsplash.com/photo-1581622558665-6e42b20f04e0?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-4"></span><span class="nm">Mira</span></span><span class="like">5.6k</span></div>
+          <div class="clip" style="background-image:url('https://images.unsplash.com/photo-1441986300911-8c46006f0b83?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-5"></span><span class="nm">Nick</span></span><span class="like">4.3k</span></div>
+          <div class="clip" style="background-image:url('https://images.unsplash.com/photo-1483985988358-1f1f211516e4?auto=format&fit=crop&w=600&q=80')"><span class="who"><span class="av cover creator-6"></span><span class="nm">Lila</span></span><span class="like">3.1k</span></div>
+        </div>
+        <div class="reviews">
+          <div class="rv">
+            <div class="who">
+              <span class="av cover creator-7"></span>
+              <span class="nm">Aurelia P.</span>
+              <span class="vbadge"></span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">"VIP parking voucher is a game changer — skipped 30min queue on Saturday. Valet service was fast and professional."</div>
+              <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1555529771-6c2e391b1510?auto=format&fit=crop&w=200&q=80')"></div>
+            </div>
+          </div>
+          <div class="rv">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <span class="nm">Jesse L.</span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">"Fashion voucher saved me Rp75k at LV store. The QR redemption took 10 seconds at the information desk."</div>
+            </div>
+          </div>
+          <div class="rv">
+            <div class="who">
+              <span class="av cover creator-8"></span>
+              <span class="nm">Mira S.</span>
+              <span class="vbadge"></span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">"Food Court Voucher is always consistent here. Voucher QR redemption takes 10 seconds flat. Highly recommend!"</div>
+              <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1567449303080-60b29c9c824c?auto=format&fit=crop&w=200&q=80')"></div>
+            </div>
+          </div>
+        </div>
+        <div class="more-foot"><span>See all 1,288 reviews</span></div>
+      </div>
+    </div>
+
+    <!-- weave-3 · 双列穿插 -->
+    <div class="native-feed weave">
+      <div class="v b1">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:38</span>
+        </div>
+        <div class="info">
+          <div class="cap">Hidden <b>study corner</b> — best spot with outlets and fast Wi-Fi</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-4"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">MiraSiri</span><span class="vbadge"></span></div>
+                <span class="date">Jul 09, 2024</span>
+              </div>
+            </div>
+            <span class="like">3.6K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">2:11</span>
+        </div>
+        <div class="info">
+          <div class="cap">Coffee <b>tasting flight</b> — single origin vs house blend</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-6"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">LilaTravels</span><span class="vbadge"></span></div>
+                <span class="date">Jul 06, 2024</span>
+              </div>
+            </div>
+            <span class="like">12.4K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 · You may also like (similar coffee shops) -->
+    <div class="mod">
+      <div class="ctx">
+        <div class="ttl">You may also like</div>
+        <span class="ct">Central Jakarta · 4 malls</span>
+        <div class="more"></div>
+      </div>
+      <div class="m-ymal">
+        <div class="rail" id="ymalRail">
+          <div class="it">
+            <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=600&q=80')"></div>
+            <div class="nm">Plaza Indonesia</div>
+            <div class="meta"><span class="star">4.6</span><span class="dot"></span><span>0.6 km</span></div>
+            <div class="pp">Rp250,000</div>
+          </div>
+          <div class="it">
+            <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=600&q=80')"></div>
+            <div class="nm">Pacific Place</div>
+            <div class="meta"><span class="star">4.7</span><span class="dot"></span><span>0.9 km</span></div>
+            <div class="pp">Rp300,000</div>
+          </div>
+          <div class="it">
+            <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=600&q=80')"></div>
+            <div class="nm">Pondok Indah Mall</div>
+            <div class="meta"><span class="star">4.4</span><span class="dot"></span><span>1.2 km</span></div>
+            <div class="pp">Rp180,000</div>
+          </div>
+          <div class="it">
+            <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=600&q=80')"></div>
+            <div class="nm">Kota Kasablanka</div>
+            <div class="meta"><span class="star">4.3</span><span class="dot"></span><span>1.5 km</span></div>
+            <div class="pp">Rp220,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom 2-up native feed · 4 张（页面底部 +1 行） -->
+    <div class="native-feed tail">
+      <div class="v b1">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">3:03</span>
+        </div>
+        <div class="info">
+          <div class="cap">Barista <b>pour-over latte</b> art beside the mall window</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-7"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">PhuongT.</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">7.3K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap">Voucher <b>QR redemption</b> — 10 seconds flat at the counter</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-8"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">KennethW</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">5.7K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b3">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">0:54</span>
+        </div>
+        <div class="info">
+          <div class="cap">Behind the scenes — <b>mall operations</b> tour with the center manager</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-9"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">ZoeC.</span><span class="vbadge"></span></div>
+                <span class="date">Jul 02, 2024</span>
+              </div>
+            </div>
+            <span class="like">2.8K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519567281027-1c1626f8f5ab?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:56</span>
+        </div>
+        <div class="info">
+          <div class="cap">Late-night <b>shopping spree</b> — midnight sale best deals</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-10"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">DarinB.</span><span class="vbadge"></span></div>
+                <span class="date">Jun 28, 2024</span>
+              </div>
+            </div>
+            <span class="like">6.1K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<script>
+  // M1 swipe → click 跳大图
+  document.querySelectorAll('#m1Swipe .it').forEach((it,i)=>{
+    it.addEventListener('click',()=>alert((it.classList.contains('video')?'Play hero video':'Open photo')+' #'+(i+1)));
+  });
+  // map entry
+  document.querySelector('.m1-loc')?.addEventListener('click',()=>alert('Open map · Bangkok Marriott Marquis'));
+  // M2 deal rows
+  document.querySelectorAll('.m-deals .row').forEach(r=>{
+    r.addEventListener('click',()=>{
+      const nm=r.querySelector('.nm')?.textContent||'OTA';
+      alert('Open '+nm+' offer');
+    });
+  });
+  // M3 clip rail
+  document.querySelectorAll('#clipRail .clip').forEach((c,i)=>{
+    c.addEventListener('click',e=>{
+      e.stopPropagation();
+      alert('Play review video #'+(i+1));
+    });
+  });
+  document.querySelector('.m-rev .more-foot')?.addEventListener('click',()=>alert('Open all 1,288 reviews'));
+  // M4 ymal
+  document.querySelectorAll('#ymalRail .it').forEach(it=>{
+    it.addEventListener('click',()=>{
+      const nm=it.querySelector('.nm')?.textContent||'Hotel';
+      alert('Open '+nm);
+    });
+    const fav=it.querySelector('.fav');
+    fav?.addEventListener('click',e=>{
+      e.stopPropagation();
+      const isOn=fav.style.color==='rgb(255, 45, 85)';
+      fav.style.color=isOn?'':'#ff2d55';
+    });
+  });
+  // ⋯ more
+  document.querySelectorAll('.ctx .more').forEach(m=>m.addEventListener('click',e=>{
+    e.stopPropagation();alert('Module options · share / hide');
+  }));
+  // 双列 native feed
+  document.querySelectorAll('.native-feed .v').forEach((v,i)=>v.addEventListener('click',()=>alert('Play video #'+(i+1))));
+  // product cards
+  document.querySelectorAll('.product-card').forEach((c,i)=>{
+    c.addEventListener('click',()=>{
+      const name=c.querySelector('.pname')?.textContent||'Product';
+      alert('Open '+name+' booking');
+    });
+  });
+  // cta
+  document.querySelector('.cta-full')?.addEventListener('click',()=>{
+    alert('View all vouchers');
+  });
+  // tabs
+  document.querySelectorAll('.tabs .tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs .tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  }));
+</script>
+</body></html>

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
+<title>S1·A · Attraction · Dufan Ancol</title>
+<link rel="stylesheet" href="../_shared.css">
+<style>
+  .viewport{background:#F5F5F5}
+  .card{
+    margin:4px 4px 0;background:#fff;border-radius:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);overflow:hidden;
+  }
+
+  /* ===== 主体：左图右文（图自适应右侧高度） ===== */
+  .hero{
+    display:flex;align-items:stretch;gap:0;padding:12px;
+  }
+  .hero .pic{
+    flex:0 0 104px;align-self:stretch;
+    border-radius:8px;background-size:cover;background-position:center;
+    min-height:100%;
+  }
+  .hero .body{flex:1;min-width:0;padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
+  .hero .name{
+    font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.024em;line-height:1.2;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .hero .meta{
+    display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);flex-wrap:wrap;
+  }
+  .hero .meta .star{color:var(--text);font-weight:700}
+  .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
+  .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-4);flex:0 0 auto}
+  /* 位置行 —— 完全对齐 figma 7489:81430 (App/P2-Regular 13px, rgba(0,0,0,.65)) */
+  .hero .location{
+    display:flex;align-items:center;gap:4px;font-size:13px;line-height:1.3;
+    color:rgba(0,0,0,.65);font-weight:400;letter-spacing:-.005em;flex-wrap:wrap;
+  }
+  .hero .location .sep{color:rgba(0,0,0,.45)}
+  .hero .tags{display:flex;gap:5px;flex-wrap:wrap}
+  .hero .tags .tg{
+    display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;
+    background:var(--bg-soft);color:var(--text-2);font-size:11px;font-weight:600;letter-spacing:-.005em;
+  }
+
+  /* ===== 用户原声块：2 行省略 + 右箭头（点击跳转落地页） ===== */
+  .voice{
+    margin-top:auto;display:flex;align-items:center;gap:8px;
+    padding:9px 10px 9px 10px;background:var(--bg-soft);
+    border-radius:0 8px 8px 0;
+    border-left:2px solid var(--text);cursor:pointer;
+  }
+  .voice .txt{
+    flex:1;min-width:0;font-size:12.5px;color:var(--text-2);line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .voice .txt b{color:var(--text);font-weight:700}
+  .voice .arr{align-self:center;
+    flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+    color:var(--text-3);
+  }
+  .voice .arr svg{width:11px;height:11px}
+
+  /* ===== 单一供应商 + 价格行（带 benefit）—— 价格区参考 S4 货架 ===== */
+  .deal{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 14px;border-top:1px solid var(--line);cursor:pointer;
+  }
+  .deal .l{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+  .deal .l .brand-mark{width:20px;height:20px;border-radius:50%;font-size:9px;flex:0 0 auto;margin-top:0}
+  .deal .l .col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;line-height:1.2}
+  .deal .l .col .who{
+    font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .deal .l .col .benefit{
+    font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.35;letter-spacing:-.005em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    white-space:normal;
+  }
+  .deal .price-col{
+    display:flex;flex-direction:column;align-items:flex-end;flex:0 0 auto;line-height:1;gap:2px;
+  }
+  .deal .price-col .price{
+    font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.022em;line-height:1.1;
+  }
+  .deal .price-col .price .cur{font-size:12px;font-weight:700;color:var(--text-2);margin-right:2px;letter-spacing:0}
+  .deal .price-col .strike{
+    font-size:11px;font-weight:500;color:var(--text-4);letter-spacing:-.005em;line-height:1;
+    text-decoration:line-through;text-decoration-color:rgba(0,0,0,.32);text-decoration-thickness:1px;
+    margin-top:1px;
+  }
+
+  /* ===== 全宽 CTA ===== */
+  .cta-wrap{padding:8px 12px 12px}
+  .cta-wrap .cta-full{
+    display:flex;align-items:center;justify-content:center;
+    height:44px;border-radius:8px;background:rgba(0,0,0,.05);color:#000;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;cursor:pointer;
+    transition:background-color .15s,transform .1s;
+  }
+  .cta-wrap .cta-full:active{background:rgba(0,0,0,.08);transform:scale(.995)}
+  .cta-wrap .cta-full .more{margin-left:8px;color:rgba(0,0,0,.55);font-weight:500;font-size:13px}
+
+  /* Attraction native feed overrides */
+  .viewport[data-strategy="s1"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s1"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s1"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s1"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=900&q=80")}
+
+  /* Brand mark colors */
+  .brand-mark.tv{background:#1f76ff}
+  .brand-mark.kk{background:#ff5722}
+  .brand-mark.tp{background:#235ce6;font-size:8px}
+</style></head>
+<body>
+<div class="iphone"><div class="ios">
+  <div class="statusbar"><span>9:41</span><div class="right">
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5c2.4 0 4.6.93 6.27 2.45l-1.42 1.42A6.6 6.6 0 0 0 8 4.5a6.6 6.6 0 0 0-4.85 1.87L1.73 4.95A8.6 8.6 0 0 1 8 2.5z"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="22" height="10" rx="2.5"/><rect x="3" y="3" width="17" height="6" rx="1" fill="currentColor"/><rect x="24" y="4" width="1.5" height="4" rx=".75" fill="currentColor"/></svg>
+  </div></div>
+  <div class="searchbar">
+    <span class="back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 2 2 9l7 7"/></svg></span>
+    <div class="input">
+      <svg class="magnify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="text">Dufan Ancol Theme Park</span>
+      <span class="clear">×</span>
+    </div>
+    <span class="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>
+  </div>
+  <div class="tabs"><span class="tab active">Top</span><span class="tab">Users</span><span class="tab">Videos</span><span class="tab">Sounds</span><span class="tab">Shop</span><span class="tab">LIVE</span></div>
+
+  <div class="viewport" data-strategy="s1">
+    <div class="card">
+      <div class="hero">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="body">
+          <div class="name">Dufan Ancol Theme Park</div>
+          <div class="meta">
+            <span class="star">4.6</span><span>(54,218)</span>
+            <span class="dot"></span><span>Amusement park</span>
+          </div>
+          <div class="location">
+            <span>North Jakarta</span>
+            <span class="sep">·</span>
+            <span>12.4km</span>
+          </div>
+          <div class="tags">
+            <span class="tg">Roller coaster</span>
+            <span class="tg">Family friendly</span>
+          </div>
+          <div class="voice">
+            <div class="txt">"<b>Fast Track pass</b> is totally worth it — skip 2-hour lines on weekends, say <b>78% of 54,218 visitors</b>."</div>
+            <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="deal">
+        <div class="l">
+          <span class="brand-mark tv">tv</span>
+          <div class="col">
+            <span class="who">1-Day All Access Pass</span>
+            <span class="benefit">Instant QR · Skip the line · Free cancellation · All rides included</span>
+          </div>
+        </div>
+        <span class="price-col">
+          <span class="price"><span class="cur">Rp</span>275,000</span>
+          <span class="strike">Rp350,000</span>
+        </span>
+      </div>
+      <div class="deal">
+        <div class="l">
+          <span class="brand-mark kk">K</span>
+          <div class="col">
+            <span class="who">Fast Track + Entry Ticket</span>
+            <span class="benefit">Instant QR · Priority access to all rides · Free cancellation</span>
+          </div>
+        </div>
+        <span class="price-col">
+          <span class="price"><span class="cur">Rp</span>495,000</span>
+          <span class="strike">Rp600,000</span>
+        </span>
+      </div>
+      <div class="deal">
+        <div class="l">
+          <span class="brand-mark tp">Trip</span>
+          <div class="col">
+            <span class="who">Family Package (4 pax)</span>
+            <span class="benefit">Instant QR · 4 tickets + Free 2 meal vouchers · Free cancellation</span>
+          </div>
+        </div>
+        <span class="price-col">
+          <span class="price"><span class="cur">Rp</span>950,000</span>
+          <span class="strike">Rp1,400,000</span>
+        </span>
+      </div>
+
+      <div class="cta-wrap">
+        <a class="cta-full">View all tickets</a>
+      </div>
+    </div>
+
+    <div class="native-feed">
+      <div class="v b1">
+        <div class="pic">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">3:03</span>
+        </div>
+        <div class="info">
+          <div class="cap"><b>Halilintar</b> front row POV — the scariest roller coaster in Indonesia</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-2"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">aditya.rollercoaster</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">15.3K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap"><b>Family day</b> at Dufan — parade + 4D cinema experience</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">siti.family</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">11.2K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b3">
+        <div class="pic">
+          <span class="dur">0:48</span>
+        </div>
+        <div class="info">
+          <div class="cap"><b>Fast Track</b> hack — how I skipped 2-hour lines on Saturday</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-4"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">bayu.hacks</span><span class="vbadge"></span></div>
+                <span class="date">Jul 16, 2024</span>
+              </div>
+            </div>
+            <span class="like">8.7K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic">
+          <span class="dur">2:42</span>
+        </div>
+        <div class="info">
+          <div class="cap"><b>Night parade</b> at Dufan — the best part of the weekend</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-6"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">lina.night</span><span class="vbadge"></span></div>
+                <span class="date">Jul 14, 2024</span>
+              </div>
+            </div>
+            <span class="like">6.4K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<script>
+  // 用户原声 → 跳详情页
+  document.querySelectorAll('.voice').forEach(el=>{
+    el.addEventListener('click',()=>{
+      el.style.opacity='.6';
+      setTimeout(()=>{el.style.opacity='';alert('Open Dufan detail · review highlights');},120);
+    });
+  });
+  // 主 CTA → 查看所有门票
+  document.querySelector('.cta-full')?.addEventListener('click',()=>{
+    alert('View all tickets — Dufan Ancol');
+  });
+  // 单 deal 行 → 跳供应商
+  document.querySelectorAll('.deal').forEach(d=>{
+    d.addEventListener('click',()=>{
+      const who=d.querySelector('.who')?.textContent||'Ticket';
+      alert('Open '+who+' booking');
+    });
+  });
+  // 双列 native feed → 跳视频详情
+  document.querySelectorAll('.native-feed .v').forEach((v,i)=>{
+    v.addEventListener('click',()=>alert('Play video #'+(i+1)));
+  });
+</script>
+</body></html>

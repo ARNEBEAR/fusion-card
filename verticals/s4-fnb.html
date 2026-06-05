@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
+<title>S4·A · F&amp;B</title>
+<link rel="stylesheet" href="../_shared.css">
+<style>
+  .viewport{background:#F5F5F5}
+
+  /* ===== container with frosted-glass blurred background ===== */
+  .vshow{
+    position:relative;margin:4px 4px 0;border-radius:8px;overflow:hidden;
+    box-shadow:0 4px 16px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.04);
+    isolation:isolate;
+  }
+  /* 毛玻璃底图 — 联动当前横滑大封面 */
+  .vshow .bg{
+    position:absolute;inset:0;z-index:0;
+    background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80');
+    background-size:cover;background-position:center;
+    filter:blur(26px) saturate(1.15) brightness(.55);
+    transform:scale(1.15);
+  }
+  .vshow .bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.32) 0%,rgba(0,0,0,.55) 60%,rgba(0,0,0,.86) 100%);
+  }
+  .vshow .inner{position:relative;z-index:1;padding:14px 0 14px}
+
+  /* ===== 顶部 POI 标题行 ===== */
+  .head{padding:0 12px 12px;display:flex;align-items:center;gap:10px;color:#fff;position:relative}
+  .head .th{width:34px;height:34px;border-radius:8px;background-size:cover;background-position:center;flex:0 0 auto;border:1px solid rgba(255,255,255,.2)}
+  /* F&B logo tile for thumbnail */
+  .fnb-logo-tile{display:flex!important;align-items:center;justify-content:center;background:#00704A!important;border:0!important;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);position:relative;overflow:hidden}
+  .fnb-logo-tile:before{display:none}
+  .fnb-logo-tile:after{content:"STARBUCKS"!important;position:relative!important;z-index:1!important;width:auto!important;height:auto!important;border-radius:0!important;background:transparent!important;color:#fff!important;box-shadow:none!important;display:block!important;font-size:4.5px!important;line-height:1!important;font-weight:900!important;letter-spacing:.06em!important;text-align:center!important}
+  .head .body{flex:1;min-width:0;padding-right:96px}
+  .head .body .nm{font-size:14.5px;font-weight:800;letter-spacing:-.014em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .head .body .meta{margin-top:2px;font-size:11.5px;color:rgba(255,255,255,.78);font-weight:500;display:flex;align-items:center;gap:5px}
+  .head .body .meta .star{color:#fff;font-weight:700}
+  .head .body .meta .star::before{content:"★";color:#f4b400;margin-right:3px;font-size:12px}
+  .head .body .meta .dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.45);flex:0 0 auto}
+  .head .view-details{
+    position:absolute;right:12px;top:17px;transform:translateY(-50%);
+    display:inline-flex;align-items:center;gap:3px;height:34px;padding:0;
+    background:transparent;border:0;
+    color:#fff;font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;
+  }
+  .head .view-details svg{width:11px;height:11px;opacity:.92}
+  .head .view-details:active{opacity:.7}
+  .head-divider{
+    height:1px;margin:6px 18px 12px;
+    background:linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.32) 18%,
+      rgba(255,255,255,.42) 50%,
+      rgba(255,255,255,.32) 82%,
+      rgba(255,255,255,0) 100%);
+  }
+
+  /* ===== 胶囊切换 ===== */
+  .toggle-wrap{display:flex;justify-content:center;margin:0 12px 14px}
+  .toggle{
+    display:inline-flex;height:34px;padding:3px;border-radius:99px;
+    background:rgba(255,255,255,.14);backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.16);
+  }
+  .toggle .seg{
+    display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-radius:99px;
+    color:rgba(255,255,255,.78);font-size:12.5px;font-weight:700;letter-spacing:-.005em;
+    transition:all .2s;cursor:pointer;
+  }
+  .toggle .seg.on{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+  .toggle .seg .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+  .toggle .seg.on .dot{background:var(--brand);opacity:1}
+
+  /* swipe (轨道) ===== */
+  .swipe{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding:0 12px 4px;scroll-padding-left:12px;
+    scrollbar-width:none;
+  }
+  .swipe::-webkit-scrollbar{display:none}
+  .swipe .card{
+    position:relative;flex:0 0 auto;width:240px;aspect-ratio:9/13.5;border-radius:12px;overflow:hidden;
+    background:#222;scroll-snap-align:start;
+    box-shadow:0 6px 18px rgba(0,0,0,.32);cursor:pointer;
+  }
+  .swipe .card .bg-img{
+    position:absolute;inset:0;z-index:0;
+    background-size:cover;background-position:center;background-repeat:no-repeat;
+    transform-origin:50% 50%;
+    transition:transform .4s ease;
+  }
+  @keyframes s4kb{
+    0%{transform:scale(1.02) translate(0,0)}
+    25%{transform:scale(1.08) translate(-1.4%,-.8%)}
+    55%{transform:scale(1.10) translate(1.2%,.6%)}
+    100%{transform:scale(1.02) translate(0,0)}
+  }
+  .swipe .card.playing .bg-img{animation:s4kb 10s ease-in-out infinite}
+  .swipe .card::after{
+    content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(0,0,0,.32) 0%,transparent 25%,transparent 55%,rgba(0,0,0,.85) 100%);
+  }
+  .swipe .card .badge{
+    position:absolute;top:10px;left:10px;z-index:2;
+    display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:6px;
+    background:rgba(51,51,51,.42);backdrop-filter:blur(8px);color:#fff;
+    font-size:10.5px;font-weight:700;letter-spacing:.02em;
+  }
+  .swipe .card .badge.brand{background:rgba(51,51,51,.42);color:#fff}
+  .swipe .card .dur{
+    position:absolute;top:10px;right:10px;z-index:2;
+    display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;
+    background:rgba(0,0,0,.62);backdrop-filter:blur(6px);
+    color:#fff;font-size:11px;font-weight:700;font-family:var(--font-mono);
+  }
+  .swipe .card .play{display:none}
+  .swipe .card.photo::before{
+    content:"";position:absolute;top:10px;left:10px;z-index:2;
+    width:18px;height:18px;color:#fff;
+    background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));
+  }
+  .swipe .card .progress{
+    position:absolute;left:0;right:0;bottom:0;height:2px;z-index:3;
+    background:rgba(255,255,255,.18);overflow:hidden;opacity:0;transition:opacity .2s;
+  }
+  .swipe .card .progress::before{
+    content:"";display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,#fff 0%,#ffd6e0 100%);
+  }
+  .swipe .card.playing .progress{opacity:1}
+  .swipe .card.playing .progress::before{
+    animation:s4progress 10s linear infinite;
+  }
+  @keyframes s4progress{0%{width:0%}100%{width:100%}}
+  .swipe .card .sound{
+    position:absolute;top:10px;right:10px;z-index:4;
+    width:24px;height:24px;
+    background:transparent;border:0;
+    display:none;align-items:center;justify-content:center;color:#fff;cursor:pointer;
+    filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.28));
+    transition:opacity .2s,transform .15s;
+  }
+  .swipe .card .sound:active{transform:scale(.9)}
+  .swipe .card.playing .sound{display:flex}
+  .swipe .card.playing .dur{display:none}
+  .swipe .card .sound svg{width:16px;height:16px}
+  .swipe .card .sound .ic-off{display:none}
+  .swipe .card.muted .sound .ic-on{display:none}
+  .swipe .card.muted .sound .ic-off{display:block}
+  .swipe .card .meta{
+    position:absolute;left:12px;right:12px;bottom:10px;z-index:2;color:#fff;
+  }
+  .swipe .card .meta .who{
+    display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:-.005em;
+  }
+  .swipe .card .meta .who .av{
+    width:18px;height:18px;border-radius:50%;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    flex:0 0 auto;border:1.4px solid rgba(255,255,255,.85);
+  }
+  .swipe .card .meta .who .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  .swipe .card .meta .who .heart{
+    display:inline-flex;align-items:center;gap:3px;
+    font-size:11px;font-weight:700;color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+  .swipe .card .meta .who .heart::before{
+    content:"";width:12px;height:12px;flex:0 0 auto;
+    background:currentColor;color:#fff;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.19812 2.17173C2.87295 2.23763 2.2811 2.54462 1.88903 3.12278C1.51884 3.66867 1.30321 4.49148 1.75265 5.66738C2.10462 6.58823 2.90073 7.52408 3.80295 8.3287C4.58784 9.02868 5.41338 9.59447 5.99994 9.92978C6.5865 9.59447 7.41205 9.02868 8.19694 8.3287C9.09916 7.52408 9.89526 6.58823 10.2472 5.66738C10.6967 4.49148 10.481 3.66867 10.1109 3.12278C9.71879 2.54462 9.12694 2.23763 8.80177 2.17173C7.43387 1.89453 6.66821 2.7731 5.99994 3.71769C5.3316 2.77301 4.55685 1.89639 3.19812 2.17173ZM5.99994 2.35994C6.80177 1.35403 7.90253 0.969178 9.00038 1.19165C9.57792 1.30869 10.3973 1.76349 10.9385 2.56153C11.5016 3.39185 11.7412 4.55967 11.1813 6.0244C10.7445 7.16725 9.80799 8.23183 8.86252 9.07502C7.90968 9.92478 6.8946 10.5963 6.23164 10.943L5.99994 11.0642L5.76824 10.943C5.10528 10.5963 4.0902 9.92478 3.13737 9.07502C2.19189 8.23183 1.25538 7.16725 0.818561 6.0244C0.258711 4.55967 0.498316 3.39185 1.06138 2.56153C1.60256 1.76349 2.42196 1.30869 2.99951 1.19165C4.09735 0.969178 5.19811 1.35403 5.99994 2.35994Z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill-rule='evenodd' clip-rule='evenodd' d='M3.19812 2.17173C2.87295 2.23763 2.2811 2.54462 1.88903 3.12278C1.51884 3.66867 1.30321 4.49148 1.75265 5.66738C2.10462 6.58823 2.90073 7.52408 3.80295 8.3287C4.58784 9.02868 5.41338 9.59447 5.99994 9.92978C6.5865 9.59447 7.41205 9.02868 8.19694 8.3287C9.09916 7.52408 9.89526 6.58823 10.2472 5.66738C10.6967 4.49148 10.481 3.66867 10.1109 3.12278C9.71879 2.54462 9.12694 2.23763 8.80177 2.17173C7.43387 1.89453 6.66821 2.7731 5.99994 3.71769C5.3316 2.77301 4.55685 1.89639 3.19812 2.17173ZM5.99994 2.35994C6.80177 1.35403 7.90253 0.969178 9.00038 1.19165C9.57792 1.30869 10.3973 1.76349 10.9385 2.56153C11.5016 3.39185 11.7412 4.55967 11.1813 6.0244C10.7445 7.16725 9.80799 8.23183 8.86252 9.07502C7.90968 9.92478 6.8946 10.5963 6.23164 10.943L5.99994 11.0642L5.76824 10.943C5.10528 10.5963 4.0902 9.92478 3.13737 9.07502C2.19189 8.23183 1.25538 7.16725 0.818561 6.0244C0.258711 4.55967 0.498316 3.39185 1.06138 2.56153C1.60256 1.76349 2.42196 1.30869 2.99951 1.19165C4.09735 0.969178 5.19811 1.35403 5.99994 2.35994Z'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35));
+  }
+  .swipe .card .meta .cap{
+    margin-top:6px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.96);line-height:1.36;letter-spacing:-.005em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  .dots{display:flex;justify-content:center;gap:5px;padding:14px 0 6px}
+  .dots .d{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.32)}
+  .dots .d.on{width:18px;border-radius:99px;background:#fff}
+
+  /* ===== F&B 底部产品货架（S4 左图右文精简高度版） ===== */
+  .mount-wrap{padding:10px 12px 0}
+  .product-shelf{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 0 14px;margin:0;scrollbar-width:none}
+  .product-shelf::-webkit-scrollbar{display:none}
+  .product-card{flex:0 0 248px;scroll-snap-align:start;display:grid;grid-template-columns:72px 1fr;background:rgba(255,255,255,.96);border-radius:12px;min-height:86px;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.22);cursor:pointer}
+  .product-card .photo{height:100%;min-height:86px;background:center/cover no-repeat #ddd;position:relative}
+  .product-card .photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.34) 100%)}
+  .product-card .badge{position:absolute;left:6px;bottom:6px;z-index:1;height:19px;padding:0 6px;border-radius:6px;background:rgba(0,0,0,.48);backdrop-filter:blur(8px);color:#fff;font-size:9.5px;font-weight:750;letter-spacing:-.005em;display:flex;align-items:center}
+  .product-card .pcopy{padding:9px 10px;display:flex;flex-direction:column;gap:4px}
+  .product-card .pname{font-size:13.5px;font-weight:800;color:#0a0a0a;line-height:1.18;letter-spacing:-.014em;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;min-height:auto}
+  .product-card .pbenefit{font-size:11px;color:#737373;line-height:1.28;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+  .product-card .prow{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:3px}
+  .product-card .pprice{font-size:15.5px;font-weight:800;letter-spacing:-.02em;color:#0a0a0a;line-height:1}
+  .product-card .pprice .cur{font-size:10.5px;margin-right:1px;color:#333}
+  .product-card .pstrike{font-size:10.5px;color:#a3a3a3;text-decoration:line-through;line-height:1;margin-top:2px}
+  .product-card .buy{height:26px;padding:0 10px;border-radius:7px;background:#0a0a0a;color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+
+  /* F&B vertical native feed overrides */
+  .viewport[data-strategy="s4"] .native-feed .v.b1 .pic{background-image:url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s4"] .native-feed .v.b2 .pic{background-image:url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s4"] .native-feed .v.b3 .pic{background-image:url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80")}
+  .viewport[data-strategy="s4"] .native-feed .v.b4 .pic{background-image:url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80")}
+</style></head>
+<body>
+<div class="iphone"><div class="ios">
+  <div class="statusbar"><span>9:41</span><div class="right">
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5c2.4 0 4.6.93 6.27 2.45l-1.42 1.42A6.6 6.6 0 0 0 8 4.5a6.6 6.6 0 0 0-4.85 1.87L1.73 4.95A8.6 8.6 0 0 1 8 2.5z"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="22" height="10" rx="2.5"/><rect x="3" y="3" width="17" height="6" rx="1" fill="currentColor"/><rect x="24" y="4" width="1.5" height="4" rx=".75" fill="currentColor"/></svg>
+  </div></div>
+  <div class="searchbar">
+    <span class="back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 2 2 9l7 7"/></svg></span>
+    <div class="input">
+      <svg class="magnify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="text">Starbucks Grand Indonesia</span>
+      <span class="clear">×</span>
+    </div>
+    <span class="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>
+  </div>
+  <div class="tabs"><span class="tab active">Top</span><span class="tab">Users</span><span class="tab">Videos</span><span class="tab">Sounds</span><span class="tab">Shop</span><span class="tab">LIVE</span></div>
+
+  <div class="viewport" data-strategy="s4">
+    <div class="vshow">
+      <div class="bg"></div>
+      <div class="inner">
+
+        <!-- POI header -->
+        <div class="head">
+          <div class="th fnb-logo-tile"></div>
+          <div class="body">
+            <div class="nm">Starbucks Grand Indonesia</div>
+            <div class="meta">
+              <span class="star">4.7</span><span>(8,642)</span>
+              <span class="dot"></span><span>1.1 km</span>
+            </div>
+          </div>
+          <span class="view-details" id="viewDetails">View details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+          </span>
+        </div>
+
+        <div class="head-divider"></div>
+
+        <!-- Capsule toggle -->
+        <div class="toggle-wrap">
+          <div class="toggle">
+            <span class="seg on" data-mode="ugc">Creator picks</span>
+            <span class="seg" data-mode="official">Menu official</span>
+          </div>
+        </div>
+
+        <!-- Horizontal swipe video carousel -->
+        <div class="swipe" id="swipe">
+          <div class="card c1" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">0:48</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-2"></span>
+                <span class="nm">@nadia.jkt</span>
+                <span class="heart">12.4k</span>
+              </div>
+              <div class="cap">Iced latte + croissant voucher — easiest lunch break save</div>
+            </div>
+          </div>
+          <div class="card c2" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">1:24</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-3"></span>
+                <span class="nm">@rio.coffee</span>
+                <span class="heart">8.2k</span>
+              </div>
+              <div class="cap">2 Grande drinks bundle — perfect for sharing with a friend</div>
+            </div>
+          </div>
+          <div class="card c3" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">0:52</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-4"></span>
+                <span class="nm">@maya.s</span>
+                <span class="heart">5.7k</span>
+              </div>
+              <div class="cap">Caramel Frappuccino extra shot — my after-work ritual</div>
+            </div>
+          </div>
+          <div class="card c4 photo" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">8 photos</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-5"></span>
+                <span class="nm">@dika.food</span>
+                <span class="heart">4.9k</span>
+              </div>
+              <div class="cap">Lunch set review — turkey sandwich + americano under Rp80k</div>
+            </div>
+          </div>
+          <div class="card c5" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">2:11</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-6"></span>
+                <span class="nm">@lina.jkt</span>
+                <span class="heart">4.3k</span>
+              </div>
+              <div class="cap">QR redemption walkthrough — so much faster than ordering</div>
+            </div>
+          </div>
+          <div class="card c6" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">0:36</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-7"></span>
+                <span class="nm">@arif.coffee</span>
+                <span class="heart">3.8k</span>
+              </div>
+              <div class="cap">Study spot vibe — quiet corner with outlets and fast Wi-Fi</div>
+            </div>
+          </div>
+          <div class="card c7" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">1:42</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-8"></span>
+                <span class="nm">@sari.drinks</span>
+                <span class="heart">3.5k</span>
+              </div>
+              <div class="cap">Matcha latte vs caramel — which one is worth your voucher?</div>
+            </div>
+          </div>
+          <div class="card c8" data-bg="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
+            <div class="bg-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80')"></div>
+            <span class="dur">0:58</span>
+            <span class="sound" data-sound="on"></span>
+            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="progress"></div>
+            <div class="meta">
+              <div class="who">
+                <span class="av cover creator-9"></span>
+                <span class="nm">@yoga.morning</span>
+                <span class="heart">3.1k</span>
+              </div>
+              <div class="cap">Morning routine — grab & go croissant + coffee before work</div>
+            </div>
+          </div>
+        </div>
+        <div class="dots" id="dots">
+          <span class="d on"></span>          <span class="d"></span>          <span class="d"></span>          <span class="d"></span>          <span class="d"></span>          <span class="d"></span>          <span class="d"></span>          <span class="d"></span>
+        </div>
+
+        <!-- F&B product shelf (horizontal swipe cards, same as S1/S2/S3) -->
+        <div class="mount-wrap">
+          <div class="product-shelf" style="padding-top:12px">
+            <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=80')"><span class="badge">Combo voucher</span></div><div class="pcopy"><div class="pname">Iced Latte + Croissant</div><div class="pbenefit">Instant QR · Dine-in / takeaway</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>59,000</div><div class="pstrike">Rp82,000</div></div><span class="buy">Buy</span></div></div></div>
+            <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=80')"><span class="badge">Shareable set</span></div><div class="pcopy"><div class="pname">2 Grande Drinks Bundle</div><div class="pbenefit">Instant QR · Dine-in / takeaway</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>99,000</div><div class="pstrike">Rp138,000</div></div><span class="buy">Buy</span></div></div></div>
+            <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=80')"><span class="badge">Best seller</span></div><div class="pcopy"><div class="pname">Caramel Frappuccino</div><div class="pbenefit">Instant QR · Dine-in / takeaway</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>48,000</div><div class="pstrike">Rp65,000</div></div><span class="buy">Buy</span></div></div></div>
+            <div class="product-card"><div class="photo" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=80')"><span class="badge">Lunch set</span></div><div class="pcopy"><div class="pname">Turkey Sandwich + Coffee</div><div class="pbenefit">Instant QR · Dine-in / takeaway</div><div class="prow"><div><div class="pprice"><span class="cur">Rp</span>78,000</div><div class="pstrike">Rp105,000</div></div><span class="buy">Buy</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="native-feed">
+      <div class="v b1">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">2:47</span>
+        </div>
+        <div class="info">
+          <div class="cap">Barista <b>pour-over latte</b> art beside the mall window</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-2"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Nadia</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">8.1K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:52</span>
+        </div>
+        <div class="info">
+          <div class="cap">Voucher <b>QR redemption</b> — 10 seconds flat at the counter</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Rizki</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">6.4K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b3">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">0:58</span>
+        </div>
+        <div class="info">
+          <div class="cap"><b>Caramel Frappuccino</b> extra shot — my after-work ritual</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-1"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Maya</span><span class="vbadge"></span></div>
+                <span class="date">Jul 16, 2024</span>
+              </div>
+            </div>
+            <span class="like">5.2K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap">Lunch <b>turkey sandwich</b> set — perfect between meetings</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-4"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Dika</span><span class="vbadge"></span></div>
+                <span class="date">Jul 14, 2024</span>
+              </div>
+            </div>
+            <span class="like">3.8K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<script>
+  const bg=document.querySelector('.vshow .bg');
+  const swipe=document.getElementById('swipe');
+  const dots=document.getElementById('dots');
+
+  // 数据：Creator picks vs Menu official
+  const sets={
+    ugc:[
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Voucher',dur:'0:48',av:'creator-2',nm:'@nadia.jkt',like:'12.4k',cap:'Iced latte + croissant voucher — easiest lunch break save at Grand Indonesia'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:24',av:'creator-3',nm:'@rio.coffee',like:'8.2k',cap:'2 Grande drinks bundle — perfect for sharing with a friend'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:52',av:'creator-4',nm:'@maya.s',like:'5.7k',cap:'Caramel Frappuccino extra shot — my after-work ritual'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'8 photos',av:'creator-5',nm:'@dika.food',like:'4.9k',cap:'Lunch set review — turkey sandwich + americano under Rp80k',photo:true},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:11',av:'creator-6',nm:'@lina.jkt',like:'4.3k',cap:'QR redemption walkthrough — so much faster than ordering'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:36',av:'creator-7',nm:'@arif.coffee',like:'3.8k',cap:'Study spot vibe — quiet corner with outlets and fast Wi-Fi'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:42',av:'creator-8',nm:'@sari.drinks',like:'3.5k',cap:'Matcha latte vs caramel — which one is worth your voucher?'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:58',av:'creator-9',nm:'@yoga.morning',like:'3.1k',cap:'Morning routine — grab & go croissant + coffee before work'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:42',av:'creator-10',nm:'@rara.weekend',like:'2.7k',cap:'Mocha cookie crumble — the ultimate weekend indulgence'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'12 photos',av:'creator-11',nm:'@budi.hacks',like:'2.4k',cap:'Voucher hack — save 30% on every visit with these bundles',photo:true},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:18',av:'creator-12',nm:'@wulan.date',like:'2.1k',cap:'Date night at Starbucks — cozy ambience + shared dessert'}
+    ],
+    official:[
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:12',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Iced Latte + Croissant combo — available now via voucher'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'15 photos',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'2 Grande Drinks Bundle — share the joy with a friend',photo:true},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:36',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Caramel Frappuccino — the classic favorite, now on voucher'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:54',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Lunch sets — perfect for your midday break at the mall'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:02',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'How to redeem — scan QR at counter in 10 seconds'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:48',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Store ambience — your third place between home and office'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:30',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'New summer menu — try the limited-time offerings'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:46',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Breakfast combos — start your day right with our bundles'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:24',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Happy hour — special prices every weekday 3-6pm'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:38',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Voucher value — save up to 35% vs counter prices'},
+      {bg:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:52',av:'creator-1',nm:'Starbucks Indonesia',like:'',cap:'Grand Indonesia store — your neighborhood Starbucks'}
+    ]
+  };
+
+  const SOUND_ON_SVG=`<svg class="ic-on" viewBox="0 0 20 20" fill="currentColor"><path d="M1.66663 7.918C1.66663 7.22765 2.22627 6.668 2.91663 6.668H4.64754C4.89 6.668 5.12045 6.5624 5.27875 6.37874L8.95208 2.1171C9.45646 1.53194 10.4166 1.88864 10.4166 2.66118V17.4727C10.4166 18.2287 9.49074 18.594 8.97448 18.0417L5.27645 14.0851C5.11887 13.9165 4.89842 13.8208 4.66764 13.8208H2.91663C2.22627 13.8208 1.66663 13.2611 1.66663 12.5708V7.918Z"/><path d="M12.9291 7.65933C12.7853 7.47966 12.7832 7.21713 12.946 7.05441L13.5352 6.46516C13.6979 6.30244 13.9631 6.30146 14.1129 6.47613C15.8299 8.47801 15.8299 11.5234 14.1129 13.5253C13.9631 13.6999 13.6979 13.6989 13.5352 13.5362L12.946 12.947C12.7832 12.7843 12.7853 12.5217 12.9291 12.3421C14.0108 10.9905 14.0108 9.01093 12.9291 7.65933Z"/><path d="M15.5976 15.5986C15.4349 15.4359 15.4358 15.1728 15.5893 15.0014C18.1047 12.1917 18.1047 7.80973 15.5893 5.00001C15.4358 4.82855 15.4349 4.56548 15.5976 4.40276L16.1869 3.81351C16.3496 3.65079 16.6142 3.65017 16.7694 3.82007C19.9249 7.27438 19.9249 12.727 16.7694 16.1813C16.6142 16.3512 16.3496 16.3506 16.1869 16.1879L15.5976 15.5986Z"/></svg>`;
+  const SOUND_OFF_SVG=`<svg class="ic-off" viewBox="0 0 20 20" fill="currentColor"><path d="M1.25 7.918C1.25 7.22765 1.80964 6.668 2.5 6.668H4.23091C4.47338 6.668 4.70382 6.5624 4.86212 6.37874L8.53546 2.1171C9.03983 1.53194 10 1.88864 10 2.66118V17.4727C10 18.2287 9.07412 18.594 8.55785 18.0417L4.85983 14.0851C4.70224 13.9165 4.4818 13.8208 4.25102 13.8208H2.5C1.80964 13.8208 1.25 13.2611 1.25 12.5708V7.918Z"/><path d="M12.2054 7.55061L14.6549 10.0001L12.2054 12.4495C12.0427 12.6122 12.0427 12.876 12.2054 13.0388L12.7947 13.628C12.9574 13.7907 13.2212 13.7907 13.3839 13.628L15.8334 11.1786L18.2828 13.628C18.4456 13.7907 18.7094 13.7907 18.8721 13.628L19.4614 13.0388C19.6241 12.8761 19.6241 12.6122 19.4614 12.4495L17.0119 10.0001L19.4614 7.55061C19.6241 7.38789 19.6241 7.12408 19.4614 6.96136L18.8721 6.3721C18.7094 6.20938 18.4456 6.20938 18.2828 6.3721L15.8334 8.82155L13.3839 6.3721C13.2212 6.20938 12.9574 6.20938 12.7947 6.3721L12.2054 6.96136C12.0427 7.12408 12.0427 7.3879 12.2054 7.55061Z"/></svg>`;
+
+  // 注入 sound SVG 到所有 sound 按钮
+  document.querySelectorAll('.swipe .card .sound').forEach(btn=>{
+    btn.innerHTML=SOUND_ON_SVG+SOUND_OFF_SVG;
+  });
+
+  function updateBg(bgUrl){
+    const bg=document.querySelector('.vshow .bg');
+    if(bg && bgUrl) bg.style.backgroundImage='url('+bgUrl+')';
+  }
+  function renderSwipe(mode){
+    const data=sets[mode];
+    swipe.innerHTML=data.map((d,i)=>`
+      <div class="card c${i+1}${d.photo?' photo':''}" data-bg="${d.bg}">
+        <div class="bg-img" style="background-image:url('${d.bg}')"></div>
+        <span class="dur">${d.dur}</span>
+        <span class="sound" data-sound="on">${SOUND_ON_SVG}${SOUND_OFF_SVG}</span>
+        <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="progress"></div>
+        <div class="meta">
+          <div class="who">
+            <span class="av cover ${d.av}"></span>
+            <span class="nm">${d.nm}</span>
+            ${d.like?`<span class="heart">${d.like}</span>`:''}
+          </div>
+          <div class="cap">${d.cap}</div>
+        </div>
+      </div>
+    `).join('');
+    dots.innerHTML=data.map((_,i)=>`<span class="d ${i===0?'on':''}"></span>`).join('');
+    if(data.length>0) updateBg(data[0].bg);
+    bindCards();
+    setupAutoPlay();
+    swipe.scrollLeft=0;
+  }
+  function bindCards(){
+    document.querySelectorAll('.swipe .card').forEach((c,i)=>{
+      c.addEventListener('click',e=>{
+        if(e.target.closest('.sound')) return;
+        alert('Play video #'+(i+1));
+      });
+    });
+    document.querySelectorAll('.swipe .card .sound').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        btn.closest('.card').classList.toggle('muted');
+      });
+    });
+  }
+
+  // 自动播放
+  let autoObserver=null;
+  function setupAutoPlay(){
+    if(autoObserver) autoObserver.disconnect();
+    autoObserver=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.intersectionRatio>=0.95){
+          en.target.classList.add('playing');
+        }else{
+          en.target.classList.remove('playing');
+        }
+      });
+    },{root:swipe,threshold:[0,.5,.95,1]});
+    document.querySelectorAll('.swipe .card').forEach(c=>autoObserver.observe(c));
+  }
+  // 首屏直接渲染
+  setupAutoPlay();
+
+  // 横滑 → indicator 联动
+  let bgScrollTimer=null;
+  swipe.addEventListener('scroll',()=>{
+    clearTimeout(bgScrollTimer);
+    bgScrollTimer=setTimeout(()=>{
+      const cs=[...swipe.querySelectorAll('.card')];
+      const cardW=cs[0]?.offsetWidth||240;
+      const idx=Math.round(swipe.scrollLeft/(cardW+10));
+      const mode=document.querySelector('.toggle .seg.on')?.dataset.mode||'ugc';
+      const data=sets[mode];
+      if(data && data[idx]) updateBg(data[idx].bg);
+    },100);
+    const cs=[...swipe.querySelectorAll('.card')];
+    const cardW=cs[0]?.offsetWidth||240;
+    const idx=Math.round(swipe.scrollLeft/(cardW+10));
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===idx));
+  });
+
+  // 胶囊切换
+  document.querySelectorAll('.toggle .seg').forEach(s=>{
+    s.addEventListener('click',()=>{
+      document.querySelectorAll('.toggle .seg').forEach(x=>x.classList.remove('on'));
+      s.classList.add('on');
+      const mode=s.dataset.mode;
+      renderSwipe(mode);
+    });
+  });
+
+  // product card click
+  document.querySelectorAll('.product-card').forEach((c,i)=>{
+    c.addEventListener('click',e=>{
+      if(e.target.closest('.buy')){
+        e.stopPropagation();
+        const name=c.querySelector('.pname')?.textContent||'voucher';
+        alert('Buy '+name);
+        return;
+      }
+      const name=c.querySelector('.pname')?.textContent||'voucher';
+      alert('Open '+name+' · detail');
+    });
+  });
+
+  // 其他点击
+  document.getElementById('viewDetails').addEventListener('click',()=>alert('View details · Starbucks Grand Indonesia'));
+  document.querySelectorAll('.native-feed .v').forEach((v,i)=>v.addEventListener('click',()=>alert('Play video #'+(i+1))));
+  document.querySelectorAll('.tabs .tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tabs .tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
+</body></html>

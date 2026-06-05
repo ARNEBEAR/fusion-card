@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=390,initial-scale=1">
+<title>S2·A · Internal Tabs</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .viewport{background:#F5F5F5}
+  .card{margin:4px 4px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04)}
+
+  /* ===== S2 识别头：16:9 banner 大图 + 信息压在图上 + 底部黑色柔和渐变（区别于 S1 的左图右文）===== */
+  .hero{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+  .hero .pic{position:absolute;inset:0;background-size:cover;background-position:center}
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;top:20%;
+    background:linear-gradient(180deg,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,.18) 28%,
+      rgba(0,0,0,.6) 68%,
+      rgba(0,0,0,.85) 100%);
+    pointer-events:none;
+  }
+  .hero .body{
+    position:absolute;left:0;right:0;bottom:0;z-index:1;
+    padding:14px 14px 13px;
+    display:flex;flex-direction:column;gap:6px;color:#fff;
+  }
+  .hero .name{
+    font-size:20px;font-weight:800;color:#fff;letter-spacing:-.024em;line-height:1.18;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .hero .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.88);flex-wrap:wrap;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+  .hero .meta .star{color:#fff;font-weight:700}
+  .hero .meta .star::before{content:"★";color:var(--gold);margin-right:3px;font-size:13px}
+  .hero .meta .dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.55);flex:0 0 auto}
+  .hero .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .hero .tags .tg{
+    display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:5px;
+    background:rgba(255,255,255,.16);backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);
+    color:#fff;font-size:11px;font-weight:600;letter-spacing:-.005em;
+    border:1px solid rgba(255,255,255,.18);
+  }
+
+  /* segmented control */
+  .seg{display:flex;padding:0 14px;border-bottom:1px solid var(--line);gap:22px;font-size:13px;color:var(--text-3);overflow-x:auto;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg .it{padding:11px 0 12px;font-weight:600;position:relative;cursor:pointer;letter-spacing:-.005em;flex:0 0 auto;white-space:nowrap}
+  .seg .it.on{color:var(--text);font-weight:700}
+  .seg .it.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-1px;height:2px;background:var(--text);border-radius:2px}
+  /* deal panel */
+  .panel{padding:4px 14px 12px}
+  .panel.hide{display:none}
+  .panel .date-bar-wrap{margin:4px 0 6px}
+  .deal-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 0;border-top:1px solid var(--line);gap:10px;cursor:pointer;
+  }
+  .deal-row:first-child{border-top:0}
+  .panel .date-bar-wrap + .deal-row{border-top:0}
+  .deal-row .l{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+  .deal-row .l .brand-mark{width:20px;height:20px;border-radius:50%;font-size:9px;flex:0 0 auto;margin-top:0}
+  .deal-row .l .col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;line-height:1.2}
+  .deal-row .l .col .name{font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.005em;line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .deal-row .l .col .benefit{
+    font-size:11.5px;font-weight:500;color:var(--text-3);line-height:1.3;letter-spacing:-.005em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .deal-row .r{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+  .deal-row .r .pp{font-weight:800;font-size:14.5px;color:var(--text);letter-spacing:-.012em;line-height:1}
+  .deal-row .r .chev{color:var(--text-4);font-size:18px;line-height:1;margin-left:2px}
+  /* 展开/收起：柔和高度过渡 */
+  .deal-row.extra{
+    display:flex;
+    max-height:0;padding-top:0;padding-bottom:0;border-top-width:0;
+    overflow:hidden;opacity:0;
+    transition:max-height .32s ease,opacity .25s ease,padding .28s ease,border-top-width .28s ease;
+  }
+  .deal-row.extra.shown{
+    max-height:64px;padding-top:11px;padding-bottom:11px;border-top-width:1px;opacity:1;
+  }
+  /* see more (居中可展开) */
+  .deal-foot{
+    margin-top:8px;padding:10px 0 2px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:13px;color:var(--text);font-weight:600;cursor:pointer;letter-spacing:-.005em;
+    user-select:none;
+  }
+  .deal-foot .av-stack{display:inline-flex;align-items:center}
+  .deal-foot .av-stack .av{
+    width:18px;height:18px;border-radius:50%;
+    box-shadow:0 0 0 1.5px #fff;
+    display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-size:8px;font-weight:800;letter-spacing:-.01em;
+  }
+  .deal-foot .av-stack .av + .av{margin-left:-6px}
+  .deal-foot .av-stack .av.bk{background:#003580}
+  .deal-foot .av-stack .av.kk{background:#ff5722}
+  .deal-foot .av-stack .av.ex{background:#fdd935;color:#0b1f4d}
+  .deal-foot .av-stack .av.hc{background:#d63346}
+  .deal-foot.open .av-stack{display:none}
+  .deal-foot .ch{
+    width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;
+    transition:transform .3s ease;color:var(--text-3);
+  }
+  .deal-foot .ch svg{width:12px;height:12px}
+  .deal-foot.open .ch{transform:rotate(180deg)}
+
+  /* ===== Reviews tab content：筛选 chips（一行横滑）+ 用户文字列表（最多 3 条） ===== */
+  .rv-filter{
+    display:flex;gap:6px;padding:8px 0 0;
+    overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;
+  }
+  .rv-filter::-webkit-scrollbar{display:none}
+  .rv-filter .chip{
+    display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:99px;
+    font-size:11.5px;font-weight:700;letter-spacing:-.005em;cursor:pointer;
+    background:var(--bg-soft);color:var(--text-2);transition:all .15s;flex:0 0 auto;white-space:nowrap;
+  }
+  .rv-filter .chip.on{background:var(--text);color:#fff}
+  /* review 列表 —— 对齐 figma 7536:38297：身份+评分一行 + 正文 max 2 行 + 右侧可选 44 方缩略图 */
+  .rv-list{display:flex;flex-direction:column;gap:14px;padding:12px 0 6px}
+  .rv-list .it.hidden{display:none}
+  .rv-list .it .who{
+    display:flex;align-items:center;gap:4px;margin-bottom:4px;flex-wrap:wrap;
+  }
+  .rv-list .it .who .av{
+    width:20px;height:20px;border-radius:50%;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    flex:0 0 auto;
+    border:.5px solid rgba(0,0,0,.06);
+  }
+  .rv-list .it .who .nm{
+    font-size:15px;font-weight:400;color:var(--text);letter-spacing:-.005em;line-height:1.3;
+  }
+  .rv-list .it .who .vbadge{
+    width:12px;height:12px;display:inline-block;flex:0 0 auto;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path fill='%2320D5EC' d='M6 0 7.32 1.18 8.95.92 9.73 2.4l1.6.55-.34 1.65L12 6l-1.01 1.4.34 1.65-1.6.55-.78 1.48-1.63-.26L6 12 4.68 10.82 3.05 11.08 2.27 9.6.67 9.05l.34-1.65L0 6l1.01-1.4L.67 2.95l1.6-.55.78-1.48 1.63.26z'/><path fill='white' d='M5.04 8.36 2.92 6.24l.95-.95 1.17 1.18 2.91-2.91.95.94z'/></svg>") center/contain no-repeat;
+  }
+  .rv-list .it .who .sep{
+    font-size:13px;color:rgba(0,0,0,.65);font-weight:400;line-height:1.3;
+  }
+  /* 5 颗星评分 */
+  .rv-list .it .who .stars{display:inline-flex;gap:1px;align-items:center;margin-left:2px}
+  .rv-list .it .who .stars .s{
+    width:14px;height:14px;display:inline-block;background:currentColor;color:#FFBB00;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M7 1.2 8.79 4.83 12.8 5.41 9.9 8.24 10.58 12.23 7 10.34 3.42 12.23 4.1 8.24 1.2 5.41 5.21 4.83Z'/></svg>") center/contain no-repeat;
+  }
+  .rv-list .it .who .stars .s.off{color:rgba(0,0,0,.12)}
+  .rv-list .it .who .date{font-size:11px;color:var(--text-4);font-weight:500}
+  /* 正文 + 右侧缩略图 */
+  .rv-list .it .row{display:flex;align-items:flex-start;gap:12px}
+  .rv-list .it .body{
+    flex:1;min-width:0;
+    font-size:15px;line-height:1.3;color:var(--text);font-weight:400;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    letter-spacing:-.005em;
+  }
+  .rv-list .it .thumb{
+    flex:0 0 auto;width:44px;height:44px;border-radius:8px;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+  }
+  .rv-foot{padding:10px 0 4px;margin:0;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer}
+  .rv-foot::after{content:"›";color:var(--text-3);font-size:16px;margin-left:4px}
+
+  /* ===== What people say tab：筛选 chips + 横滑视频 ===== */
+  .says-filter{
+    display:flex;gap:6px;padding:8px 0 0;
+    overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;
+  }
+  .says-filter::-webkit-scrollbar{display:none}
+  .says-filter .chip{
+    display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:99px;
+    font-size:11.5px;font-weight:700;letter-spacing:-.005em;cursor:pointer;
+    background:var(--bg-soft);color:var(--text-2);transition:all .15s;flex:0 0 auto;white-space:nowrap;
+  }
+  .says-filter .chip.on{background:var(--text);color:#fff}
+  .says-rail{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    /* 默认左 14px 与 tab/头图对齐；横滑时左右无固定白边，首末卡可直接出血到 .panel 边缘 */
+    padding:10px 0 6px 14px;margin:0 -14px;scroll-padding-left:14px;scrollbar-width:none;
+  }
+  .says-rail::-webkit-scrollbar{display:none}
+  .says-card{flex:0 0 auto;width:160px;scroll-snap-align:start;cursor:pointer;position:relative}
+  .says-card .pic{
+    width:100%;aspect-ratio:3/4;border-radius:8px;
+    position:relative;overflow:hidden;background-color:#ddd;
+  }
+  /* 背景图层独立抽出，仅它做 Ken Burns，不影响头像/名字/时长等覆盖元素 */
+  .says-card .pic .bg-img{
+    position:absolute;inset:0;z-index:0;
+    background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
+    transform-origin:50% 50%;
+  }
+  .says-card .pic::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:50%;z-index:1;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.35) 100%);pointer-events:none;
+  }
+  .says-card .pic .dur{
+    position:absolute;right:6px;bottom:6px;z-index:2;
+    color:#fff;font-size:11px;font-weight:700;font-family:var(--font-mono);
+    text-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  /* 右下角点赞数（与 S3 横滑视频结构一致） */
+  .says-card .pic .like{
+    position:absolute;right:6px;bottom:6px;z-index:2;display:inline-flex;align-items:center;gap:3px;
+    color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  .says-card .pic .like::before{
+    content:"";width:11px;height:11px;display:inline-block;background:currentColor;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.5C1 3.1 2.1 2 3.5 2 4.5 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.5 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M6 10.5S1 7.5 1 4.5C1 3.1 2.1 2 3.5 2 4.5 2 5.4 2.7 6 3.5 6.6 2.7 7.5 2 8.5 2 9.9 2 11 3.1 11 4.5 11 7.5 6 10.5 6 10.5z'/></svg>") center/contain no-repeat;
+  }
+  .says-card .pic .who{
+    position:absolute;left:6px;bottom:6px;z-index:3;display:flex;align-items:center;gap:4px;
+    color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);
+    max-width:62%;
+  }
+  .says-card .pic .who .nm{
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  }
+  .says-card .pic .who .av{width:16px;height:16px;border-radius:50%;background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;border:1px solid rgba(255,255,255,.7);flex:0 0 auto}
+  /* 自动播放视觉态：底部进度条 + 右上角脉冲 LIVE，10s 循环 */
+  .says-card .pic .progress{
+    position:absolute;left:0;right:0;bottom:0;height:2px;z-index:4;
+    background:rgba(255,255,255,.18);overflow:hidden;opacity:0;transition:opacity .2s;
+  }
+  .says-card .pic .progress::before{content:"";display:block;height:100%;width:0%;background:#fff}
+  .says-card.playing .pic .progress{opacity:1}
+  .says-card.playing .pic .progress::before{animation:s2says 10s linear infinite}
+  @keyframes s2says{0%{width:0%}100%{width:100%}}
+  /* 静音切换喇叭按钮 —— 纯图标，无底色 */
+  .says-card .pic .sound{
+    position:absolute;top:6px;right:6px;z-index:5;
+    width:20px;height:20px;
+    background:transparent;border:0;
+    display:none;align-items:center;justify-content:center;color:#fff;cursor:pointer;
+    filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.28));
+  }
+  .says-card.playing .pic .sound{display:flex}
+  .says-card .pic .sound svg{width:14px;height:14px}
+  .says-card .pic .sound .ic-off{display:none}
+  .says-card.muted .pic .sound .ic-on{display:none}
+  .says-card.muted .pic .sound .ic-off{display:block}
+  /* Ken Burns 微动效 —— 仅作用在背景图层上，覆盖元素（头像/名字/进度条）保持稳定 */
+  @keyframes s2kb{
+    0%{transform:scale(1) translate(0,0)}
+    50%{transform:scale(1.06) translate(-1.2%,-.6%)}
+    100%{transform:scale(1) translate(0,0)}
+  }
+  .says-card.playing .pic .bg-img{animation:s2kb 10s ease-in-out infinite}
+  .says-card .cap{
+    margin-top:6px;font-size:12px;color:var(--text);font-weight:600;line-height:1.35;letter-spacing:-.005em;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .says-card .cap b{font-weight:800}
+
+  /* ===== Location tab：真实可交互 Google Maps + 底部悬浮地址卡 ===== */
+  .loc-wrap{
+    position:relative;margin:8px 0 4px;border-radius:10px;overflow:hidden;
+    height:240px;background:#eaf2ff;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+  }
+  .loc-wrap .gmap{
+    position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
+    /* 偏调色 + 微弱去饱和，让地图视觉更扁平、不抢内容 */
+    filter:saturate(.78) contrast(.96) brightness(1.02);
+  }
+  .loc-wrap .pin-overlay{
+    position:absolute;left:50%;top:44%;transform:translate(-50%,-100%);z-index:2;pointer-events:none;
+    width:30px;height:40px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='40' viewBox='0 0 30 40'><defs><filter id='s' x='-10%25' y='-10%25' width='120%25' height='120%25'><feDropShadow dx='0' dy='1.5' stdDeviation='1.5' flood-color='black' flood-opacity='.35'/></filter></defs><path filter='url(%23s)' fill='%23ff2d55' stroke='white' stroke-width='2.6' d='M15 2c-7 0-12.6 5.4-12.6 12.2 0 9.2 12.6 23.6 12.6 23.6s12.6-14.4 12.6-23.6C27.6 7.4 22 2 15 2z'/><circle cx='15' cy='13.5' r='4.6' fill='white'/></svg>") center/contain no-repeat;
+  }
+  .loc-wrap .ctrl{
+    position:absolute;right:10px;top:10px;display:flex;flex-direction:column;
+    background:#fff;border-radius:8px;overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);z-index:2;
+  }
+  .loc-wrap .ctrl .b{
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+    color:var(--text);font-size:18px;font-weight:600;cursor:pointer;
+  }
+  .loc-wrap .ctrl .b + .b{border-top:1px solid var(--line)}
+  .loc-wrap .ctrl .b svg{width:14px;height:14px}
+  .loc-wrap .me{
+    position:absolute;right:10px;bottom:78px;z-index:2;
+    width:32px;height:32px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;color:var(--text);
+    box-shadow:0 2px 6px rgba(0,0,0,.16);cursor:pointer;
+  }
+  .loc-wrap .me svg{width:14px;height:14px}
+  /* 悬浮地址卡 —— 毛玻璃 + 加深底色，确保文字在地图任何区域都清晰可读 */
+  .loc-wrap .addr-card{
+    position:absolute;left:10px;right:10px;bottom:10px;z-index:3;
+    background:rgba(255,255,255,.86);
+    -webkit-backdrop-filter:saturate(140%) blur(14px);
+            backdrop-filter:saturate(140%) blur(14px);
+    border-radius:10px;
+    box-shadow:0 6px 18px rgba(0,0,0,.18),0 0 0 .5px rgba(255,255,255,.6) inset;
+    padding:8px 12px;height:68px;display:flex;align-items:center;gap:12px;overflow:hidden;
+  }
+  .loc-wrap .addr-card::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:linear-gradient(135deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 60%);
+  }
+  .loc-wrap .addr-card .pin-btn{
+    position:relative;z-index:1;flex:0 0 auto;
+    width:32px;height:32px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--text);
+  }
+  .loc-wrap .addr-card .pin-btn svg{width:14px;height:14px}
+  .loc-wrap .addr-card .col{
+    position:relative;z-index:1;flex:1;min-width:0;
+    display:flex;flex-direction:column;gap:2px;line-height:1.3;
+  }
+  .loc-wrap .addr-card .col .a1{
+    font-size:13px;font-weight:400;color:#202020;letter-spacing:-.005em;line-height:1.3;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .loc-wrap .addr-card .col .a2{
+    font-size:12px;color:rgba(0,0,0,.65);font-weight:400;line-height:1.3;letter-spacing:-.005em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    display:flex;align-items:center;gap:4px;
+  }
+  .loc-wrap .addr-card .col .a2 .img{
+    width:8px;height:12px;flex:0 0 auto;border-radius:1px;
+    background:linear-gradient(135deg,#9bd3df 0%,#5fa8b8 100%);
+  }
+</style></head>
+<body>
+<div class="iphone"><div class="ios">
+  <div class="statusbar"><span>9:41</span><div class="right">
+    <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.5c2.4 0 4.6.93 6.27 2.45l-1.42 1.42A6.6 6.6 0 0 0 8 4.5a6.6 6.6 0 0 0-4.85 1.87L1.73 4.95A8.6 8.6 0 0 1 8 2.5z"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="22" height="10" rx="2.5"/><rect x="3" y="3" width="17" height="6" rx="1" fill="currentColor"/><rect x="24" y="4" width="1.5" height="4" rx=".75" fill="currentColor"/></svg>
+  </div></div>
+  <div class="searchbar">
+    <span class="back"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 2 2 9l7 7"/></svg></span>
+    <div class="input"><svg class="magnify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="text">Bangkok Marriott Marquis City Star</span><span class="clear">×</span></div>
+    <span class="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>
+  </div>
+  <div class="tabs"><span class="tab active">Top</span><span class="tab">Users</span><span class="tab">Videos</span><span class="tab">Sounds</span><span class="tab">Shop</span><span class="tab">LIVE</span></div>
+
+  <div class="viewport" data-strategy="s2">
+    <div class="card">
+      <div class="hero">
+        <div class="pic cover hotel-night"></div>
+        <div class="body">
+          <div class="name">Bangkok Marriott Marquis City Star</div>
+          <div class="meta">
+            <span class="star">4.5</span><span>(1,288)</span>
+            <span class="dot"></span><span>5-star</span>
+            <span class="dot"></span><span>1.2km</span>
+          </div>
+          <div class="tags">
+            <span class="tg">Private pool</span>
+            <span class="tg">Skyline view</span>
+          </div>
+        </div>
+      </div>
+      <div class="seg">
+        <span class="it on" data-tab="deals">Deals</span>
+        <span class="it" data-tab="reviews">Reviews</span>
+        <span class="it" data-tab="says">What people say</span>
+        <span class="it" data-tab="loc">Location</span>
+      </div>
+      <div class="panel" data-panel="deals">
+        <div class="deal-row"><div class="l"><span class="brand-mark tv">tv</span><div class="col"><span class="name">Traveloka</span><span class="benefit">Free cancellation · Breakfast · Pay at hotel</span></div></div><div class="r"><span class="pp">Rp1,299,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row"><div class="l"><span class="brand-mark tp">Trip</span><div class="col"><span class="name">Trip.com</span><span class="benefit">Free cancellation · Member price</span></div></div><div class="r"><span class="pp">Rp1,345,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row"><div class="l"><span class="brand-mark ag">A</span><div class="col"><span class="name">Agoda</span><span class="benefit">Pay later · Breakfast included</span></div></div><div class="r"><span class="pp">Rp1,405,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row extra"><div class="l"><span class="brand-mark bk">B</span><div class="col"><span class="name">Booking.com</span><span class="benefit">No prepayment · Free cancellation</span></div></div><div class="r"><span class="pp">Rp1,422,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row extra"><div class="l"><span class="brand-mark kk">K</span><div class="col"><span class="name">Klook</span><span class="benefit">App-only · Breakfast · Late checkout</span></div></div><div class="r"><span class="pp">Rp1,488,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row extra"><div class="l"><span class="brand-mark tv">E</span><div class="col"><span class="name">Expedia</span><span class="benefit">Bundle & save · Free cancellation</span></div></div><div class="r"><span class="pp">Rp1,499,000</span><span class="chev">›</span></div></div>
+        <div class="deal-row extra"><div class="l"><span class="brand-mark tp">H</span><div class="col"><span class="name">Hotels.com</span><span class="benefit">Collect 10 nights, get 1 free</span></div></div><div class="r"><span class="pp">Rp1,512,000</span><span class="chev">›</span></div></div>
+        <div class="deal-foot" id="seeMore">
+          <span class="av-stack" aria-hidden="true">
+            <span class="av bk">B</span><span class="av kk">K</span><span class="av ex">E</span><span class="av hc">H</span>
+          </span>
+          <span class="lbl">See more (4)</span>
+          <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </div>
+      </div>
+      <div class="panel hide" data-panel="reviews">
+        <div class="rv-filter" id="rvFilter">
+          <span class="chip on" data-f="all">All <span style="opacity:.6;font-weight:600">1,288</span></span>
+          <span class="chip" data-f="pos">Positive <span style="opacity:.6;font-weight:600">1,104</span></span>
+          <span class="chip" data-f="neu">Neutral <span style="opacity:.6;font-weight:600">128</span></span>
+          <span class="chip" data-f="neg">Negative <span style="opacity:.6;font-weight:600">56</span></span>
+          <span class="chip" data-f="loc">Location <span style="opacity:.6;font-weight:600">412</span></span>
+          <span class="chip" data-f="room">Rooms <span style="opacity:.6;font-weight:600">386</span></span>
+          <span class="chip" data-f="svc">Service <span style="opacity:.6;font-weight:600">274</span></span>
+          <span class="chip" data-f="food">Dining <span style="opacity:.6;font-weight:600">196</span></span>
+        </div>
+        <div class="rv-list" id="rvList">
+          <div class="it" data-tone="pos" data-topic="room loc">
+            <div class="who">
+              <span class="av cover creator-1"></span>
+              <span class="nm">Sasithorn P.</span>
+              <span class="vbadge"></span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">Rooms are exactly as photos — quiet, spacious, with a real skyline view. Rooftop pool was the highlight. Breakfast spread is huge, plenty of Thai &amp; Western options.</div>
+              <div class="thumb cover hotel-room"></div>
+            </div>
+          </div>
+          <div class="it" data-tone="pos" data-topic="svc loc">
+            <div class="who">
+              <span class="av cover creator-7"></span>
+              <span class="nm">Aurelia W.</span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">Service at check-in was warm; got a free upgrade to a corner room. Walking distance to BTS is a big plus, but the elevators get crowded between 8–9am.</div>
+              <div class="thumb cover hotel-lobby"></div>
+            </div>
+          </div>
+          <div class="it" data-tone="neu" data-topic="room svc">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <span class="nm">Jesse L.</span>
+              <span class="vbadge"></span>
+              <span class="sep">·</span>
+              <span class="stars"><span class="s"></span><span class="s"></span><span class="s"></span><span class="s off"></span><span class="s off"></span></span>
+            </div>
+            <div class="row">
+              <div class="body">Good location and clean rooms, but the Wi-Fi in the lower floors kept dropping. Front desk was helpful and switched me to a higher floor — fixed it.</div>
+              <div class="thumb cover hotel-pool"></div>
+            </div>
+          </div>
+        </div>
+        <div class="rv-foot">See all 1,288 reviews</div>
+      </div>
+      <div class="panel hide" data-panel="says">
+        <div class="says-filter" id="saysFilter">
+          <span class="chip on" data-f="all">Most liked</span>
+          <span class="chip" data-f="loc">Location</span>
+          <span class="chip" data-f="room">Rooms</span>
+          <span class="chip" data-f="svc">Service</span>
+          <span class="chip" data-f="food">Dining</span>
+        </div>
+        <div class="says-rail" id="saysRail"></div>
+      </div>
+      <div class="panel hide" data-panel="loc">
+        <div class="loc-wrap" id="locMap">
+          <iframe class="gmap" src="https://www.google.com/maps?q=199+Sukhumvit+Soi+22+Bangkok&z=15&output=embed&hl=en" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <div class="pin-overlay"></div>
+          <div class="ctrl">
+            <div class="b">+</div>
+            <div class="b">−</div>
+          </div>
+          <div class="me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </div>
+          <div class="addr-card">
+            <div class="pin-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+            </div>
+            <div class="col">
+              <span class="a1">1.2 km from Bangkok city center</span>
+              <span class="a2"><span class="img"></span>199 Sukhumvit Soi 22 · Bangkok 10110</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="native-feed">
+      <div class="v b1">
+        <div class="pic">
+          <span class="top-liked">Top liked</span>
+          <span class="dur">3:03</span>
+        </div>
+        <div class="info">
+          <div class="cap">Skyline-view <b>rooftop pool</b> at Marriott Marquis — golden hour magic</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-2"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Aurelia</span><span class="vbadge"></span></div>
+                <span class="date">Jul 20, 2024</span>
+              </div>
+            </div>
+            <span class="like">7.3K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b2">
+        <div class="pic">
+          <span class="dur">1:24</span>
+        </div>
+        <div class="info">
+          <div class="cap">Inside the <b>executive lounge</b> — high tea with city views</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-3"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">JesseLiu</span><span class="vbadge"></span></div>
+                <span class="date">Jul 18, 2024</span>
+              </div>
+            </div>
+            <span class="like">5.7K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b3">
+        <div class="pic">
+          <span class="dur">1:08</span>
+        </div>
+        <div class="info">
+          <div class="cap">36F <b>skyline night</b> — Bangkok lights from the corner suite</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-1"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Sasithorn</span><span class="vbadge"></span></div>
+                <span class="date">Jul 16, 2024</span>
+              </div>
+            </div>
+            <span class="like">4.6K</span>
+          </div>
+        </div>
+      </div>
+      <div class="v b4">
+        <div class="pic">
+          <span class="dur">0:38</span>
+        </div>
+        <div class="info">
+          <div class="cap">24/7 <b>fitness center</b> tour — clean, equipped, never crowded</div>
+          <div class="row">
+            <div class="who">
+              <span class="av cover creator-4"></span>
+              <div class="col">
+                <div class="nm-row"><span class="nm">Mira.s</span><span class="vbadge"></span></div>
+                <span class="date">Jul 14, 2024</span>
+              </div>
+            </div>
+            <span class="like">3.1K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<script>
+  // segment 切换
+  document.querySelectorAll('.seg .it').forEach(it=>{
+    it.addEventListener('click',()=>{
+      document.querySelectorAll('.seg .it').forEach(x=>x.classList.remove('on'));
+      it.classList.add('on');
+      const t=it.dataset.tab;
+      document.querySelectorAll('.panel').forEach(p=>{
+        p.classList.toggle('hide',p.dataset.panel!==t);
+      });
+    });
+  });
+  // see more (4) 展开收起
+  const seeMore=document.getElementById('seeMore');
+  const lbl=seeMore.querySelector('.lbl');
+  seeMore.addEventListener('click',()=>{
+    const open=seeMore.classList.toggle('open');
+    document.querySelectorAll('.deal-row.extra').forEach(r=>r.classList.toggle('shown',open));
+    lbl.textContent=open?'Show less':'See more (4)';
+  });
+  // 单 OTA 行 → 跳供应商
+  document.querySelectorAll('.deal-row').forEach(r=>{
+    r.addEventListener('click',()=>{
+      const nm=r.querySelector('.name')?.textContent||'OTA';
+      alert('Open '+nm+' offer');
+    });
+  });
+  // Reviews 筛选 chips —— 同时支持情感(pos/neu/neg)与话题(loc/room/svc/food)
+  const rvFilter=document.getElementById('rvFilter');
+  const rvList=document.getElementById('rvList');
+  const TONES=new Set(['pos','neu','neg']);
+  const TOPICS=new Set(['loc','room','svc','food']);
+  if(rvFilter){
+    rvFilter.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        rvFilter.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+        c.classList.add('on');
+        const f=c.dataset.f;
+        rvList.querySelectorAll('.it').forEach(it=>{
+          let ok=true;
+          if(f==='all') ok=true;
+          else if(TONES.has(f)) ok=(it.dataset.tone===f);
+          else if(TOPICS.has(f)) ok=(it.dataset.topic||'').split(/\s+/).includes(f);
+          it.classList.toggle('hidden',!ok);
+        });
+      });
+    });
+  }
+
+  // What people say —— 话题筛选 + 自动播放（露出≥95% 时播放，一屏多个则播第一个）
+  const saysFilter=document.getElementById('saysFilter');
+  const saysRail=document.getElementById('saysRail');
+  // 数据：12 张卡，每张多话题 tag，确保每个筛选下都 ≥10；封面与作者全部去重
+  const saysData=[
+    {clip:'clip-pool',    av:'creator-2', nm:'Aurelia',           like:'12.4k', cap:'<b>Rooftop pool</b> at golden hour — the view is unreal',                topic:'room loc svc food'},
+    {clip:'clip-night',   av:'creator-3', nm:'nick.travel',       like:'8.7k',  cap:'5-min walk to <b>BTS Asok</b> — Sukhumvit at your feet',                 topic:'loc room food'},
+    {clip:'clip-suite',   av:'creator-1', nm:'Sasithorn',         like:'5.2k',  cap:'Corner suite tour — <b>floor-to-ceiling</b> windows',                    topic:'room loc svc'},
+    {clip:'clip-bf',      av:'creator-6', nm:'Foodie.bkk',        like:'3.8k',  cap:'Honest <b>breakfast review</b> — Thai noodles &amp; egg station',        topic:'food svc room loc'},
+    {clip:'clip-lobby',   av:'creator-5', nm:'NickHarrow',        like:'2.1k',  cap:'Front-desk <b>service walkthrough</b> — warm welcome at midnight',       topic:'svc loc room food'},
+    {clip:'clip-rooftop', av:'creator-7', nm:'lobby.lover',       like:'4.4k',  cap:'Cabana <b>day pass</b> — private deck &amp; full villa feel',           topic:'room svc food loc'},
+    {clip:'clip-view',    av:'creator-9', nm:'bangkok.nights',    like:'3.1k',  cap:'Bangkok by night — <b>36th floor</b> sunset to neon',                    topic:'loc room svc food'},
+    {clip:'clip-bath',    av:'creator-8', nm:'suitelife',         like:'3.5k',  cap:'Bathtub view — <b>panoramic skyline</b> from the corner suite',          topic:'room loc svc food'},
+    {clip:'clip-bar',     av:'creator-10',nm:'mclub.tea',         like:'2.7k',  cap:'M Club lounge tour — <b>high tea</b> &amp; canapés',                     topic:'food svc loc room'},
+    {clip:'clip-room',    av:'creator-11',nm:'checkin.review',    like:'2.4k',  cap:'Check-in <b>upgrade hack</b> — what worked for our stay',                topic:'svc room loc food'},
+    {clip:'clip-gym',     av:'creator-12',nm:'rooftop.guide',     like:'2.1k',  cap:'Best <b>rooftop bars</b> walking distance edition',                      topic:'loc food svc room'},
+    {clip:'clip-spa',     av:'creator-4', nm:'thaitravel.diaries',like:'1.9k',  cap:'Inside the <b>executive lounge</b> — high tea + skyline',                topic:'food svc room loc'}
+  ];
+  const SAYS_SOUND_SVG=`<svg class="ic-on" viewBox="0 0 20 20" fill="currentColor"><path d="M1.66663 7.918C1.66663 7.22765 2.22627 6.668 2.91663 6.668H4.64754C4.89 6.668 5.12045 6.5624 5.27875 6.37874L8.95208 2.1171C9.45646 1.53194 10.4166 1.88864 10.4166 2.66118V17.4727C10.4166 18.2287 9.49074 18.594 8.97448 18.0417L5.27645 14.0851C5.11887 13.9165 4.89842 13.8208 4.66764 13.8208H2.91663C2.22627 13.8208 1.66663 13.2611 1.66663 12.5708V7.918Z"/><path d="M12.9291 7.65933C12.7853 7.47966 12.7832 7.21713 12.946 7.05441L13.5352 6.46516C13.6979 6.30244 13.9631 6.30146 14.1129 6.47613C15.8299 8.47801 15.8299 11.5234 14.1129 13.5253C13.9631 13.6999 13.6979 13.6989 13.5352 13.5362L12.946 12.947C12.7832 12.7843 12.7853 12.5217 12.9291 12.3421C14.0108 10.9905 14.0108 9.01093 12.9291 7.65933Z"/><path d="M15.5976 15.5986C15.4349 15.4359 15.4358 15.1728 15.5893 15.0014C18.1047 12.1917 18.1047 7.80973 15.5893 5.00001C15.4358 4.82855 15.4349 4.56548 15.5976 4.40276L16.1869 3.81351C16.3496 3.65079 16.6142 3.65017 16.7694 3.82007C19.9249 7.27438 19.9249 12.727 16.7694 16.1813C16.6142 16.3512 16.3496 16.3506 16.1869 16.1879L15.5976 15.5986Z"/></svg><svg class="ic-off" viewBox="0 0 20 20" fill="currentColor"><path d="M1.25 7.918C1.25 7.22765 1.80964 6.668 2.5 6.668H4.23091C4.47338 6.668 4.70382 6.5624 4.86212 6.37874L8.53546 2.1171C9.03983 1.53194 10 1.88864 10 2.66118V17.4727C10 18.2287 9.07412 18.594 8.55785 18.0417L4.85983 14.0851C4.70224 13.9165 4.4818 13.8208 4.25102 13.8208H2.5C1.80964 13.8208 1.25 13.2611 1.25 12.5708V7.918Z"/><path d="M12.2054 7.55061L14.6549 10.0001L12.2054 12.4495C12.0427 12.6122 12.0427 12.876 12.2054 13.0388L12.7947 13.628C12.9574 13.7907 13.2212 13.7907 13.3839 13.628L15.8334 11.1786L18.2828 13.628C18.4456 13.7907 18.7094 13.7907 18.8721 13.628L19.4614 13.0388C19.6241 12.8761 19.6241 12.6122 19.4614 12.4495L17.0119 10.0001L19.4614 7.55061C19.6241 7.38789 19.6241 7.12408 19.4614 6.96136L18.8721 6.3721C18.7094 6.20938 18.4456 6.20938 18.2828 6.3721L15.8334 8.82155L13.3839 6.3721C13.2212 6.20938 12.9574 6.20938 12.7947 6.3721L12.2054 6.96136C12.0427 7.12408 12.0427 7.3879 12.2054 7.55061Z"/></svg>`;
+  if(saysRail){
+    saysRail.innerHTML=saysData.map(d=>`
+      <div class="says-card" data-topic="${d.topic}">
+        <div class="pic">
+          <div class="bg-img cover ${d.clip}"></div>
+          <span class="who"><span class="av cover ${d.av}"></span><span class="nm">${d.nm}</span></span>
+          <span class="like">${d.like}</span>
+          <div class="progress"></div>
+          <span class="sound" data-sound="on">${SAYS_SOUND_SVG}</span>
+        </div>
+        <div class="cap">${d.cap}</div>
+      </div>
+    `).join('');
+  }
+  function saysVisibleCards(){
+    return Array.from(saysRail.querySelectorAll('.says-card')).filter(c=>!c.classList.contains('hidden'));
+  }
+  if(saysFilter && saysRail){
+    saysFilter.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        saysFilter.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+        c.classList.add('on');
+        const f=c.dataset.f;
+        saysRail.querySelectorAll('.says-card').forEach(card=>{
+          const ok=(f==='all')||(card.dataset.topic||'').split(/\s+/).includes(f);
+          card.classList.toggle('hidden',!ok);
+          if(!ok) card.classList.remove('playing');
+        });
+        saysRail.scrollLeft=0;
+        scheduleSaysAutoPlay();
+      });
+    });
+    // 隐藏卡片视觉上不占位
+    const styleEl=document.createElement('style');
+    styleEl.textContent='.says-card.hidden{display:none}';
+    document.head.appendChild(styleEl);
+  }
+
+  // 自动播放：露出度 ≥ 0.95 视为"完全露出"，多个则播 DOM 中的第一个
+  let saysIO=null;
+  const visMap=new Map();
+  function scheduleSaysAutoPlay(){
+    requestAnimationFrame(()=>{
+      const cards=saysVisibleCards();
+      if(saysIO) saysIO.disconnect();
+      visMap.clear();
+      saysIO=new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ visMap.set(e.target,e.intersectionRatio); });
+        // 找出 ≥0.95 的卡片，按 DOM 顺序取第一个
+        let target=null;
+        for(const card of cards){
+          if((visMap.get(card)||0)>=0.95){ target=card; break; }
+        }
+        cards.forEach(c=>{
+          c.classList.toggle('playing',c===target);
+          if(c!==target) c.classList.remove('muted');
+        });
+      },{root:saysRail,threshold:[0,.5,.85,.95,1]});
+      cards.forEach(c=>saysIO.observe(c));
+    });
+  }
+  // 切换到 says tab 时初始化
+  document.querySelectorAll('.seg .it').forEach(it=>{
+    it.addEventListener('click',()=>{
+      if(it.dataset.tab==='says') scheduleSaysAutoPlay();
+    });
+  });
+  // 横滑时重新评估
+  if(saysRail){
+    let scrTimer=null;
+    saysRail.addEventListener('scroll',()=>{
+      clearTimeout(scrTimer);
+      scrTimer=setTimeout(scheduleSaysAutoPlay,80);
+    });
+  }
+  // 喇叭按钮 —— 切换静音
+  document.querySelectorAll('.says-card .sound').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      btn.closest('.says-card').classList.toggle('muted');
+    });
+  });
+  // 卡片点击（避开按钮） → 详情
+  document.querySelectorAll('.says-card').forEach((s,i)=>{
+    s.addEventListener('click',e=>{
+      if(e.target.closest('.sound')) return;
+      alert('Play UGC clip #'+(i+1));
+    });
+  });
+  // voice → 详情
+  document.querySelectorAll('.voice').forEach(el=>el.addEventListener('click',()=>alert('Open hotel detail · review highlights')));
+  // location 地址卡 → 地图详情（地图本身已是可交互 iframe）
+  document.querySelector('#locMap .addr-card')?.addEventListener('click',()=>alert('Open full map · 199 Sukhumvit Soi 22'));
+  // 双列 → 视频
+  document.querySelectorAll('.native-feed .v').forEach((v,i)=>v.addEventListener('click',()=>alert('Play video #'+(i+1))));
+  // tabs 顶部
+  document.querySelectorAll('.tabs .tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tabs .tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
+</body></html>
