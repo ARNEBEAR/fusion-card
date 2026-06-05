@@ -7,9 +7,13 @@
   .viewport{background:#F5F5F5}
   .card{margin:4px 4px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04)}
 
-  /* ===== S2 识别头：16:9 banner 大图 + 信息压在图上 + 底部黑色柔和渐变 ===== */
-  .hero{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
-  .hero .pic{position:absolute;inset:0;background-size:cover;background-position:center}
+  /* ===== S2 识别头：横滑图片 gallery + 信息压在图上 + 底部黑色柔和渐变 ===== */
+  .hero{position:relative;height:214px;overflow:hidden;background:#000}
+  .hero .gallery{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+  .hero .gallery::-webkit-scrollbar{display:none}
+  .hero .gallery .pic{flex:0 0 auto;height:100%;scroll-snap-align:start;background-size:cover;background-position:center;position:relative;}
+  .hero .gallery .pic.fnb-logo-tile{aspect-ratio:1/1;}
+  .hero .gallery .pic.env{aspect-ratio:4/3;}
   .hero::after{
     content:"";position:absolute;left:0;right:0;bottom:0;top:20%;
     background:linear-gradient(180deg,
@@ -307,7 +311,13 @@
   <div class="viewport" data-strategy="s2">
     <div class="card">
       <div class="hero">
-        <div class="pic fnb-logo-tile" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="gallery">
+          <div class="pic fnb-logo-tile"></div>
+          <div class="pic env" style="background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80')"></div>
+          <div class="pic env" style="background-image:url('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80')"></div>
+          <div class="pic env" style="background-image:url('https://images.unsplash.com/photo-1459755486867-b55449bb39ff?auto=format&fit=crop&w=800&q=80')"></div>
+          <div class="pic env" style="background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80')"></div>
+        </div>
         <div class="body">
           <div class="name">Starbucks Grand Indonesia</div>
           <div class="meta">
