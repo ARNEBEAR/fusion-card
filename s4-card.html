@@ -350,26 +350,9 @@ a{color:inherit;text-decoration:none}
 .sb-ico{display:block}
 
 
-/* === standalone preview override === */
 html{background:#0a0a0b;min-height:100vh}
-body{
-  background:#0a0a0b !important;
-  width:auto !important;
-  min-height:100vh !important;
-  display:flex;align-items:center;justify-content:center;
-  padding:24px 0 !important;
-}
-.iphone{
-  flex:0 0 auto;
-  width:390px !important;height:844px !important;
-  border-radius:42px !important;
-  overflow:hidden;
-  box-shadow:
-    0 30px 70px rgba(0,0,0,.55),
-    0 12px 28px rgba(0,0,0,.4),
-    0 0 0 1px rgba(255,255,255,.04),
-    inset 0 0 0 1px rgba(255,255,255,.04) !important;
-}
+body{background:#0a0a0b !important;width:auto !important;min-height:100vh !important;display:flex;align-items:center;justify-content:center;padding:24px 0 !important}
+.iphone{flex:0 0 auto;width:390px !important;height:844px !important;border-radius:42px !important;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04),inset 0 0 0 1px rgba(255,255,255,.04) !important}
 .iphone .ios{border-radius:42px !important;overflow:hidden}
 
 </style>
@@ -385,7 +368,7 @@ body{
   /* 毛玻璃底图（取自当前激活视频的同一张图，放大模糊） */
   .vshow .bg{
     position:absolute;inset:0;z-index:0;
-    background:#000 center/cover url("https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=1200&q=80");
+    background:#000 center/cover url("https://images.unsplash.com/photo-photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80");
     transform:scale(1.18);filter:blur(28px) saturate(1.15);
   }
   .vshow .bg::after{
@@ -638,7 +621,7 @@ body{
 
         <!-- Horizontal swipe video carousel -->
         <div class="swipe" id="swipe">
-          <div class="card c1" data-bg="https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=1200&q=80">
+          <div class="card c1" data-bg="https://images.unsplash.com/photo-photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80">
             <span class="badge brand">Updated recently</span>
             <span class="dur">0:48</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
@@ -651,7 +634,7 @@ body{
               <div class="cap">Rooftop pool + city skyline — Marriott Marquis worth every dollar ✦</div>
             </div>
           </div>
-          <div class="card c2" data-bg="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80">
+          <div class="card c2" data-bg="https://images.unsplash.com/photo-photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80">
             <span class="dur">1:24</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
             <div class="meta">
@@ -663,7 +646,7 @@ body{
               <div class="cap">3-night honest stay tour · suite + breakfast included</div>
             </div>
           </div>
-          <div class="card c3" data-bg="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80">
+          <div class="card c3" data-bg="https://images.unsplash.com/photo-photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80">
             <span class="dur">0:52</span>
             <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
             <div class="meta">
@@ -785,30 +768,30 @@ body{
   // 数据：UGC vs Official（切换胶囊时替换轨道内容；每个 set ≥10 条）
   const sets={
     ugc:[
-      {bg:'https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=1200&q=80',badge:'Updated recently',dur:'0:48',av:'creator-2',nm:'@aurelia.bkk',like:'12.4k',cap:'Rooftop pool + city skyline — Marriott Marquis worth every dollar ✦'},
-      {bg:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:24',av:'creator-3',nm:'@bangkok.staycation',like:'8.2k',cap:'3-night honest stay tour · suite + breakfast included'},
-      {bg:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:52',av:'creator-4',nm:'@thaitravel.diaries',like:'5.7k',cap:'Inside the executive lounge — high tea and the skyline view'},
-      {bg:'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'8 photos',av:'creator-5',nm:'@nick.travel',like:'4.9k',cap:'Late-night rooftop bar — live jazz till 1am, must visit',photo:true},
-      {bg:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:11',av:'creator-6',nm:'@spa.diaries',like:'4.3k',cap:'Honest spa review — couples massage at the wellness floor'},
-      {bg:'https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:36',av:'creator-7',nm:'@lobby.lover',like:'3.8k',cap:'Lobby vibes — the marble entrance feels like a movie set'},
-      {bg:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:42',av:'creator-8',nm:'@suitelife',like:'3.5k',cap:'Corner suite tour · panoramic city view from the bathtub'},
-      {bg:'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:58',av:'creator-9',nm:'@bangkok.nights',like:'3.1k',cap:'Bangkok at night from the 36th floor — golden hour to neon'},
-      {bg:'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:42',av:'creator-10',nm:'@foodie.bkk',like:'2.7k',cap:'Breakfast deep dive — Thai noodles, dim sum & egg station'},
-      {bg:'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'12 photos',av:'creator-11',nm:'@checkin.review',like:'2.4k',cap:'Check-in to checkout · everything you need to know',photo:true},
-      {bg:'https://images.unsplash.com/photo-1551776235-dde6d4829808?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:18',av:'creator-12',nm:'@rooftop.guide',like:'2.1k',cap:'Best rooftop bars near Marquis — walking distance edition'}
+      {bg:'https://images.unsplash.com/photo-photo-1542314831-c6a4d1421045?auto=format&fit=crop&w=1200&q=80',badge:'Updated recently',dur:'0:48',av:'creator-2',nm:'@aurelia.bkk',like:'12.4k',cap:'Rooftop pool + city skyline — Marriott Marquis worth every dollar ✦'},
+      {bg:'https://images.unsplash.com/photo-photo-1551882547-ff40c0d5b5df?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:24',av:'creator-3',nm:'@bangkok.staycation',like:'8.2k',cap:'3-night honest stay tour · suite + breakfast included'},
+      {bg:'https://images.unsplash.com/photo-photo-1584132967334-10e028bd69f4?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:52',av:'creator-4',nm:'@thaitravel.diaries',like:'5.7k',cap:'Inside the executive lounge — high tea and the skyline view'},
+      {bg:'https://images.unsplash.com/photo-photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'8 photos',av:'creator-5',nm:'@nick.travel',like:'4.9k',cap:'Late-night rooftop bar — live jazz till 1am, must visit',photo:true},
+      {bg:'https://images.unsplash.com/photo-photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:11',av:'creator-6',nm:'@spa.diaries',like:'4.3k',cap:'Honest spa review — couples massage at the wellness floor'},
+      {bg:'https://images.unsplash.com/photo-photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:36',av:'creator-7',nm:'@lobby.lover',like:'3.8k',cap:'Lobby vibes — the marble entrance feels like a movie set'},
+      {bg:'https://images.unsplash.com/photo-photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:42',av:'creator-8',nm:'@suitelife',like:'3.5k',cap:'Corner suite tour · panoramic city view from the bathtub'},
+      {bg:'https://images.unsplash.com/photo-photo-1535827841776-24afc1e255ac?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'0:58',av:'creator-9',nm:'@bangkok.nights',like:'3.1k',cap:'Bangkok at night from the 36th floor — golden hour to neon'},
+      {bg:'https://images.unsplash.com/photo-photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'2:42',av:'creator-10',nm:'@foodie.bkk',like:'2.7k',cap:'Breakfast deep dive — Thai noodles, dim sum & egg station'},
+      {bg:'https://images.unsplash.com/photo-photo-1596436889106-be35e843f974?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'12 photos',av:'creator-11',nm:'@checkin.review',like:'2.4k',cap:'Check-in to checkout · everything you need to know',photo:true},
+      {bg:'https://images.unsplash.com/photo-photo-1574643156929-51fa098b0394?auto=format&fit=crop&w=1200&q=80',badge:'',dur:'1:18',av:'creator-12',nm:'@rooftop.guide',like:'2.1k',cap:'Best rooftop bars near Marquis — walking distance edition'}
     ],
     official:[
-      {bg:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:12',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Tour the rooftop pool, suites and dining — Marriott Marquis Bangkok'},
-      {bg:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'15 photos',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Newly renovated executive suites with skyline view',photo:true},
-      {bg:'https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:36',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Lobby experience — welcome to Bangkok Marriott Marquis'},
-      {bg:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:54',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Rooftop pool — designed for the Bangkok skyline'},
-      {bg:'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:02',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Sky bar & lounge — signature cocktails and small plates'},
-      {bg:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:48',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Quan Spa — six treatment suites for couples and singles'},
-      {bg:'https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:30',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Panoramic city view — every Tower room faces the skyline'},
-      {bg:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:46',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Suite walk-through — separate living, dining and bath'},
-      {bg:'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:24',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'M Club Lounge — high tea, evening canapés and open bar'},
-      {bg:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:38',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Fitness center — open 24/7 for in-house guests'},
-      {bg:'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:52',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Marriott Marquis at night — your gateway to Sukhumvit'}
+      {bg:'https://images.unsplash.com/photo-photo-1584132915807-fd1f5fbc078f?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:12',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Tour the rooftop pool, suites and dining — Marriott Marquis Bangkok'},
+      {bg:'https://images.unsplash.com/photo-photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'15 photos',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Newly renovated executive suites with skyline view',photo:true},
+      {bg:'https://images.unsplash.com/photo-photo-1573047330191-fb342b1be381?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:36',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Lobby experience — welcome to Bangkok Marriott Marquis'},
+      {bg:'https://images.unsplash.com/photo-photo-1572987669554-0ba2ba9aee1f?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:54',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Rooftop pool — designed for the Bangkok skyline'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:02',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Sky bar & lounge — signature cocktails and small plates'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:48',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Quan Spa — six treatment suites for couples and singles'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:30',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Panoramic city view — every Tower room faces the skyline'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:46',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Suite walk-through — separate living, dining and bath'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'1:24',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'M Club Lounge — high tea, evening canapés and open bar'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:38',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Fitness center — open 24/7 for in-house guests'},
+      {bg:'https://images.unsplash.com/photo-photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',badge:'Official',dur:'0:52',av:'hotel-hero',nm:'Marriott Marquis',like:'',cap:'Marriott Marquis at night — your gateway to Sukhumvit'}
     ]
   };
 

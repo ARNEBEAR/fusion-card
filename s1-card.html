@@ -350,26 +350,9 @@ a{color:inherit;text-decoration:none}
 .sb-ico{display:block}
 
 
-/* === standalone preview override === */
 html{background:#0a0a0b;min-height:100vh}
-body{
-  background:#0a0a0b !important;
-  width:auto !important;
-  min-height:100vh !important;
-  display:flex;align-items:center;justify-content:center;
-  padding:24px 0 !important;
-}
-.iphone{
-  flex:0 0 auto;
-  width:390px !important;height:844px !important;
-  border-radius:42px !important;
-  overflow:hidden;
-  box-shadow:
-    0 30px 70px rgba(0,0,0,.55),
-    0 12px 28px rgba(0,0,0,.4),
-    0 0 0 1px rgba(255,255,255,.04),
-    inset 0 0 0 1px rgba(255,255,255,.04) !important;
-}
+body{background:#0a0a0b !important;width:auto !important;min-height:100vh !important;display:flex;align-items:center;justify-content:center;padding:24px 0 !important}
+.iphone{flex:0 0 auto;width:390px !important;height:844px !important;border-radius:42px !important;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04),inset 0 0 0 1px rgba(255,255,255,.04) !important}
 .iphone .ios{border-radius:42px !important;overflow:hidden}
 
 </style>
@@ -430,7 +413,7 @@ body{
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   }
   .voice .txt b{color:var(--text);font-weight:700}
-  .voice .arr{
+  .voice .arr{align-self:center;
     flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
     color:var(--text-3);
   }
@@ -551,17 +534,6 @@ body{
           </div>
         </div>
       </div>
-
-      <div class="date-bar-wrap">
-        <div class="date-bar">
-          <span class="ic" aria-hidden="true"></span>
-          <span class="dt">Thu, Nov 21 - Sat, Nov 23</span>
-          <span class="sep"></span>
-          <span class="gst"><span class="pic" aria-hidden="true"></span>2</span>
-          <span class="ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
-        </div>
-      </div>
-
       <div class="deal">
         <div class="l">
           <span class="brand-mark tv">tv</span>
