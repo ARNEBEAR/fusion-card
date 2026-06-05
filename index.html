@@ -1,11 +1,12 @@
 <!doctype html><meta charset="utf-8">
 <title>Fusion Card · 4 Strategies</title>
 <style>
-  /* Inject 30% Scale for Document Embedding */
+  /* Use transform instead of zoom for precise iframe scaling */
   body { 
-    zoom: 0.3; 
-    -moz-transform: scale(0.3); 
-    -moz-transform-origin: top center; 
+    transform: scale(0.3); 
+    transform-origin: top left;
+    width: 333.33%; /* 100 / 0.3 */
+    height: 333.33%;
   }
 
   *{box-sizing:border-box}
