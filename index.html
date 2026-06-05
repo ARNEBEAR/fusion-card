@@ -1,243 +1,256 @@
-<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fusion Card · 3 Verticals × 4 Strategies</title>
+<!doctype html><meta charset="utf-8">
+<title>Fusion Card · 4 Strategies</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
   body{
-    background:#f0f0f0;
-    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif;
-    padding:32px 24px 48px;
-    min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;
+    background:#0a0a0b;color:#fafafa;min-height:100vh;
   }
-  .header{
-    max-width:1680px;
-    margin:0 auto 32px;
-    text-align:center;
+  .wrap{max-width:1760px;margin:0 auto}
+
+  /* ===== header ===== */
+  header{padding:80px 32px 24px;text-align:center}
+  header .pre{
+    display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:28px;
   }
-  .header h1{
-    font-size:64px;font-weight:800;letter-spacing:-.024em;color:#0a0a0a;
-    margin-bottom:8px;
-    background:linear-gradient(90deg,#0a0a0a 0%,#333 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+  header h1{
+    margin:0;
+    font-family:"SF Pro Display","Inter",-apple-system,sans-serif;
+    font-size:84px;line-height:1.02;letter-spacing:-.035em;font-weight:700;
+    background:linear-gradient(180deg,#fff 0%,#fff 40%,rgba(255,255,255,.55) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .header .sub{
-    font-size:16px;color:#666;letter-spacing:-.005em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  header h1 em{font-style:italic;color:#ff7898;-webkit-text-fill-color:#ff7898;font-weight:600}
+  header .lead{
+    margin:24px auto 0;color:rgba(255,255,255,.62);font-size:15px;line-height:1.65;max-width:680px;
   }
+  header .lead b{color:#fff;font-weight:600}
+
+  /* ===== axis (true horizontal timeline) ===== */
+  .axis{padding:48px 32px 12px}
+  .axis-inner{
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.08);border-radius:18px;
+    padding:36px 40px 28px;position:relative;
+  }
+  .axis-head{
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;
+    font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .axis-head .lbl{color:rgba(255,255,255,.5)}
+  .axis-head .lbl::before{content:"";display:inline-block;width:4px;height:11px;border-radius:2px;background:#fe2c55;margin-right:10px;vertical-align:-1px}
+  .axis-head .end-l{color:rgba(255,120,152,.85);font-weight:700}
+  .axis-head .end-r{color:rgba(120,180,255,.85);font-weight:700}
+
+  /* track */
+  .track{
+    position:relative;height:6px;border-radius:999px;
+    background:linear-gradient(90deg,#fe2c55 0%,#ff7898 28%,rgba(255,120,152,.45) 50%,rgba(120,180,255,.55) 72%,#5b9eff 100%);
+    margin:0 0 0;
+    box-shadow:0 0 24px rgba(254,44,85,.25),0 0 48px rgba(91,158,255,.18);
+  }
+  .nodes{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin-top:-13px}
+  .node{position:relative;display:flex;justify-content:center}
+  .dot{
+    width:20px;height:20px;border-radius:50%;
+    background:#0a0a0b;border:2px solid #fff;
+    box-shadow:0 0 0 4px rgba(255,255,255,.06),0 4px 14px rgba(0,0,0,.6);
+    position:relative;z-index:2;
+  }
+  .node:nth-child(1) .dot{border-color:#fe2c55;box-shadow:0 0 0 4px rgba(254,44,85,.18),0 0 24px rgba(254,44,85,.5)}
+  .node:nth-child(2) .dot{border-color:#ff7898;box-shadow:0 0 0 4px rgba(255,120,152,.18),0 0 24px rgba(255,120,152,.4)}
+  .node:nth-child(3) .dot{border-color:#a59bff;box-shadow:0 0 0 4px rgba(165,155,255,.18),0 0 24px rgba(165,155,255,.4)}
+  .node:nth-child(4) .dot{border-color:#5b9eff;box-shadow:0 0 0 4px rgba(91,158,255,.18),0 0 24px rgba(91,158,255,.5)}
+
+  .node-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:22px}
+  .node-card{
+    text-align:center;padding:0 8px;
+  }
+  .node-card .k{
+    display:inline-block;font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,255,255,.45);font-weight:700;margin-bottom:8px;
+    padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  }
+  .node-card .v{display:block;color:#fff;font-weight:700;font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
+  .node-card .d{color:rgba(255,255,255,.55);font-size:12.5px;line-height:1.55}
+
+  .axis-foot{
+    margin-top:28px;padding-top:18px;border-top:1px dashed rgba(255,255,255,.08);
+    display:flex;justify-content:space-between;font-family:"SF Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(255,255,255,.35);
+  }
+  .axis-foot .l{color:#ff7898}
+  .axis-foot .r{color:#5b9eff}
+
+  /* ===== grid ===== */
   .grid{
-    max-width:1680px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:120px repeat(4, 390px);
-    gap:16px;
-    align-items:start;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;
+    padding:48px 32px 56px;
   }
-  .col-header{
-    position:sticky;
-    top:32px;
-    z-index:10;
+  @media (max-width:1280px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:680px){.grid{grid-template-columns:1fr}}
+  .col{display:flex;flex-direction:column;gap:14px}
+  .col .lbl{
+    font-family:"SF Mono","JetBrains Mono",monospace;font-size:11px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;
+  }
+  .col:nth-child(1) .lbl{color:#ff7898}
+  .col:nth-child(2) .lbl{color:#ffa6c0}
+  .col:nth-child(3) .lbl{color:#a59bff}
+  .col:nth-child(4) .lbl{color:#5b9eff}
+  .col .ttl{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.012em;margin-top:-4px;line-height:1.3}
+  .phone-wrap{
+    width:100%;aspect-ratio:390/844;position:relative;border-radius:42px;overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
     background:#fff;
-    border-radius:12px;
-    padding:16px;
-    box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);
   }
-  .col-header.strategy{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
+  .phone-wrap iframe{width:390px;height:844px;border:0;display:block;background:#fff;transform-origin:top left}
+  .col .desc{
+    font-size:13px;line-height:1.6;color:rgba(255,255,255,.62);
+    padding-top:6px;
   }
-  .col-header.strategy .code{
-    font-size:11px;font-weight:800;letter-spacing:.14em;color:#ff2d55;
-    text-transform:uppercase;
+  .col .desc b{color:rgba(255,255,255,.92);font-weight:600}
+  .col .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .col .meta span{
+    font-family:"SF Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.08);
   }
-  .col-header.strategy .name{
-    font-size:18px;font-weight:800;letter-spacing:-.02em;color:#0a0a0a;
-    line-height:1.2;
+
+  footer{
+    text-align:center;padding:32px 32px 56px;
+    color:rgba(255,255,255,.3);font-family:"SF Mono",monospace;font-size:11px;letter-spacing:.05em;
   }
-  .col-header.strategy .desc{
-    font-size:11.5px;color:#666;line-height:1.4;letter-spacing:-.005em;
-  }
-  .row-header{
-    position:sticky;
-    left:24px;
-    z-index:5;
-    background:#fff;
-    border-radius:12px;
-    padding:16px;
-    box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.04);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    justify-content:center;
-    align-items:flex-start;
-  }
-  .row-header .icon{
-    width:36px;height:36px;border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:18px;
-  }
-  .row-header.hotel .icon{background:#e8f4fd;color:#1a73e8}
-  .row-header.fnb .icon{background:#e8f5ee;color:#00704a}
-  .row-header.attraction .icon{background:#fff4e6;color:#ff6b00}
-  .row-header .vname{
-    font-size:15px;font-weight:800;letter-spacing:-.014em;color:#0a0a0a;
-  }
-  .row-header .vexample{
-    font-size:11px;color:#666;letter-spacing:-.005em;line-height:1.3;
-  }
-  .phone{
-    width:390px;
-    height:844px;
-    background:#fff;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04);
-    position:relative;
-  }
-  .phone iframe{
-    width:100%;
-    height:100%;
-    border:0;
-    display:block;
-  }
-  .phone .label{
-    position:absolute;
-    top:8px;left:8px;
-    background:rgba(0,0,0,.6);
-    color:#fff;
-    font-size:10px;font-weight:700;
-    padding:3px 6px;
-    border-radius:4px;
-    letter-spacing:.05em;
-    pointer-events:none;
-    z-index:5;
-  }
-  .legend{
-    max-width:1680px;
-    margin:24px auto 0;
-    display:flex;
-    gap:24px;
-    flex-wrap:wrap;
-  }
-  .legend .item{
-    display:flex;align-items:center;gap:8px;
-    font-size:12px;color:#666;
-  }
-  .legend .dot{
-    width:8px;height:8px;border-radius:50%;
-  }
-  .legend .dot.hotel{background:#1a73e8}
-  .legend .dot.fnb{background:#00704a}
-  .legend .dot.attraction{background:#ff6b00}
+  footer a{color:rgba(255,255,255,.45);text-decoration:none;margin:0 8px}
+  footer a:hover{color:#ff7898}
 </style>
-</head>
-<body>
-  <div class="header">
-    <h1>生服地点精搜 · 融合卡设计探索</h1>
-    <div class="sub">3 大真实行业 × 4 套交互架构演进</div>
-  </div>
 
-  <div class="grid">
-    <!-- Corner cell (empty) -->
-    <div></div>
+<div class="wrap">
 
-    <!-- Strategy headers (columns) -->
-    <div class="col-header strategy">
-      <span class="code">S1·A</span>
-      <span class="name">意图直达型</span>
-      <span class="desc">在一体化卡片内优先缩短确认路径。</span>
-    </div>
-    <div class="col-header strategy">
-      <span class="code">S2·A</span>
-      <span class="name">降噪折叠型</span>
-      <span class="desc">在单卡框架内提升单位高度的信息效率。</span>
-    </div>
-    <div class="col-header strategy">
-      <span class="code">S3·A</span>
-      <span class="name">路径解耦型</span>
-      <span class="desc">将决策信息拆为可编排单元，提升适配能力。</span>
-    </div>
-    <div class="col-header strategy">
-      <span class="code">S4·A</span>
-      <span class="name">内容沉浸型</span>
-      <span class="desc">以内容容器主导判断，再嵌入转化承接。</span>
-    </div>
+  <header>
+    <span class="pre">POI Exact Search · Hotel · 390 × 844</span>
+    <h1>One hotel,<br><em>four structural takes.</em></h1>
+    <p class="lead">同一组核心信息，只在 <b>识别 / 理解 / 交易</b> 三段的结构与权重上做差异化。整张页面从 <b>commerce-first</b> 的最强收口，一路释放到 <b>content-first</b> 的内容沉浸。</p>
+  </header>
 
-    <!-- Hotel row -->
-    <div class="row-header hotel">
-      <div class="icon">🏨</div>
-      <div class="vname">Hotel</div>
-      <div class="vexample">Bangkok Marriott Marquis</div>
-    </div>
-    <div class="phone">
-      <span class="label">HOTEL · S1</span>
-      <iframe src="s1-a-hotel-hero-stack.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">HOTEL · S2</span>
-      <iframe src="s2-a-hotel-tabbed-card.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">HOTEL · S3</span>
-      <iframe src="s3-a-hotel-modules-split.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">HOTEL · S4</span>
-      <iframe src="s4-a-hotel-video-first.html" scrolling="no"></iframe>
-    </div>
+  <section class="axis">
+    <div class="axis-inner">
+      <div class="axis-head">
+        <span class="lbl">Design Axis · Structural Progression</span>
+        <span><span class="end-l">Commerce-led</span> ────► <span class="end-r">Content-led</span></span>
+      </div>
 
-    <!-- F&B row -->
-    <div class="row-header fnb">
-      <div class="icon">☕</div>
-      <div class="vname">F&amp;B</div>
-      <div class="vexample">Starbucks Grand Indonesia</div>
+      <div class="track"></div>
+      <div class="nodes">
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+        <div class="node"><span class="dot"></span></div>
+      </div>
+
+      <div class="node-cards">
+        <div class="node-card">
+          <span class="k">策略 1</span>
+          <span class="v">识别即转化</span>
+          <div class="d">最强收口<br>单一最优供应商 + 全宽 CTA</div>
+        </div>
+        <div class="node-card">
+          <span class="k">策略 2</span>
+          <span class="v">折叠分层</span>
+          <div class="d">Banner 识别头<br>四段 segment 折叠多视图</div>
+        </div>
+        <div class="node-card">
+          <span class="k">策略 3</span>
+          <span class="v">解耦排版</span>
+          <div class="d">识别 / 交易 / 理解 / 推荐<br>独立成卡，可穿插 feed</div>
+        </div>
+        <div class="node-card">
+          <span class="k">策略 4</span>
+          <span class="v">内容沉浸</span>
+          <div class="d">视频做主体<br>识别压顶 / 交易反向挂载</div>
+        </div>
+      </div>
+
+      <div class="axis-foot">
+        <span class="l">◀ 转化路径最短</span>
+        <span>结构权重</span>
+        <span class="r">内容驱动决策 ▶</span>
+      </div>
     </div>
-    <div class="phone">
-      <span class="label">F&amp;B · S1</span>
-      <iframe src="verticals/s1-fnb.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">F&amp;B · S2</span>
-      <iframe src="verticals/s2-fnb.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">F&amp;B · S3</span>
-      <iframe src="verticals/s3-fnb.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">F&amp;B · S4</span>
-      <iframe src="verticals/s4-fnb.html" scrolling="no"></iframe>
+  </section>
+
+  <section class="grid">
+    <div class="col">
+      <span class="lbl">策略 1</span>
+      <span class="ttl">识别即转化 · 单卡聚合</span>
+      <div class="phone-wrap"><iframe src="s1-card.html" loading="lazy" scrolling="no"></iframe></div>
+      <p class="desc">紧凑识别头（左图右文 + 原声）+ <b>单一最优供应商 + 全宽 CTA</b>。最强收口，转化路径最短。</p>
+      <div class="meta"><span>原声头</span><span>1 个 OTA</span><span>1 个 CTA</span></div>
     </div>
 
-    <!-- Attraction row -->
-    <div class="row-header attraction">
-      <div class="icon">🎢</div>
-      <div class="vname">Attraction</div>
-      <div class="vexample">Dufan Ancol Theme Park</div>
+    <div class="col">
+      <span class="lbl">策略 2</span>
+      <span class="ttl">折叠分层 · 多视图 segment</span>
+      <div class="phone-wrap"><iframe src="s2-card.html" loading="lazy" scrolling="no"></iframe></div>
+      <p class="desc"><b>16:9 banner 大图</b> + 信息浮层做识别，下方 <b>Deals / Reviews / What people say / Location</b> 四段 segment 按需展开。一卡承载多视图。</p>
+      <div class="meta"><span>Banner 识别</span><span>4 段 tab</span><span>3+4 OTA</span></div>
     </div>
-    <div class="phone">
-      <span class="label">ATTRACTION · S1</span>
-      <iframe src="verticals/s1-attraction.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">ATTRACTION · S2</span>
-      <iframe src="verticals/s2-attraction.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">ATTRACTION · S3</span>
-      <iframe src="verticals/s3-attraction.html" scrolling="no"></iframe>
-    </div>
-    <div class="phone">
-      <span class="label">ATTRACTION · S4</span>
-      <iframe src="verticals/s4-attraction.html" scrolling="no"></iframe>
-    </div>
-  </div>
 
-  <div class="legend">
-    <div class="item"><span class="dot hotel"></span>酒店行业 · 供应商概念 · OTA比价列表</div>
-    <div class="item"><span class="dot fnb"></span>餐饮行业 · 聚焦商品视图 · 图片主导 · 无供应商概念</div>
-    <div class="item"><span class="dot attraction"></span>景点行业 · 供应商概念 · 门票直出展示</div>
-  </div>
-</body>
-</html>
+    <div class="col">
+      <span class="lbl">策略 3</span>
+      <span class="ttl">解耦排版 · 模块独立</span>
+      <div class="phone-wrap"><iframe src="s3-card.html" loading="lazy" scrolling="no"></iframe></div>
+      <p class="desc">识别 / 交易 / 理解 / 推荐拆成 4 张独立卡，<b>每张可独立 ranking、独立竞价、独立沉浸</b>。卡间灰底允许 native feed 穿插。</p>
+      <div class="meta"><span>4 张独立卡</span><span>可穿插 feed</span></div>
+    </div>
+
+    <div class="col">
+      <span class="lbl">策略 4</span>
+      <span class="ttl">内容沉浸 · 视频主体</span>
+      <div class="phone-wrap"><iframe src="s4-card.html" loading="lazy" scrolling="no"></iframe></div>
+      <p class="desc">9:13 横滑视频卡做主容器，<b>UGC ↔ Official 一键切换</b>。识别压顶、交易以白卡反向挂载在视频底部，几乎不打断观看。</p>
+      <div class="meta"><span>横滑视频</span><span>UGC ↔ Official</span><span>挂载交易</span></div>
+    </div>
+  </section>
+
+  <footer>
+    TikTok Local Services · Fusion Card · 2026.06
+    &nbsp;·&nbsp;
+    <a href="overview.html">Overview</a>
+    <a href="prototypes/stage-1.html">Lo-fi</a>
+  </footer>
+
+</div>
+
+<script>
+  function fitIframes(){
+    document.querySelectorAll('.phone-wrap').forEach(scr=>{
+      const iframe = scr.querySelector('iframe');
+      if(!iframe) return;
+      const w = scr.clientWidth, h = scr.clientHeight;
+      const s = Math.min(w/390, h/844);
+      iframe.style.transform = `scale(${s})`;
+      iframe.style.width = (w/s) + 'px';
+      iframe.style.height = (h/s) + 'px';
+    });
+  }
+  document.querySelectorAll('iframe').forEach(f=>{
+    f.addEventListener('load',()=>{
+      try{
+        const d = f.contentDocument;
+        if(d){
+          const s = d.createElement('style');
+          s.textContent = 'html,body{background:#fff !important;display:block !important;padding:0 !important}.iphone{box-shadow:none !important;border-radius:0 !important}.iphone .ios{border-radius:0 !important}';
+          d.head.appendChild(s);
+        }
+      }catch(e){}
+      fitIframes();
+    });
+  });
+  window.addEventListener('load', fitIframes);
+  window.addEventListener('resize', fitIframes);
+</script>
