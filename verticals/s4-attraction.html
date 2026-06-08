@@ -72,20 +72,22 @@
   /* swipe (轨道) ===== */
   .swipe{
     display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
-    padding:0 12px 4px;scroll-padding-left:12px;
+    padding:0 12px 24px;scroll-padding-left:12px;
     scrollbar-width:none;
   }
   .swipe::-webkit-scrollbar{display:none}
   .swipe .card{
-    position:relative;flex:0 0 auto;width:240px;aspect-ratio:9/13.5;border-radius:12px;overflow:hidden;
-    background:#222;scroll-snap-align:start;
-    box-shadow:0 6px 18px rgba(0,0,0,.32);cursor:pointer;
+    position:relative;flex:0 0 auto;width:240px;aspect-ratio:9/13.5;border-radius:12px;
+    scroll-snap-align:start;cursor:pointer;
   }
   .swipe .card .bg-img{
     position:absolute;inset:0;z-index:0;
     background-size:cover;background-position:center;background-repeat:no-repeat;
     transform-origin:50% 50%;
     transition:transform .4s ease;
+      border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,.32);
+    background-color:#E2E2E2;
   }
   @keyframes s4kb{
     0%{transform:scale(1.02) translate(0,0)}
@@ -97,6 +99,21 @@
   .swipe .card::after{
     content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(180deg,rgba(0,0,0,.32) 0%,transparent 25%,transparent 55%,rgba(0,0,0,.85) 100%);
+      border-radius:12px;
+  }
+  .swipe .stack-layer {
+    position: absolute; inset: 0; border-radius: 12px;
+    background: #E2E2E2; z-index: -1;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .swipe .stack-layer.l1 {
+    transform: rotate(-3.5deg) translate(-2px, 4px);
+    z-index: -1; background: #D1D1D1;
+  }
+  .swipe .stack-layer.l2 {
+    transform: rotate(3deg) translate(2px, 8px);
+    z-index: -2; background: #C0C0C0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
   }
   .swipe .card .badge{
     position:absolute;top:10px;left:10px;z-index:2;
@@ -112,14 +129,7 @@
     color:#fff;font-size:11px;font-weight:700;font-family:var(--font-mono);
   }
   .swipe .card .play{display:none}
-  .swipe .card.photo::before{
-    content:"";position:absolute;top:10px;left:10px;z-index:2;
-    width:18px;height:18px;color:#fff;
-    background:currentColor;
-    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
-            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h13v2H3zm0 5h13v2H3zm0 5h13v2H3zm15-9 4 3-4 3z'/></svg>") center/contain no-repeat;
-    filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));
-  }
+  
   .swipe .card .progress{
     position:absolute;left:0;right:0;bottom:0;height:2px;z-index:3;
     background:rgba(255,255,255,.18);overflow:hidden;opacity:0;transition:opacity .2s;
@@ -265,7 +275,7 @@
         <!-- Horizontal swipe video carousel -->
         <div class="swipe" id="swipe">
           <div class="card c1" data-bg="../assets/images/img_1483985988355-763728e1935b.jpg">
-            <div class="bg-img" style="background-image:url('../assets/images/img_1504674900247-0877df9cc836.jpg')"></div>
+            <div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="bg-img" style="background-image:url('../assets/images/img_1504674900247-0877df9cc836.jpg')"></div>
             <span class="badge brand">Ticket</span>
             <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="progress"></div>
@@ -279,7 +289,7 @@
             </div>
           </div>
           <div class="card c2" data-bg="../assets/images/img_1611892440504-42a792e24d32.jpg">
-            <div class="bg-img" style="background-image:url('../assets/images/img_1582719508461-905c673771fd.jpg')"></div>
+            <div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="bg-img" style="background-image:url('../assets/images/img_1582719508461-905c673771fd.jpg')"></div>
             <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="progress"></div>
             <div class="meta">
@@ -292,7 +302,7 @@
             </div>
           </div>
           <div class="card c3" data-bg="../assets/images/img_1507003211169-0a1dd7228f2d.jpg">
-            <div class="bg-img" style="background-image:url('../assets/images/img_1568084680786-a84f91d1153c.jpg')"></div>
+            <div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="bg-img" style="background-image:url('../assets/images/img_1568084680786-a84f91d1153c.jpg')"></div>
             <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="progress"></div>
             <div class="meta">
@@ -458,7 +468,7 @@
     data[0].badge = "Official";
     swipe.innerHTML=data.map((d,i)=>`
       <div class="card c${i+1}${d.photo?' photo':''}" data-bg="${d.bg}">
-        <div class="bg-img" style="background-image:url('${d.bg}')"></div>
+        <div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="bg-img" style="background-image:url('${d.bg}')"></div>
         ${d.badge?`<span class="badge ${i===0?'brand':''}">${d.badge}</span>`:''}
         <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
         <div class="meta">

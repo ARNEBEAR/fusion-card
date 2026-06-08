@@ -352,7 +352,7 @@ a{color:inherit;text-decoration:none}
 /* TEMP: Grey placeholders for all images */
 img, .pic, .photo, .bg, .bg-img, .cover, .card[data-bg], .avatar, .vshow .bg {
   background-image: none !important;
-  background-color: #333 !important;
+  background-color: #E2E2E2 !important;
 }
 
 /* ===== status bar SVG icons (used in template) ===== */
