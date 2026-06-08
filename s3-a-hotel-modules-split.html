@@ -176,7 +176,7 @@
   .m-rev .clip-rail{
     display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
     /* 默认左侧 14px 与模块标题对齐；横滑时右侧无任何 padding/margin，最后一张直接触达 .mod 右边缘 */
-    padding:0 0 4px 14px;margin:12px -14px 0 -14px;scroll-padding-left:14px;scrollbar-width:none;
+    padding:0 0 14px 14px;margin:12px -14px 0 -14px;scroll-padding-left:14px;scrollbar-width:none;
   }
   .m-rev .clip-rail::-webkit-scrollbar{display:none}
   /* 与 S2 says 保持一致：宽 160px、3:4 比例 */
@@ -185,6 +185,13 @@
     background-color:#ddd;background-position:center;background-size:cover;background-repeat:no-repeat;
     position:relative;scroll-snap-align:start;cursor:pointer;overflow:hidden;
   }
+  /* cover-stack（专辑堆叠感，与 S4 一致） */
+  .m-rev .clip-stack{position:relative;flex:0 0 auto;width:160px;aspect-ratio:3/4;scroll-snap-align:start}
+  .m-rev .clip-stack .clip{width:100%;height:100%;flex:0 0 auto}
+  .m-rev .clip-stack .stack-layer{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;z-index:-1;background:#D6D6D6;border:1px solid rgba(0,0,0,.05)}
+  .m-rev .clip-stack .stack-layer.l1{transform:rotate(-3deg) translate(-2px,3px);background:#D6D6D6}
+  .m-rev .clip-stack .stack-layer.l2{transform:rotate(2.6deg) translate(2px,7px);background:#C9C9C9;box-shadow:0 8px 14px rgba(0,0,0,.18)}
+
   .m-rev .clip::before{
     content:"";position:absolute;left:0;right:0;bottom:0;height:50%;
     background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.4) 100%);pointer-events:none;
@@ -458,12 +465,12 @@
       <div class="m-rev">
         <div class="top"><span class="big">4.5</span><span class="ct">/ 5 · <b>1,288</b> reviews · 142 with video</span></div>
         <div class="clip-rail" id="clipRail">
-          <div class="clip cover clip-pool"><span class="who"><span class="av cover creator-2"></span><span class="nm">Aurelia</span></span><span class="like">12.4k</span></div>
-          <div class="clip cover clip-suite"><span class="who"><span class="av cover creator-1"></span><span class="nm">Sasi</span></span><span class="like">9.8k</span></div>
-          <div class="clip cover clip-bar photo"><span class="who"><span class="av cover creator-3"></span><span class="nm">JesseL</span></span><span class="like">7.2k</span></div>
-          <div class="clip cover clip-view"><span class="who"><span class="av cover creator-4"></span><span class="nm">Mira</span></span><span class="like">5.6k</span></div>
-          <div class="clip cover clip-spa"><span class="who"><span class="av cover creator-5"></span><span class="nm">Nick</span></span><span class="like">4.3k</span></div>
-          <div class="clip cover clip-night"><span class="who"><span class="av cover creator-6"></span><span class="nm">Lila</span></span><span class="like">3.1k</span></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-pool"><span class="who"><span class="av cover creator-2"></span><span class="nm">Aurelia</span></span><span class="like">12.4k</span></div></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-suite"><span class="who"><span class="av cover creator-1"></span><span class="nm">Sasi</span></span><span class="like">9.8k</span></div></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-bar photo"><span class="who"><span class="av cover creator-3"></span><span class="nm">JesseL</span></span><span class="like">7.2k</span></div></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-view"><span class="who"><span class="av cover creator-4"></span><span class="nm">Mira</span></span><span class="like">5.6k</span></div></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-spa"><span class="who"><span class="av cover creator-5"></span><span class="nm">Nick</span></span><span class="like">4.3k</span></div></div>
+          <div class="clip-stack"><div class="stack-layer l2"></div><div class="stack-layer l1"></div><div class="clip cover clip-night"><span class="who"><span class="av cover creator-6"></span><span class="nm">Lila</span></span><span class="like">3.1k</span></div></div>
         </div>
         <div class="reviews">
           <div class="rv">
