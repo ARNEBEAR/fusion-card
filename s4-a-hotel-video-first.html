@@ -259,20 +259,14 @@
         <div class="head-divider"></div>
 
         <!-- Capsule toggle: Official | What people say (水平居中) -->
-        <div class="toggle-wrap">
-          <div class="toggle">
-            <span class="seg on" data-mode="ugc">What people say</span>
-            <span class="seg" data-mode="official">Official</span>
-          </div>
-        </div>
+        
 
         <!-- Horizontal swipe video carousel -->
         <div class="swipe" id="swipe">
           <div class="card c1" data-bg="assets/images/img_1563241527-3004b7be0ffd.jpg">
             <div class="bg-img" style="background-image:url('assets/images/img_1504754524776-8f4f37790ca0.jpg')"></div>
-            <span class="badge brand">Updated recently</span>
-            <span class="dur">0:48</span>
-            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <span class="badge brand">Official</span>
+            <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="meta">
               <div class="who">
                 <span class="av cover creator-2"></span>
@@ -284,8 +278,7 @@
           </div>
           <div class="card c2" data-bg="assets/images/img_1551024709-8f23befc6f87.jpg">
             <div class="bg-img" style="background-image:url('assets/images/img_1528825871115-3581a5387919.jpg')"></div>
-            <span class="dur">1:24</span>
-            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="meta">
               <div class="who">
                 <span class="av cover creator-3"></span>
@@ -297,8 +290,7 @@
           </div>
           <div class="card c3" data-bg="assets/images/img_1552832230-c0197dd311b5.jpg">
             <div class="bg-img" style="background-image:url('assets/images/img_1573047330191-fb342b1be381.jpg')"></div>
-            <span class="dur">0:52</span>
-            <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
             <div class="meta">
               <div class="who">
                 <span class="av cover creator-4"></span>
@@ -448,16 +440,14 @@
   const SOUND_ON_SVG=`<svg class="ic-on" viewBox="0 0 20 20" fill="currentColor"><path d="M1.66663 7.918C1.66663 7.22765 2.22627 6.668 2.91663 6.668H4.64754C4.89 6.668 5.12045 6.5624 5.27875 6.37874L8.95208 2.1171C9.45646 1.53194 10.4166 1.88864 10.4166 2.66118V17.4727C10.4166 18.2287 9.49074 18.594 8.97448 18.0417L5.27645 14.0851C5.11887 13.9165 4.89842 13.8208 4.66764 13.8208H2.91663C2.22627 13.8208 1.66663 13.2611 1.66663 12.5708V7.918Z"/><path d="M12.9291 7.65933C12.7853 7.47966 12.7832 7.21713 12.946 7.05441L13.5352 6.46516C13.6979 6.30244 13.9631 6.30146 14.1129 6.47613C15.8299 8.47801 15.8299 11.5234 14.1129 13.5253C13.9631 13.6999 13.6979 13.6989 13.5352 13.5362L12.946 12.947C12.7832 12.7843 12.7853 12.5217 12.9291 12.3421C14.0108 10.9905 14.0108 9.01093 12.9291 7.65933Z"/><path d="M15.5976 15.5986C15.4349 15.4359 15.4358 15.1728 15.5893 15.0014C18.1047 12.1917 18.1047 7.80973 15.5893 5.00001C15.4358 4.82855 15.4349 4.56548 15.5976 4.40276L16.1869 3.81351C16.3496 3.65079 16.6142 3.65017 16.7694 3.82007C19.9249 7.27438 19.9249 12.727 16.7694 16.1813C16.6142 16.3512 16.3496 16.3506 16.1869 16.1879L15.5976 15.5986Z"/></svg>`;
   const SOUND_OFF_SVG=`<svg class="ic-off" viewBox="0 0 20 20" fill="currentColor"><path d="M1.25 7.918C1.25 7.22765 1.80964 6.668 2.5 6.668H4.23091C4.47338 6.668 4.70382 6.5624 4.86212 6.37874L8.53546 2.1171C9.03983 1.53194 10 1.88864 10 2.66118V17.4727C10 18.2287 9.07412 18.594 8.55785 18.0417L4.85983 14.0851C4.70224 13.9165 4.4818 13.8208 4.25102 13.8208H2.5C1.80964 13.8208 1.25 13.2611 1.25 12.5708V7.918Z"/><path d="M12.2054 7.55061L14.6549 10.0001L12.2054 12.4495C12.0427 12.6122 12.0427 12.876 12.2054 13.0388L12.7947 13.628C12.9574 13.7907 13.2212 13.7907 13.3839 13.628L15.8334 11.1786L18.2828 13.628C18.4456 13.7907 18.7094 13.7907 18.8721 13.628L19.4614 13.0388C19.6241 12.8761 19.6241 12.6122 19.4614 12.4495L17.0119 10.0001L19.4614 7.55061C19.6241 7.38789 19.6241 7.12408 19.4614 6.96136L18.8721 6.3721C18.7094 6.20938 18.4456 6.20938 18.2828 6.3721L15.8334 8.82155L13.3839 6.3721C13.2212 6.20938 12.9574 6.20938 12.7947 6.3721L12.2054 6.96136C12.0427 7.12408 12.0427 7.3879 12.2054 7.55061Z"/></svg>`;
 
-  function renderSwipe(mode){
-    const data=sets[mode];
+  function renderSwipe(){
+    const data=sets.ugc;
+    data[0].badge = "Official";
     swipe.innerHTML=data.map((d,i)=>`
       <div class="card c${i+1}${d.photo?' photo':''}" data-bg="${d.bg}">
         <div class="bg-img" style="background-image: url('${d.bg}');"></div>
-        ${d.badge?`<span class="badge ${mode==='ugc'?'brand':''}">${d.badge}</span>`:''}
-        <span class="dur">${d.dur}</span>
-        <span class="sound" data-sound="on">${SOUND_ON_SVG}${SOUND_OFF_SVG}</span>
-        <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div class="progress"></div>
+        ${d.badge?`<span class="badge ${i===0?'brand':''}">${d.badge}</span>`:''}
+        <div class="album-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v14H4zm4-2h2v16H8zm4-2h8v18h-8z"/></svg> <span style="font-size:12px;font-weight:bold;margin-left:4px">Album</span></div>
         <div class="meta">
           <div class="who">
             <span class="av cover ${d.av}"></span>
@@ -505,7 +495,7 @@
     document.querySelectorAll('.swipe .card').forEach(c=>autoObserver.observe(c));
   }
   // 首屏直接渲染 UGC 全量列表（≥10 条）
-  renderSwipe('ugc');
+  renderSwipe();
 
   // 横滑 → indicator 联动 + 毛玻璃底图跟随当前激活卡
   swipe.addEventListener('scroll',()=>{
@@ -515,15 +505,6 @@
     [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===idx));
     const url=cs[idx]?.dataset.bg;
     if(url) bg.style.backgroundImage=`url('${url}')`;
-  });
-
-  // 胶囊切换（联动轨道内容 + indicator + 毛玻璃）
-  document.querySelectorAll('.toggle .seg').forEach(s=>{
-    s.addEventListener('click',()=>{
-      document.querySelectorAll('.toggle .seg').forEach(x=>x.classList.remove('on'));
-      s.classList.add('on');
-      renderSwipe(s.dataset.mode);
-    });
   });
 
   // view details 跳详情

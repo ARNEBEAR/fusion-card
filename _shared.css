@@ -158,6 +158,14 @@ a{color:inherit;text-decoration:none}
 .cover.map{background-image:url("assets/images/img_1524661135-423995f22d0b.jpg")}
 
 /* ===== UGC clip covers（横滑视频缩略图，用于 S2 says / S3 reviews / S4 swipe） ===== */
+.album-icon {
+  position: absolute; right: 8px; top: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  padding: 4px 6px; border-radius: 4px; color: #fff;
+  z-index: 10;
+}
+.album-icon svg { width: 14px; height: 14px; }
 .cover.clip-pool{background-image:url("assets/images/img_1551782450-a2132b4ba21d.jpg")}
 .cover.clip-room{background-image:url("assets/images/img_1568084680786-a84f91d1153c.jpg")}
 .cover.clip-suite{background-image:url("assets/images/img_1591088398332-8a7791972843.jpg")}
@@ -340,6 +348,12 @@ a{color:inherit;text-decoration:none}
 /* ===== utility ===== */
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dot-sep{display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--text-4);margin:0 6px;vertical-align:middle}
+
+/* TEMP: Grey placeholders for all images */
+img, .pic, .photo, .bg, .bg-img, .cover, .card[data-bg], .avatar, .vshow .bg {
+  background-image: none !important;
+  background-color: #333 !important;
+}
 
 /* ===== status bar SVG icons (used in template) ===== */
 .sb-ico{display:block}
